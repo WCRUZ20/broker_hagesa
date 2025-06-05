@@ -11,6 +11,10 @@ class User(Base):
     user_cod = Column(String, nullable=False)
     user_email = Column(String, nullable=False, unique=True, index=True)
     user_password = Column(String, nullable=False)
+    user_photo = Column(String, nullable=True)
+    user_position = Column(String, nullable=True)
+    user_status = Column(String, default="Habilitado", nullable=False)
+    
 
 class Client(Base):
     __tablename__ = "CTMS"

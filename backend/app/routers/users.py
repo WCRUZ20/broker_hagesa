@@ -7,6 +7,7 @@ from app.database import SessionLocal
 import os
 from dotenv import load_dotenv
 from typing import List
+import base64
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/login")
@@ -23,11 +24,32 @@ def get_db():
     finally:
         db.close()
 
+def validate_image_base64(base64_data):
+    try:
+        header, encoded = base64_data.split(",", 1)
+        data = base64.b64decode(encoded)
+
+        # Validar tamaño máximo (500 KB)
+        if len(data) > 500 * 1024:
+            raise ValueError("La imagen excede los 500 KB.")
+
+        # Validar tipo
+        if not (header.startswith("data:image/jpeg") or header.startswith("data:image/png")):
+            raise ValueError("Tipo de imagen no permitido.")
+
+        return base64_data
+    except Exception:
+        raise ValueError("Imagen inválida.")
+
 @router.post("/login", response_model=schemas.Token)
 def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email_or_cod(db, user.identifier)
     if not db_user or not auth.verify_password(user.password, db_user.user_password):
         raise HTTPException(status_code=400, detail="Credenciales inválidas")
+
+    if db_user.user_status != "Habilitado":
+        raise HTTPException(status_code=403, detail="Su cuenta está deshabilitada. Contacte al administrador.")
+        
     token = auth.create_token({"sub": db_user.user_cod, "role": db_user.user_role})
     return {"access_token": token, "token_type": "bearer"}
 
@@ -81,7 +103,17 @@ def update_user(user_id: int, user_data: schemas.UserCreate, db: Session = Depen
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
+    # Validar imagen si viene incluida
+    if user_data.user_photo:
+        try:
+            user_data.user_photo = validate_image_base64(user_data.user_photo)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+
+    # Actualizar campos
     for key, value in user_data.dict().items():
+        if value is None:
+            continue
         if key == "user_password":
             setattr(user, key, auth.hash_password(value))
         else:
@@ -91,6 +123,7 @@ def update_user(user_id: int, user_data: schemas.UserCreate, db: Session = Depen
     db.refresh(user)
     return user
 
+
 @router.delete("/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).get(user_id)
@@ -99,3 +132,4 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     db.delete(user)
     db.commit()
     return {"msg": "Usuario eliminado"}
+    

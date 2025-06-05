@@ -13,6 +13,14 @@ import Vendedores from "./pages/Vendedores";
 function App() {
   const [user, setUser] = useState(null);
 
+   useEffect(() => {
+    // Agrega el link a Google Fonts (Montserrat)
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+  }, []);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -37,7 +45,7 @@ function App() {
   if (!user) return <LoginForm onLogin={handleLogin} />;
 
   return (
-    <>
+    <div style={{ fontFamily: "'Montserrat', sans-serif" }}>
       <Sidebar user={user} onLogout={handleLogout} />
       <div style={{ marginLeft: "260px", padding: "2rem" }}>
         <Routes>
@@ -50,7 +58,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
-    </>
+    </div>
   );
 }
 
