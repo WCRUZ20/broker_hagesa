@@ -10,17 +10,48 @@ export default function UsuarioModal({ user, onClose }) {
     user_role: "R",
     user_cod: "",
     user_email: "",
-    user_password: ""
+    user_password: "",
+    user_photo: "",
+    user_position: "",
+    user_status: "Habilitado"
   });
 
   useEffect(() => {
     if (isEdit) {
-      setForm({ ...user, user_password: "" }); // no mostrar hash
+      setForm({ ...user, user_password: "" });
     }
   }, [user]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const validTypes = ["image/jpeg", "image/png"];
+      const maxSize = 500 * 1024;
+
+      if (!validTypes.includes(file.type)) {
+        alert("Solo se permiten imágenes JPG o PNG.");
+        return;
+      }
+
+      if (file.size > maxSize) {
+        alert("La imagen no debe superar los 500 KB.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm((prevForm) => ({
+          ...prevForm,
+          user_photo: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -51,12 +82,41 @@ export default function UsuarioModal({ user, onClose }) {
               <input name="last_name" className="form-control mb-2" placeholder="Apellido" value={form.last_name} onChange={handleChange} required />
               <input name="user_cod" className="form-control mb-2" placeholder="Código usuario" value={form.user_cod} onChange={handleChange} required />
               <input name="user_email" className="form-control mb-2" placeholder="Correo" type="email" value={form.user_email} onChange={handleChange} required />
-              {!isEdit && (
-                <input name="user_password" className="form-control mb-2" placeholder="Contraseña" type="password" value={form.user_password} onChange={handleChange} required />
+
+              <input name="user_position" className="form-control mb-2" placeholder="Cargo o Posición" value={form.user_position} onChange={handleChange} />
+
+              <input type="file" accept="image/*" className="form-control mb-2" onChange={handlePhotoChange} />
+              {form.user_photo && (
+                <div className="text-center mb-2">
+                  <img
+                    src={form.user_photo}
+                    alt="Vista previa"
+                    className="rounded-circle"
+                    width={100}
+                    height={100}
+                  />
+                </div>
               )}
+
+              {!isEdit && (
+                <input
+                  name="user_password"
+                  className="form-control mb-2"
+                  placeholder="Contraseña"
+                  type="password"
+                  value={form.user_password}
+                  onChange={handleChange}
+                  required
+                />
+              )}
+
               <select name="user_role" className="form-select mb-2" value={form.user_role} onChange={handleChange}>
                 <option value="A">Administrador</option>
                 <option value="R">Regular</option>
+              </select>
+              <select name="user_status" className="form-select mb-2" value={form.user_status} onChange={handleChange} required>
+                <option value="Habilitado">Habilitado</option>
+                <option value="Deshabilitado">Deshabilitado</option>
               </select>
             </div>
             <div className="modal-footer">

@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class UserLogin(BaseModel):
     identifier: str
@@ -10,12 +11,22 @@ class UserBase(BaseModel):
     user_role: str
     user_cod: str
     user_email: str
+    user_photo: Optional[str] = None
+    user_position: Optional[str] = None
+    user_status: str
 
 class UserCreate(UserBase):
     user_password: str
+    user_photo: Optional[str] = None
+    user_position: Optional[str] = None
 
 class UserOut(UserBase):
     id: int
+    user_photo: Optional[str] = None
+    user_position: Optional[str] = None
+    user_status: Optional[str] = "Habilitado"
+    class Config:
+        orm_mode = True
 
 class Token(BaseModel):
     access_token: str
@@ -53,3 +64,4 @@ class SellerOut(SellerBase):
 
     class Config:
         orm_mode = True
+        
