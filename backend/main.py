@@ -5,9 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import sellers
 
 app = FastAPI(
-    title="HAGESA API BACKEND REAL",
+    title="HAGESA API BACKEND",
     version="2.0.0",
-    description="🔥 Instancia limpia y real del backend para login y gestión de usuarios"
+    description="🔥 CONSUMO DE METODOS CREACION, EDICION, ELIMINAR (USUARIOS, VENDEDORES, CLIENTES)"
 )
 
 origins = [
