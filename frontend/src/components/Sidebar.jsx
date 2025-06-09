@@ -31,7 +31,7 @@ export default function Sidebar({ user, onLogout }) {
     <div className={sidebarClass}>
       <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
         <div className="d-flex align-items-center">
-          <img src="logo.png'" alt="Logo" style={{ width: 36, height: 36, marginRight: 8 }} />
+          <img src="/logo.png'" alt="Logo" style={{ width: 36, height: 36, marginRight: 8 }} />
           <span className="fw-bold" style={{ fontSize: "1.1rem" }}>HAGESA</span>
         </div>
         <button className="btn btn-sm btn-outline-light" onClick={toggleTheme}>
