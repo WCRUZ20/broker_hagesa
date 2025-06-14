@@ -42,3 +42,9 @@ class Company(Base):
     IdCompany = Column(String(20), primary_key=True, index=True)
     CompanyName = Column(String)
     CompanyLogo = Column(String)
+
+class Country(Base):
+    __tablename__ = "CTRY"
+
+    id = Column(Integer, primary_key=True, index=True)
+    Description = Column(String)

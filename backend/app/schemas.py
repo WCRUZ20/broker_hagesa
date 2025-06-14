@@ -74,3 +74,16 @@ class CompanyBase(BaseModel):
 class CompanyOut(CompanyBase):
     class Config:
         orm_mode = True
+
+class CountryBase(BaseModel):
+    id: int
+    Description: str
+
+
+class CountryCreate(CountryBase):
+    pass
+
+
+class CountryOut(CountryBase):
+    class Config:
+        orm_mode = True

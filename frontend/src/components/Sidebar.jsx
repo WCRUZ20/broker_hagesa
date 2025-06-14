@@ -5,6 +5,7 @@ import "./Sidebar.css";
 export default function Sidebar({ user, onLogout }) {
   const [darkMode, setDarkMode] = useState(true);
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [complementosOpen, setComplementosOpen] = useState(false);
 
   useEffect(() => {
     // Aplicar clase al body solo si está en modo oscuro
@@ -23,6 +24,10 @@ export default function Sidebar({ user, onLogout }) {
 
   const toggleMenu = () => {
     setMenuAbierto(!menuAbierto);
+  };
+
+  const toggleComplementos = () => {
+    setComplementosOpen(!complementosOpen);
   };
 
   const sidebarClass = "sidebar sidebar-dark"; // Siempre oscuro
@@ -67,6 +72,29 @@ export default function Sidebar({ user, onLogout }) {
             <i className="bi bi-building me-2"></i>Compañía
           </NavLink>
         </li>
+        <li className="nav-item mt-3">
+            <div
+              onClick={toggleComplementos}
+              className="nav-link d-flex justify-content-between align-items-center"
+              style={{ cursor: "pointer" }}
+            >
+              <span>
+                <i className="bi bi-puzzle me-2"></i>Complementos
+              </span>
+              <i
+                className={`bi ${complementosOpen ? "bi-chevron-up" : "bi-chevron-down"}`}
+              ></i>
+            </div>
+            {complementosOpen && (
+              <ul className="nav flex-column ms-3 submenu">
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/paises">
+                    <i className="bi bi-flag me-2"></i>Países
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </li>
       </ul>
 
       <div className="sidebar-footer px-3 mt-auto border-top py-3 position-relative">

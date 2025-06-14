@@ -29,3 +29,7 @@
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 0.25rem;
 }
+
+.sidebar .submenu .nav-link {
+  padding-left: 1.5rem;
+}
