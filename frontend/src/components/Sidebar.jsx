@@ -1,11 +1,27 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
+import API from "../services/api";
 
 export default function Sidebar({ user, onLogout }) {
   const [darkMode, setDarkMode] = useState(true);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [complementosOpen, setComplementosOpen] = useState(false);
+  const [company, setCompany] = useState(null);
+
+  useEffect(() => {
+    const loadCompany = async () => {
+      try {
+        const res = await API.get("/company");
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setCompany(res.data[0]);
+        }
+      } catch (err) {
+        console.error("Error cargando compañía", err);
+      }
+    };
+    loadCompany();
+  }, []);
 
   useEffect(() => {
     // Aplicar clase al body solo si está en modo oscuro
@@ -36,8 +52,14 @@ export default function Sidebar({ user, onLogout }) {
     <div className={sidebarClass}>
       <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
         <div className="d-flex align-items-center">
-          <img src="/logo.png'" alt="Logo" style={{ width: 36, height: 36, marginRight: 8 }} />
-          <span className="fw-bold" style={{ fontSize: "1.1rem" }}>HAGESA</span>
+          <img
+            src={company?.CompanyLogo || "/logo.png"}
+            alt="Logo"
+            style={{ width: 36, height: 36, marginRight: 8 }}
+          />
+          <span className="fw-bold" style={{ fontSize: "1.1rem" }}>
+            {company?.CompanyName || "HAGESA"}
+          </span>
         </div>
         <button className="btn btn-sm btn-outline-light" onClick={toggleTheme}>
           <i className={`bi ${darkMode ? "bi-sun" : "bi-moon"}`}></i>

@@ -16,9 +16,12 @@ export default function UsuarioModal({ user, onClose }) {
     user_status: "Habilitado"
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     if (isEdit) {
       setForm({ ...user, user_password: "" });
+      setShowPassword(false);
     }
   }, [user]);
 
@@ -57,10 +60,14 @@ export default function UsuarioModal({ user, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      let payload = { ...form };
+      if (isEdit && !payload.user_password.trim()) {
+        delete payload.user_password;
+      }
       if (isEdit) {
-        await API.put(`/users/${user.id}`, form);
+        await API.put(`/users/${user.id}`, payload);
       } else {
-        await API.post("/users/create", form);
+        await API.post("/users/create", payload);
       }
       onClose();
     } catch (err) {
@@ -98,18 +105,24 @@ export default function UsuarioModal({ user, onClose }) {
                 </div>
               )}
 
-              {!isEdit && (
+              <div className="input-group mb-2">
                 <input
                   name="user_password"
-                  className="form-control mb-2"
-                  placeholder="Contraseña"
-                  type="password"
+                  className="form-control"
+                  placeholder={isEdit ? "Contraseña (dejar en blanco para mantener)" : "Contraseña"}
+                  type={showPassword ? "text" : "password"}
                   value={form.user_password}
                   onChange={handleChange}
-                  required
+                  {...(!isEdit && { required: true })}
                 />
-              )}
-
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                </button>
+              </div>
               <select name="user_role" className="form-select mb-2" value={form.user_role} onChange={handleChange}>
                 <option value="A">Administrador</option>
                 <option value="R">Regular</option>

@@ -21,6 +21,12 @@ class UserCreate(UserBase):
     user_photo: Optional[str] = None
     user_position: Optional[str] = None
 
+class UserUpdate(UserBase):
+    user_password: Optional[str] = None
+    user_photo: Optional[str] = None
+    user_position: Optional[str] = None
+    user_status: Optional[str] = None
+
 class UserOut(UserBase):
     id: int
     user_photo: Optional[str] = None
@@ -75,11 +81,6 @@ class CompanyBase(BaseModel):
 class CompanyOut(CompanyBase):
     class Config:
         orm_mode = True
-
-class CountryBase(BaseModel):
-    id: int
-    Description: str
-
 
 class CountryBase(BaseModel):
     id: int
