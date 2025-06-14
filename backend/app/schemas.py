@@ -22,6 +22,11 @@ class UserCreate(UserBase):
     user_position: Optional[str] = None
 
 class UserUpdate(UserBase):
+    user_name: Optional[str] = None
+    last_name: Optional[str] = None
+    user_role: Optional[str] = None
+    user_cod: Optional[str] = None
+    user_email: Optional[str] = None
     user_password: Optional[str] = None
     user_photo: Optional[str] = None
     user_position: Optional[str] = None

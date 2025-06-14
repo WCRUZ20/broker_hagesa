@@ -4,7 +4,10 @@ import "./Sidebar.css";
 import API from "../services/api";
 
 export default function Sidebar({ user, onLogout }) {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    const stored = localStorage.getItem("darkMode");
+    return stored ? stored === "true" : true;
+  });
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [complementosOpen, setComplementosOpen] = useState(false);
   const [company, setCompany] = useState(null);
@@ -24,11 +27,16 @@ export default function Sidebar({ user, onLogout }) {
   }, []);
 
   useEffect(() => {
+     localStorage.setItem("darkMode", darkMode);
     // Aplicar clase al body solo si está en modo oscuro
     if (darkMode) {
+      document.body.classList.add("dark-mode");
+      document.body.classList.remove("light-mode");
       document.body.style.backgroundColor = "#3a3a3a"; // gris oscuro claro
       document.body.style.color = "#fff";
     } else {
+      document.body.classList.remove("dark-mode");
+      document.body.classList.add("light-mode");
       document.body.style.backgroundColor = "#ffffff";
       document.body.style.color = "#000";
     }
