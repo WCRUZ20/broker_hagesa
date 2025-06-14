@@ -188,11 +188,11 @@ export default function Usuarios() {
                     onChange={toggleSelectAll}
                   />
                 </th>
-                <th style={{ width: "25%" }}>NOMBRE</th>
-                <th style={{ width: "20%" }}>POSICIÓN</th>
-                <th style={{ width: "20%" }}>ROL</th>
-                <th style={{ width: "20%" }}>ESTADO</th>
-                <th style={{ width: "15%" }}>ACCIÓN</th>
+                <th style={{ width: "35%" }}>Usuario</th>
+                <th style={{ width: "25%" }}>Cargo</th>
+                <th style={{ width: "15%" }}>Rol</th>
+                <th style={{ width: "15%" }}>Estado</th>
+                <th style={{ width: "10%" }}></th>
               </tr>
             </thead>
             <tbody>
