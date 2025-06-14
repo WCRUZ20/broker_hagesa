@@ -35,3 +35,10 @@ class Seller(Base):
     telefono = Column(String)
     email = Column(String)
     direccion = Column(String)
+
+class Company(Base):
+    __tablename__ = "COMP"
+
+    IdCompany = Column(String(20), primary_key=True, index=True)
+    CompanyName = Column(String)
+    CompanyLogo = Column(String)

@@ -3,6 +3,7 @@ from app.routers import users
 from app.routers import clients
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import sellers
+from app.routers import company
 
 app = FastAPI(
     title="HAGESA API BACKEND",
@@ -25,6 +26,7 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(clients.router)
 app.include_router(sellers.router)
+app.include_router(company.router)
 
 @app.get("/")
 def read_root():

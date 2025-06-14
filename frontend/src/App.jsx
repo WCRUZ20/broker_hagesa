@@ -9,6 +9,7 @@ import Customers from "./pages/Customers";
 import Usuarios from "./pages/Usuarios";
 import Clientes from "./pages/Clientes";
 import Vendedores from "./pages/Vendedores";
+import Compania from "./pages/Compania";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -55,6 +56,7 @@ function App() {
             <Route path="/usuarios" element={<Usuarios />} />
           )}
           <Route path="/vendedores" element={<Vendedores />} />
+          <Route path="/compania" element={<Compania />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

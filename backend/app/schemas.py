@@ -65,3 +65,12 @@ class SellerOut(SellerBase):
     class Config:
         orm_mode = True
         
+class CompanyBase(BaseModel):
+    IdCompany: str
+    CompanyName: str
+    CompanyLogo: Optional[str] = None
+
+
+class CompanyOut(CompanyBase):
+    class Config:
+        orm_mode = True

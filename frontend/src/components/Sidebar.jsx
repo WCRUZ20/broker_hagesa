@@ -62,6 +62,11 @@ export default function Sidebar({ user, onLogout }) {
             <i className="bi bi-person-lines-fill me-2"></i>Vendedores
           </NavLink>
         </li>
+        <li className="nav-item">
+          <NavLink className="nav-link" to="/compania">
+            <i className="bi bi-building me-2"></i>Compañía
+          </NavLink>
+        </li>
       </ul>
 
       <div className="sidebar-footer px-3 mt-auto border-top py-3 position-relative">
