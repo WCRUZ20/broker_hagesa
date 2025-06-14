@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import date
 from .. import models, schemas
 from app.database import SessionLocal
 
@@ -18,7 +19,14 @@ router = APIRouter(prefix="/paises", tags=["Países"])
 
 @router.post("", response_model=schemas.CountryOut)
 def create_pais(data: schemas.CountryCreate, db: Session = Depends(get_db)):
-    pais = models.Country(**data.dict())
+    pais = models.Country(
+        id=data.id,
+        Description=data.Description,
+        CreateDate=date.today(),
+        LastDateMod=date.today(),
+        id_usrs_create=1,
+        id_usrs_update=1,
+    )
     db.add(pais)
     db.commit()
     db.refresh(pais)
@@ -43,8 +51,11 @@ def update_pais(id: int, data: schemas.CountryCreate, db: Session = Depends(get_
     pais = db.query(models.Country).get(id)
     if not pais:
         raise HTTPException(status_code=404, detail="País no encontrado")
-    for k, v in data.dict().items():
-        setattr(pais, k, v)
+
+    pais.Description = data.Description
+    pais.LastDateMod = date.today()
+    pais.id_usrs_update = 1
+
     db.commit()
     db.refresh(pais)
     return pais

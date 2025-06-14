@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import date
 
 class UserLogin(BaseModel):
     identifier: str
@@ -80,10 +81,20 @@ class CountryBase(BaseModel):
     Description: str
 
 
+class CountryBase(BaseModel):
+    id: int
+    Description: str
+
+
 class CountryCreate(CountryBase):
     pass
 
 
 class CountryOut(CountryBase):
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
     class Config:
         orm_mode = True

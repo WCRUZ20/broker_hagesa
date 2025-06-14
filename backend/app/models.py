@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Date
 from app.database import Base
 
 class User(Base):
@@ -48,3 +48,7 @@ class Country(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     Description = Column(String)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, nullable=False)
+    id_usrs_update = Column(Integer, nullable=False)
