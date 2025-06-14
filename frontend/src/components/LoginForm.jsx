@@ -221,7 +221,7 @@ export default function LoginForm({ onLogin }) {
                   />
                   <button
                     type="button"
-                    className="btn btn-outline-secondary"
+                    className="btn btn-outline-dark"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>

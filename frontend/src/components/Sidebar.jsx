@@ -94,7 +94,7 @@ export default function Sidebar({ user, onLogout }) {
             <i className="bi bi-building me-2"></i>Compañía
           </NavLink>
         </li>
-        <li className="nav-item mt-3">
+        <li className="nav-item">
             <div
               onClick={toggleComplementos}
               className="nav-link d-flex justify-content-between align-items-center"
