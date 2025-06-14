@@ -76,22 +76,22 @@ export default function Usuarios() {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div className="d-flex gap-2">
           <div className="dropdown">
-            <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <button className="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
               Acción
             </button>
             <ul className="dropdown-menu">
               <li><button className="dropdown-item" onClick={() => handleBulkAction("delete")}>Eliminar usuario</button></li>
             </ul>
           </div>
-          <div className="position-relative">
+          <div className="input-group">
+            <span className="input-group-text bg-white"><i className="bi bi-search"></i></span>
             <input
               type="text"
-              className="form-control ps-5 bg-dark text-white border-secondary"
+              className="form-control"
               placeholder="Buscar usuarios"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-white"></i>
           </div>
         </div>
         <button className="btn btn-primary" onClick={() => { setEditingUser(null); setShowModal(true); }}>
@@ -99,12 +99,13 @@ export default function Usuarios() {
         </button>
       </div>
 
-      <div className="card bg-dark text-white shadow-sm">
-        <div className="card-body">
-          <table className="table table-dark table-hover align-middle mb-0">
-            <thead className="table-secondary text-dark">
+      <div className="card shadow-sm">
+        <div className="card-body p-0">
+          <div className="table-responsive">
+            <table className="table table-striped table-hover align-middle mb-0">
+            <thead className="table-light">
               <tr>
-                <th><input type="checkbox" /></th>
+                <th><input type="checkbox" className="form-check-input" /></th>
                 <th style={{ width: "25%" }}>NOMBRE</th>
                 <th style={{ width: "20%" }}>POSICIÓN</th>
                 <th style={{ width: "20%" }}>ROL</th>
@@ -116,7 +117,12 @@ export default function Usuarios() {
               {filteredUsers.map(user => (
                 <tr key={user.id}>
                   <td>
-                    <input type="checkbox" checked={selectedUsers.includes(user.id)} onChange={() => toggleSelectUser(user.id)} />
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      checked={selectedUsers.includes(user.id)}
+                      onChange={() => toggleSelectUser(user.id)}
+                    />
                   </td>
                   <td>
                     <div className="d-flex align-items-center gap-2">
@@ -152,6 +158,7 @@ export default function Usuarios() {
               ))}
             </tbody>
           </table>
+        </div>
         </div>
       </div>
 
