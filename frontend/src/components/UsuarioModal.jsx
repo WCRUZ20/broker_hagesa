@@ -15,6 +15,7 @@ export default function UsuarioModal({ user, onClose }) {
     user_position: "",
     user_status: "Habilitado"
   });
+  
 
   const [showPassword, setShowPassword] = useState(false);
 

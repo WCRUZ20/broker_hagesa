@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app import models, auth
+from fastapi import HTTPException
 import base64
 
 def validate_image_base64(base64_data):

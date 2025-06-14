@@ -43,9 +43,10 @@ def validate_image_base64(base64_data):
 
 @router.post("/login", response_model=schemas.Token)
 def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email_or_cod(db, user.identifier)
-    if not db_user or not auth.verify_password(user.password, db_user.user_password):
-        raise HTTPException(status_code=400, detail="Credenciales inválidas")
+    identifier = user.identifier.strip()
+    password = user.password.strip()
+    db_user = crud.get_user_by_email_or_cod(db, identifier)
+    if not db_user or not auth.verify_password(password, db_user.user_password):
 
     if db_user.user_status != "Habilitado":
         raise HTTPException(status_code=403, detail="Su cuenta está deshabilitada. Contacte al administrador.")
