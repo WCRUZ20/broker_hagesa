@@ -4,6 +4,9 @@ import UsuarioModal from "../components/UsuarioModal";
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("darkMode") === "true"
+  );
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -20,6 +23,14 @@ export default function Usuarios() {
 
   useEffect(() => {
     fetchUsuarios();
+  }, []);
+
+  useEffect(() => {
+    const handler = () => {
+      setDarkMode(localStorage.getItem("darkMode") === "true");
+    };
+    window.addEventListener("darkModeChange", handler);
+    return () => window.removeEventListener("darkModeChange", handler);
   }, []);
 
   const handleEdit = (user) => {
@@ -40,12 +51,43 @@ export default function Usuarios() {
     );
   };
 
+  const toggleSelectAll = () => {
+    if (selectedUsers.length === filteredUsers.length) {
+      setSelectedUsers([]);
+    } else {
+      setSelectedUsers(filteredUsers.map((u) => u.id));
+    }
+  };
+
   const handleBulkAction = (action) => {
-    if (selectedUsers.length === 0) return alert("Seleccione al menos un usuario");
+    if (selectedUsers.length === 0)
+      return alert("Seleccione al menos un usuario");
+
+    let request;
     if (action === "delete") {
-      if (confirm("¿Eliminar usuarios seleccionados?")) {
-        Promise.all(selectedUsers.map(id => API.delete(`/users/${id}`))).then(fetchUsuarios);
-      }
+      if (!confirm("¿Eliminar usuarios seleccionados?")) return;
+      request = Promise.all(
+        selectedUsers.map((id) => API.delete(`/users/${id}`))
+      );
+    } else if (action === "disable") {
+      request = Promise.all(
+        selectedUsers.map((id) =>
+          API.put(`/users/${id}`, { user_status: "Deshabilitado" })
+        )
+      );
+    } else if (action === "enable") {
+      request = Promise.all(
+        selectedUsers.map((id) =>
+          API.put(`/users/${id}`, { user_status: "Habilitado" })
+        )
+      );
+    }
+
+    if (request) {
+      request.then(() => {
+        setSelectedUsers([]);
+        fetchUsuarios();
+      });
     }
   };
 
@@ -80,11 +122,40 @@ export default function Usuarios() {
               Acción
             </button>
             <ul className="dropdown-menu">
-              <li><button className="dropdown-item" onClick={() => handleBulkAction("delete")}>Eliminar usuario</button></li>
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleBulkAction("delete")}
+                >
+                  Eliminar usuarios
+                </button>
+              </li>
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleBulkAction("disable")}
+                >
+                  Deshabilitar usuarios
+                </button>
+              </li>
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleBulkAction("enable")}
+                >
+                  Habilitar usuarios
+                </button>
+              </li>
             </ul>
           </div>
           <div className="input-group">
-            <span className="input-group-text bg-white"><i className="bi bi-search"></i></span>
+            <span
+              className={`input-group-text ${
+                darkMode ? "bg-dark text-white border-secondary" : "bg-white"
+              }`}
+            >
+              <i className="bi bi-search"></i>
+            </span>
             <input
               type="text"
               className="form-control"
@@ -99,13 +170,24 @@ export default function Usuarios() {
         </button>
       </div>
 
-      <div className="card shadow-sm">
+      <div className={`card shadow-sm ${darkMode ? "bg-dark text-white" : ""}`}>
         <div className="card-body p-0">
           <div className="table-responsive">
-            <table className="table table-striped table-hover align-middle mb-0">
-            <thead className="table-light">
+            <table
+              className={`table table-hover align-middle mb-0 ${
+                darkMode ? "table-dark" : "table-striped"
+              }`}
+            >
+            <thead className={darkMode ? "" : "table-light"}>
               <tr>
-                <th><input type="checkbox" className="form-check-input" /></th>
+                 <th>
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    checked={filteredUsers.length > 0 && selectedUsers.length === filteredUsers.length}
+                    onChange={toggleSelectAll}
+                  />
+                </th>
                 <th style={{ width: "25%" }}>NOMBRE</th>
                 <th style={{ width: "20%" }}>POSICIÓN</th>
                 <th style={{ width: "20%" }}>ROL</th>
