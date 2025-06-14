@@ -95,7 +95,7 @@ export default function Usuarios() {
           </div>
         </div>
         <button className="btn btn-primary" onClick={() => { setEditingUser(null); setShowModal(true); }}>
-          + Nuevo Usuario
+          Nuevo Usuario
         </button>
       </div>
 
@@ -104,7 +104,7 @@ export default function Usuarios() {
           <table className="table table-dark table-hover align-middle mb-0">
             <thead className="table-secondary text-dark">
               <tr>
-                <th><input type="checkbox" disabled /></th>
+                <th><input type="checkbox" /></th>
                 <th style={{ width: "25%" }}>NOMBRE</th>
                 <th style={{ width: "20%" }}>POSICIÓN</th>
                 <th style={{ width: "20%" }}>ROL</th>

@@ -4,6 +4,7 @@ from typing import List
 from datetime import date
 from .. import models, schemas
 from app.database import SessionLocal
+from .users import get_current_user
 
 
 def get_db():
@@ -18,14 +19,18 @@ router = APIRouter(prefix="/paises", tags=["Países"])
 
 
 @router.post("", response_model=schemas.CountryOut)
-def create_pais(data: schemas.CountryCreate, db: Session = Depends(get_db)):
+def create_pais(
+    data: schemas.CountryCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
     pais = models.Country(
         id=data.id,
         Description=data.Description,
         CreateDate=date.today(),
         LastDateMod=date.today(),
-        id_usrs_create=1,
-        id_usrs_update=1,
+        id_usrs_create=current_user.id,
+        id_usrs_update=current_user.id,
     )
     db.add(pais)
     db.commit()
@@ -47,14 +52,19 @@ def get_pais(id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/{id}", response_model=schemas.CountryOut)
-def update_pais(id: int, data: schemas.CountryCreate, db: Session = Depends(get_db)):
+def update_pais(
+    id: int,
+    data: schemas.CountryCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
     pais = db.query(models.Country).get(id)
     if not pais:
         raise HTTPException(status_code=404, detail="País no encontrado")
 
     pais.Description = data.Description
     pais.LastDateMod = date.today()
-    pais.id_usrs_update = 1
+    pais.id_usrs_update = current_user.id
 
     db.commit()
     db.refresh(pais)
