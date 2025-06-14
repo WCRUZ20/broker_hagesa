@@ -47,7 +47,7 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     password = user.password.strip()
     db_user = crud.get_user_by_email_or_cod(db, identifier)
     if not db_user or not auth.verify_password(password, db_user.user_password):
-
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
     if db_user.user_status != "Habilitado":
         raise HTTPException(status_code=403, detail="Su cuenta está deshabilitada. Contacte al administrador.")
         

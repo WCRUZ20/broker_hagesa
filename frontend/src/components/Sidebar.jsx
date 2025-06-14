@@ -103,9 +103,9 @@ export default function Sidebar({ user, onLogout }) {
               <span>
                 <i className="bi bi-puzzle me-2"></i>Complementos
               </span>
-              <i
+              {/* <i
                 className={`bi ${complementosOpen ? "bi-chevron-up" : "bi-chevron-down"}`}
-              ></i>
+              ></i> */}
             </div>
             {complementosOpen && (
               <ul className="nav flex-column ms-3 submenu">
