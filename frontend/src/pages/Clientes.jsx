@@ -72,6 +72,7 @@ export default function Clientes() {
   const filtered = clientes.filter(
     (c) =>
       c.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (c.apellidos || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.identificacion.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (c.email || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -146,11 +147,16 @@ export default function Clientes() {
                       onChange={toggleSelectAll}
                     />
                   </th>
-                  <th>Nombre</th>
+                  <th>Nombres</th>
+                  <th>Apellidos</th>
                   <th>Identificación</th>
                   <th>Email</th>
                   <th>Teléfono</th>
                   <th>Dirección</th>
+                  <th>País</th>
+                  <th>Provincia</th>
+                  <th>Ciudad</th>
+                  <th>Parroquia</th>
                   <th>Acción</th>
                 </tr>
               </thead>
@@ -166,10 +172,15 @@ export default function Clientes() {
                       />
                     </td>
                     <td>{c.nombre}</td>
+                    <td>{c.apellidos}</td>
                     <td>{c.identificacion}</td>
                     <td>{c.email}</td>
                     <td>{c.telefono}</td>
                     <td>{c.direccion}</td>
+                    <td>{c.id_pais}</td>
+                    <td>{c.id_provincia}</td>
+                    <td>{c.id_ciudad}</td>
+                    <td>{c.id_parroquia}</td>
                     <td>
                       <i
                         className="bi bi-pencil-square text-warning me-3"

@@ -51,10 +51,15 @@ class Token(BaseModel):
 
 class ClientBase(BaseModel):
     nombre: str
+    apellidos: str | None = None
     identificacion: str
     telefono: str
     email: str
     direccion: str
+    id_pais: Optional[int] = None
+    id_provincia: Optional[int] = None
+    id_ciudad: Optional[int] = None
+    id_parroquia: Optional[int] = None
 
 class ClientCreate(ClientBase):
     pass

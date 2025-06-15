@@ -22,10 +22,15 @@ class Client(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String)
+    apellidos = Column(String, nullable=True)
     identificacion = Column(String)
     telefono = Column(String)
     email = Column(String)
     direccion = Column(String)
+    id_pais = Column(Integer, ForeignKey("CTRY.id"), nullable=True, autoincrement=False)
+    id_provincia = Column(Integer, ForeignKey("STTE.id"), nullable=True, autoincrement=False)
+    id_ciudad = Column(Integer, ForeignKey("CITY.id"), nullable=True, autoincrement=False)
+    id_parroquia = Column(Integer, ForeignKey("PRSH.id"), nullable=True, autoincrement=False)
 
 class Seller(Base):
     __tablename__ = "SLRS"
