@@ -21,15 +21,20 @@ export default function PaisModal({ pais, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = {
+      id: Number(form.id),
+      Description: form.Description.trim(),
+    };
     try {
       if (isEdit) {
-        await API.put(`/paises/${pais.id}`, form);
+        await API.put(`/paises/${pais.id}`, data);
       } else {
-        await API.post("/paises", form);
+        await API.post("/paises", data);
       }
       onClose();
     } catch (err) {
-      alert("Error al guardar país");
+      const msg = err.response?.data?.detail || "Error al guardar país";
+      alert(msg);
     }
   };
 
@@ -43,7 +48,16 @@ export default function PaisModal({ pais, onClose }) {
               <button type="button" className="btn-close" onClick={onClose}></button>
             </div>
             <div className="modal-body">
-              <input name="id" className="form-control mb-2" placeholder="ID" value={form.id} onChange={handleChange} required />
+              <input
+                name="id"
+                type="number"
+                className="form-control mb-2"
+                placeholder="ID"
+                value={form.id}
+                onChange={handleChange}
+                required
+                disabled={isEdit}
+              />
               <input name="Description" className="form-control mb-2" placeholder="Descripción" value={form.Description} onChange={handleChange} required />
             </div>
             <div className="modal-footer">

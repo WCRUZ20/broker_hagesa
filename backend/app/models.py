@@ -46,7 +46,7 @@ class Company(Base):
 class Country(Base):
     __tablename__ = "CTRY"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=False)
     Description = Column(String)
     CreateDate = Column(Date, nullable=False)
     LastDateMod = Column(Date, nullable=False)
