@@ -103,6 +103,31 @@ export default function Sidebar({ user, onLogout }) {
           </NavLink>
         </li>
         <li className="nav-item">
+            <div
+              onClick={toggleVehiculos}
+              className="nav-link d-flex justify-content-between align-items-center"
+              style={{ cursor: "pointer" }}
+            >
+              <span>
+                <i className="bi bi-truck me-2"></i>Vehículos
+              </span>
+            </div>
+            {vehiculosOpen && (
+              <ul className="nav flex-column ms-3 submenu">
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/vehiculos-registrados">
+                    <i className="bi bi-truck-front me-2"></i>Vehículos registrados
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/datos-vehiculos">
+                    <i className="bi bi-card-list me-2"></i>Datos Generales
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </li>
+        <li className="nav-item">
           <NavLink className="nav-link" to="/compania">
             <i className="bi bi-building me-2"></i>Compañía
           </NavLink>
@@ -130,26 +155,6 @@ export default function Sidebar({ user, onLogout }) {
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/cargos">
                     <i className="bi bi-diagram-3 me-2"></i>Cargos usuarios
-                  </NavLink>
-                </li>
-              </ul>
-            )}
-          </li>
-          <li className="nav-item">
-            <div
-              onClick={toggleVehiculos}
-              className="nav-link d-flex justify-content-between align-items-center"
-              style={{ cursor: "pointer" }}
-            >
-              <span>
-                <i className="bi bi-truck me-2"></i>Vehículos
-              </span>
-            </div>
-            {vehiculosOpen && (
-              <ul className="nav flex-column ms-3 submenu">
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/datos-vehiculos">
-                    <i className="bi bi-card-list me-2"></i>Datos Generales
                   </NavLink>
                 </li>
               </ul>

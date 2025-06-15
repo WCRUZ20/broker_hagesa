@@ -12,6 +12,8 @@ from app.routers import parishes
 from app.routers import brands
 from app.routers import vehicle_types
 from app.routers import vehicle_uses
+from app.routers import vehicles
+
 
 
 app = FastAPI(
@@ -44,6 +46,7 @@ app.include_router(parishes.router)
 app.include_router(brands.router)
 app.include_router(vehicle_types.router)
 app.include_router(vehicle_uses.router)
+app.include_router(vehicles.router)
 
 
 @app.get("/")
