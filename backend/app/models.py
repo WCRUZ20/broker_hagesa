@@ -63,3 +63,38 @@ class Cargo(Base):
     LastDateMod = Column(Date, nullable=False)
     id_usrs_create = Column(Integer, nullable=False)
     id_usrs_update = Column(Integer, nullable=False)
+
+class State(Base):
+    __tablename__ = "STTE"
+
+    id = Column(Integer, primary_key=True, index=True)
+    id_pais = Column(Integer, ForeignKey("CTRY.id"), nullable=False, autoincrement=False)
+    Description = Column(String)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, nullable=False)
+    id_usrs_update = Column(Integer, nullable=False)
+
+
+class City(Base):
+    __tablename__ = "CITY"
+
+    id = Column(Integer, primary_key=True, index=True)
+    id_provincia = Column(Integer, ForeignKey("STTE.id"), nullable=False, autoincrement=False)
+    Description = Column(String)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, nullable=False)
+    id_usrs_update = Column(Integer, nullable=False)
+
+
+class Parish(Base):
+    __tablename__ = "PRSH"
+
+    id = Column(Integer, primary_key=True, index=True)
+    id_ciudad = Column(Integer, ForeignKey("CITY.id"), nullable=False, autoincrement=False)
+    Description = Column(String)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, nullable=False)
+    id_usrs_update = Column(Integer, nullable=False)

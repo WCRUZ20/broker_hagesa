@@ -6,6 +6,9 @@ from app.routers import sellers
 from app.routers import company
 from app.routers import countries
 from app.routers import cargos
+from app.routers import states
+from app.routers import cities
+from app.routers import parishes
 
 
 app = FastAPI(
@@ -32,6 +35,9 @@ app.include_router(sellers.router)
 app.include_router(company.router)
 app.include_router(countries.router)
 app.include_router(cargos.router)
+app.include_router(states.router)
+app.include_router(cities.router)
+app.include_router(parishes.router)
 
 
 @app.get("/")

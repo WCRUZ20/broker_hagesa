@@ -126,3 +126,65 @@ class CargoOut(CargoBase):
 
     class Config:
         orm_mode = True
+
+class StateBase(BaseModel):
+    id: int | None = None
+    id_pais: int
+    Description: str
+
+
+class StateCreate(StateBase):
+    pass
+
+
+class StateOut(StateBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True
+
+
+class CityBase(BaseModel):
+    id: int | None = None
+    id_provincia: int
+    Description: str
+
+
+class CityCreate(CityBase):
+    pass
+
+
+class CityOut(CityBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True
+
+
+class ParishBase(BaseModel):
+    id: int | None = None
+    id_ciudad: int
+    Description: str
+
+
+class ParishCreate(ParishBase):
+    pass
+
+
+class ParishOut(ParishBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True

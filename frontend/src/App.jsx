@@ -10,7 +10,8 @@ import Usuarios from "./pages/Usuarios";
 import Clientes from "./pages/Clientes";
 import Vendedores from "./pages/Vendedores";
 import Compania from "./pages/Compania";
-import Paises from "./pages/Paises";
+// import Paises from "./pages/Paises";
+import DatosGeograficos from "./pages/DatosGeograficos";
 import CargosUsuarios from "./pages/CargosUsuarios";
 
 function App() {
@@ -59,7 +60,8 @@ function App() {
           )}
           <Route path="/vendedores" element={<Vendedores />} />
           <Route path="/compania" element={<Compania />} />
-          <Route path="/paises" element={<Paises />} />
+          {/* <Route path="/paises" element={<Paises />} /> */}
+          <Route path="/datos-geograficos" element={<DatosGeograficos />} />
           <Route path="/cargos" element={<CargosUsuarios />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

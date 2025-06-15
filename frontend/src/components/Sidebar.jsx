@@ -118,8 +118,8 @@ export default function Sidebar({ user, onLogout }) {
             {complementosOpen && (
               <ul className="nav flex-column ms-3 submenu">
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/paises">
-                    <i className="bi bi-flag me-2"></i>Países
+                  <NavLink className="nav-link" to="/datos-geograficos">
+                    <i className="bi bi-flag me-2"></i>Datos Geográficos
                   </NavLink>
                 </li>
                 <li className="nav-item">
