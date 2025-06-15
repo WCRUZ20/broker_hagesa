@@ -3,6 +3,8 @@ import API from "../services/api";
 import BrandModal from "../components/BrandModal";
 import VehicleTypeModal from "../components/VehicleTypeModal";
 import VehicleUseModal from "../components/VehicleUseModal";
+import VehicleClassificationModal from "../components/VehicleClassificationModal";
+
 
 export default function DatosVehiculos() {
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
@@ -22,15 +24,22 @@ export default function DatosVehiculos() {
   const [editUse, setEditUse] = useState(null);
   const [selUse, setSelUse] = useState([]);
 
+  const [classifications, setClassifications] = useState([]);
+  const [showClassModal, setShowClassModal] = useState(false);
+  const [editClass, setEditClass] = useState(null);
+  const [selClass, setSelClass] = useState([]);
+
   const loadAll = async () => {
-    const [b, t, u] = await Promise.all([
+    const [b, t, u, c] = await Promise.all([
       API.get("/marcas"),
       API.get("/tipos-vehiculo"),
       API.get("/usos-vehiculo"),
+      API.get("/clasificaciones-vehiculo"),
     ]);
     setBrands(b.data);
     setTypes(t.data);
     setUses(u.data);
+    setClassifications(c.data);
   };
 
   useEffect(() => {
@@ -46,6 +55,7 @@ export default function DatosVehiculos() {
   const filteredBrand = brands;
   const filteredType = types;
   const filteredUse = uses;
+  const filteredClass = classifications;
 
   const bulkDelete = async (selected, endpoint, reload) => {
     if (selected.length === 0) return alert("Seleccione registros");
@@ -101,6 +111,23 @@ export default function DatosVehiculos() {
         </div>
       </div>
 
+      <div className="row">
+        <div className="col-md-4 mb-4">
+          <Section
+            title="Clasificación"
+            items={filteredClass}
+            darkMode={darkMode}
+            selected={selClass}
+            onToggleSelect={id => setSelClass(s => s.includes(id) ? s.filter(i => i !== id) : [...s, id])}
+            onToggleAll={() => setSelClass(selClass.length === filteredClass.length ? [] : filteredClass.map(p => p.id))}
+            onBulkDelete={() => bulkDelete(selClass, 'clasificaciones-vehiculo', loadAll)}
+            onDelete={async id => { if (confirm('¿Eliminar clasificación?')) { await API.delete(`/clasificaciones-vehiculo/${id}`); loadAll(); } }}
+            onEdit={p => { setEditClass(p); setShowClassModal(true); }}
+            onCreate={() => { setEditClass(null); setShowClassModal(true); }}
+          />
+        </div>
+      </div>
+
       {showBrandModal && (
         <BrandModal brand={editBrand} onClose={() => { setShowBrandModal(false); loadAll(); }} />
       )}
@@ -109,6 +136,9 @@ export default function DatosVehiculos() {
       )}
       {showUseModal && (
         <VehicleUseModal useItem={editUse} onClose={() => { setShowUseModal(false); loadAll(); }} />
+      )}
+      {showClassModal && (
+        <VehicleClassificationModal classification={editClass} onClose={() => { setShowClassModal(false); loadAll(); }} />
       )}
     </div>
   );
