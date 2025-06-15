@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
+import ClientSelectModal from "./ClientSelectModal";
 
 export default function VehicleModal({ vehicle, onClose }) {
   const isEdit = !!vehicle;
@@ -25,6 +26,8 @@ export default function VehicleModal({ vehicle, onClose }) {
   const [classifications, setClassifications] = useState([]);
   const [countries, setCountries] = useState([]);
   const [clients, setClients] = useState([]);
+  const [showClientSelect, setShowClientSelect] = useState(false);
+  const [selectedClientName, setSelectedClientName] = useState("");
 
   useEffect(() => {
     Promise.all([
@@ -59,6 +62,15 @@ export default function VehicleModal({ vehicle, onClose }) {
       });
     }
   }, [vehicle]);
+
+  useEffect(() => {
+    const cl = clients.find((c) => c.id === Number(form.Propetary));
+    if (cl) {
+      setSelectedClientName(`${cl.nombre} ${cl.apellidos || ""}`.trim());
+    } else {
+      setSelectedClientName("");
+    }
+  }, [clients, form.Propetary]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -155,10 +167,14 @@ export default function VehicleModal({ vehicle, onClose }) {
                   </select>
                 </div>
                 <div className="col-md-6 mb-2">
-                  <select name="Propetary" className="form-select" value={form.Propetary} onChange={handleChange}>
-                    <option value="">Propietario</option>
-                    {clients.map(cl => <option key={cl.id} value={cl.id}>{cl.nombre}</option>)}
-                  </select>
+                  <input
+                    name="Propetary"
+                    className="form-control"
+                    placeholder="Propietario"
+                    value={selectedClientName}
+                    onFocus={() => setShowClientSelect(true)}
+                    readOnly
+                  />
                 </div>
               </div>
             </div>
@@ -170,5 +186,16 @@ export default function VehicleModal({ vehicle, onClose }) {
         </div>
       </div>
     </div>
+    {showClientSelect && (
+      <ClientSelectModal
+        clients={clients}
+        onSelect={(c) => {
+          setForm({ ...form, Propetary: c.id });
+          setSelectedClientName(`${c.nombre} ${c.apellidos || ""}`.trim());
+          setShowClientSelect(false);
+        }}
+        onClose={() => setShowClientSelect(false)}
+      />
+    )}
   );
 }
