@@ -11,6 +11,7 @@ import Clientes from "./pages/Clientes";
 import Vendedores from "./pages/Vendedores";
 import Compania from "./pages/Compania";
 import Paises from "./pages/Paises";
+import CargosUsuarios from "./pages/CargosUsuarios";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -59,6 +60,7 @@ function App() {
           <Route path="/vendedores" element={<Vendedores />} />
           <Route path="/compania" element={<Compania />} />
           <Route path="/paises" element={<Paises />} />
+          <Route path="/cargos" element={<CargosUsuarios />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

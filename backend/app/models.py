@@ -52,3 +52,13 @@ class Country(Base):
     LastDateMod = Column(Date, nullable=False)
     id_usrs_create = Column(Integer, nullable=False)
     id_usrs_update = Column(Integer, nullable=False)
+
+class Cargo(Base):
+    __tablename__ = "CRGO"
+
+    id = Column(Integer, primary_key=True, index=True)
+    Description = Column(String, nullable=False)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, nullable=False)
+    id_usrs_update = Column(Integer, nullable=False)

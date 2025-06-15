@@ -104,3 +104,21 @@ class CountryOut(CountryBase):
 
     class Config:
         orm_mode = True
+
+class CargoBase(BaseModel):
+    Description: str
+
+
+class CargoCreate(CargoBase):
+    pass
+
+
+class CargoOut(CargoBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True

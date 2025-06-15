@@ -122,6 +122,11 @@ export default function Sidebar({ user, onLogout }) {
                     <i className="bi bi-flag me-2"></i>Países
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/cargos">
+                    <i className="bi bi-diagram-3 me-2"></i>Cargos usuarios
+                  </NavLink>
+                </li>
               </ul>
             )}
           </li>

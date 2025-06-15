@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import sellers
 from app.routers import company
 from app.routers import countries
+from app.routers import cargos
 
 
 app = FastAPI(
@@ -30,6 +31,7 @@ app.include_router(clients.router)
 app.include_router(sellers.router)
 app.include_router(company.router)
 app.include_router(countries.router)
+app.include_router(cargos.router)
 
 
 @app.get("/")
