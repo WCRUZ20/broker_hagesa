@@ -153,11 +153,11 @@ export default function Clientes() {
                   <th>Email</th>
                   <th>Teléfono</th>
                   <th>Dirección</th>
-                  <th>País</th>
+                  {/* <th>País</th>
                   <th>Provincia</th>
                   <th>Ciudad</th>
                   <th>Parroquia</th>
-                  <th>Acción</th>
+                  <th>Acción</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -177,10 +177,10 @@ export default function Clientes() {
                     <td>{c.email}</td>
                     <td>{c.telefono}</td>
                     <td>{c.direccion}</td>
-                    <td>{c.id_pais}</td>
+                    {/* <td>{c.id_pais}</td>
                     <td>{c.id_provincia}</td>
                     <td>{c.id_ciudad}</td>
-                    <td>{c.id_parroquia}</td>
+                    <td>{c.id_parroquia}</td> */}
                     <td>
                       <i
                         className="bi bi-pencil-square text-warning me-3"
