@@ -193,3 +193,51 @@ class ParishOut(ParishBase):
 
     class Config:
         orm_mode = True
+
+class BrandBase(BaseModel):
+    Description: str
+
+class BrandCreate(BrandBase):
+    pass
+
+class BrandOut(BrandBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True
+
+class VehicleTypeBase(BaseModel):
+    Description: str
+
+class VehicleTypeCreate(VehicleTypeBase):
+    pass
+
+class VehicleTypeOut(VehicleTypeBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True
+
+class VehicleUseBase(BaseModel):
+    Description: str
+
+class VehicleUseCreate(VehicleUseBase):
+    pass
+
+class VehicleUseOut(VehicleUseBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True

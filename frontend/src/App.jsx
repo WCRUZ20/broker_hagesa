@@ -13,6 +13,7 @@ import Compania from "./pages/Compania";
 // import Paises from "./pages/Paises";
 import DatosGeograficos from "./pages/DatosGeograficos";
 import CargosUsuarios from "./pages/CargosUsuarios";
+import DatosVehiculos from "./pages/DatosVehiculos";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -62,6 +63,7 @@ function App() {
           <Route path="/compania" element={<Compania />} />
           {/* <Route path="/paises" element={<Paises />} /> */}
           <Route path="/datos-geograficos" element={<DatosGeograficos />} />
+          <Route path="/datos-vehiculos" element={<DatosVehiculos />} />
           <Route path="/cargos" element={<CargosUsuarios />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
