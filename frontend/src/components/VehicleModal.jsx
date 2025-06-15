@@ -22,6 +22,7 @@ export default function VehicleModal({ vehicle, onClose }) {
   const [brands, setBrands] = useState([]);
   const [types, setTypes] = useState([]);
   const [uses, setUses] = useState([]);
+  const [classifications, setClassifications] = useState([]);
   const [countries, setCountries] = useState([]);
   const [clients, setClients] = useState([]);
 
@@ -30,12 +31,14 @@ export default function VehicleModal({ vehicle, onClose }) {
       API.get("/marcas"),
       API.get("/tipos-vehiculo"),
       API.get("/usos-vehiculo"),
+      API.get("/clasificaciones-vehiculo"),
       API.get("/paises"),
       API.get("/clientes"),
-    ]).then(([b, t, u, c, cl]) => {
+    ]).then(([b, t, u, clsf, c, cl]) => {
       setBrands(b.data);
       setTypes(t.data);
       setUses(u.data);
+      setClassifications(clsf.data);
       setCountries(c.data);
       setClients(cl.data);
     });
@@ -68,7 +71,7 @@ export default function VehicleModal({ vehicle, onClose }) {
       Brand: Number(form.Brand),
       Model: form.Model,
       YearItem: Number(form.YearItem),
-      Clasification: form.Clasification,
+      Clasification: Number(form.Clasification),
       Plate: form.Plate,
       Motor: form.Motor || null,
       Chassis: form.Chassis || null,
@@ -126,7 +129,12 @@ export default function VehicleModal({ vehicle, onClose }) {
                   <input name="YearItem" type="number" className="form-control" placeholder="Año" value={form.YearItem} onChange={handleChange} required />
                 </div>
                 <div className="col-md-6 mb-2">
-                  <input name="Clasification" className="form-control" placeholder="Clasificación" value={form.Clasification} onChange={handleChange} required />
+                  <select name="Clasification" className="form-select" value={form.Clasification} onChange={handleChange} required>
+                    <option value="">Seleccione clasificación</option>
+                    {classifications.map(cs => (
+                      <option key={cs.id} value={cs.id}>{cs.Description}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className="col-md-6 mb-2">
                   <input name="Plate" className="form-control" placeholder="Placa" value={form.Plate} onChange={handleChange} required />

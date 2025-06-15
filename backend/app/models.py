@@ -134,6 +134,16 @@ class VehicleUse(Base):
     id_usrs_create = Column(Integer, nullable=False)
     id_usrs_update = Column(Integer, nullable=False)
 
+class VehicleClassification(Base):
+    __tablename__ = "CLSF"
+
+    id = Column(Integer, primary_key=True, index=True)
+    Description = Column(String, nullable=False)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, nullable=False)
+    id_usrs_update = Column(Integer, nullable=False)
+
 class Vehicle(Base):
     __tablename__ = "ITMS"
 
@@ -142,7 +152,7 @@ class Vehicle(Base):
     Brand = Column(Integer, ForeignKey("BRND.id"), nullable=False)
     Model = Column(String, nullable=False)
     YearItem = Column(Integer, nullable=False)
-    Clasification = Column(String, nullable=False)
+    Clasification = Column(Integer, ForeignKey("CLSF.id"), nullable=False)
     Plate = Column(String, nullable=False)
     Motor = Column(String, nullable=True)
     Chassis = Column(String, nullable=True)

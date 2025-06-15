@@ -242,12 +242,31 @@ class VehicleUseOut(VehicleUseBase):
     class Config:
         orm_mode = True
 
+
+class VehicleClassificationBase(BaseModel):
+    Description: str
+
+
+class VehicleClassificationCreate(VehicleClassificationBase):
+    pass
+
+
+class VehicleClassificationOut(VehicleClassificationBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True
+
 class VehicleBase(BaseModel):
     id_itm_type: int
     Brand: int
     Model: str
     YearItem: int
-    Clasification: str
+    Clasification: int
     Plate: str
     Motor: Optional[str] = None
     Chassis: Optional[str] = None
