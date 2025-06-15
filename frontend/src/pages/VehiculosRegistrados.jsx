@@ -141,9 +141,13 @@ export default function VehiculosRegistrados() {
                       onChange={toggleSelectAll}
                     />
                   </th>
+                  <th>Marca</th>
                   <th>Modelo</th>
-                  <th>Placa</th>
+                  <th>Tipo</th>
+                  <th>Clasif.</th>
                   <th>Año</th>
+                  <th>Placa</th>
+                  <th>Propietario</th>
                   <th>Acción</th>
                 </tr>
               </thead>
@@ -158,9 +162,13 @@ export default function VehiculosRegistrados() {
                         onChange={() => toggleSelect(v.id)}
                       />
                     </td>
+                    <td></td>
                     <td>{v.Model}</td>
-                    <td>{v.Plate}</td>
+                    <td></td>
+                    <td></td>
                     <td>{v.YearItem}</td>
+                    <td>{v.Plate}</td>
+                    <td></td>
                     <td>
                       <i
                         className="bi bi-pencil-square text-warning me-3"
