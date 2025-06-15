@@ -36,4 +36,9 @@
 
 .sidebar .submenu .nav-link {
   padding-left: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.sidebar .submenu .nav-item {
+  margin-bottom: 0.25rem;
 }

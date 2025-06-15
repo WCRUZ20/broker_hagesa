@@ -156,6 +156,7 @@ function Section({ title, items, darkMode, selected, onToggleSelect, onToggleAll
 
   return (
     <div>
+      <h5 className="mb-2 fw-bold">{title}</h5>
       <div className="d-flex justify-content-between align-items-center mb-2">
         <div className="d-flex gap-2">
           <div className="dropdown">
@@ -175,7 +176,7 @@ function Section({ title, items, darkMode, selected, onToggleSelect, onToggleAll
       </div>
       <div className={`card shadow-sm ${darkMode ? "bg-dark text-white" : ""}`}>
         <div className="card-body p-0">
-          <div className="table-responsive">
+          <div className="table-responsive" style={{ maxHeight: "40vh", overflowY: "auto" }}>
             <table className={`table table-hover align-middle mb-0 ${darkMode ? "table-dark" : "table-striped"}`}>
               <thead className={darkMode ? "" : "table-light"}>
                 <tr>
