@@ -4,6 +4,10 @@ import VehicleModal from "../components/VehicleModal";
 
 export default function VehiculosRegistrados() {
   const [vehicles, setVehicles] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [classifications, setClassifications] = useState([]);
+  const [clients, setClients] = useState([]);
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
   );
@@ -17,8 +21,22 @@ export default function VehiculosRegistrados() {
     setVehicles(res.data);
   };
 
+  const loadLookups = async () => {
+    const [b, t, c, cl] = await Promise.all([
+      API.get("/marcas"),
+      API.get("/tipos-vehiculo"),
+      API.get("/clasificaciones-vehiculo"),
+      API.get("/clientes"),
+    ]);
+    setBrands(b.data);
+    setTypes(t.data);
+    setClassifications(c.data);
+    setClients(cl.data);
+  };
+
   useEffect(() => {
     loadVehicles();
+    loadLookups();
   }, []);
 
   useEffect(() => {
@@ -162,13 +180,13 @@ export default function VehiculosRegistrados() {
                         onChange={() => toggleSelect(v.id)}
                       />
                     </td>
-                    <td></td>
+                    <td>{brands.find(b => b.id === v.Brand)?.Description || ""}</td>
                     <td>{v.Model}</td>
-                    <td></td>
-                    <td></td>
+                    <td>{types.find(t => t.id === v.id_itm_type)?.Description || ""}</td>
+                    <td>{classifications.find(c => c.id === v.Clasification)?.Description || ""}</td>
                     <td>{v.YearItem}</td>
                     <td>{v.Plate}</td>
-                    <td></td>
+                    <td>{clients.find(cl => cl.id === v.Propetary)?.nombre || ""}</td>
                     <td>
                       <i
                         className="bi bi-pencil-square text-warning me-3"
@@ -195,6 +213,7 @@ export default function VehiculosRegistrados() {
           onClose={() => {
             setShowModal(false);
             loadVehicles();
+            loadLookups();
           }}
         />
       )}
