@@ -13,13 +13,15 @@ class UserBase(BaseModel):
     user_cod: str
     user_email: str
     user_photo: Optional[str] = None
-    user_position: Optional[str] = None
+    # user_position: Optional[str] = None
+    user_position: Optional[int] = None
     user_status: str
 
 class UserCreate(UserBase):
     user_password: str
     user_photo: Optional[str] = None
-    user_position: Optional[str] = None
+    # user_position: Optional[str] = None
+    user_position: Optional[int] = None
 
 class UserUpdate(UserBase):
     user_name: Optional[str] = None
@@ -29,13 +31,15 @@ class UserUpdate(UserBase):
     user_email: Optional[str] = None
     user_password: Optional[str] = None
     user_photo: Optional[str] = None
-    user_position: Optional[str] = None
+    # user_position: Optional[str] = None
+    user_position: Optional[int] = None
     user_status: Optional[str] = None
 
 class UserOut(UserBase):
     id: int
     user_photo: Optional[str] = None
-    user_position: Optional[str] = None
+    # user_position: Optional[str] = None
+    user_position: Optional[int] = None
     user_status: Optional[str] = "Habilitado"
     class Config:
         orm_mode = True

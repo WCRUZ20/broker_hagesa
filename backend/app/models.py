@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from app.database import Base
 
 class User(Base):
@@ -12,7 +12,8 @@ class User(Base):
     user_email = Column(String, nullable=False, unique=True, index=True)
     user_password = Column(String, nullable=False)
     user_photo = Column(String, nullable=True)
-    user_position = Column(String, nullable=True)
+    # user_position = Column(String, nullable=True)
+    user_position = Column(Integer, ForeignKey("CRGO.id"), nullable=True)
     user_status = Column(String, default="Habilitado", nullable=False)
     
 

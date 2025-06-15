@@ -4,6 +4,7 @@ import UsuarioModal from "../components/UsuarioModal";
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
+  const [cargos, setCargos] = useState([]);
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
   );
@@ -21,8 +22,18 @@ export default function Usuarios() {
     }
   };
 
+  const fetchCargos = async () => {
+    try {
+      const res = await API.get("/cargos");
+      setCargos(res.data);
+    } catch (err) {
+      console.error("Error cargando cargos:", err);
+    }
+  };
+
   useEffect(() => {
     fetchUsuarios();
+    fetchCargos();
   }, []);
 
   useEffect(() => {
@@ -221,7 +232,9 @@ export default function Usuarios() {
                       </div>
                     </div>
                   </td>
-                  <td>{user.user_position || ""}</td>
+                  <td>
+                    {cargos.find((c) => c.id === user.user_position)?.Description || ""}
+                  </td>
                   <td>{renderRolBadge(user.user_role)}</td>
                   <td>{renderStatusBadge(user.user_status)}</td>
                   <td>

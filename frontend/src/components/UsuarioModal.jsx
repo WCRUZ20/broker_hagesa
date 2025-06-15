@@ -16,18 +16,28 @@ export default function UsuarioModal({ user, onClose }) {
     user_status: "Habilitado"
   });
   
-
+  const [cargos, setCargos] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
+    API.get("/cargos")
+      .then((res) => setCargos(res.data))
+      .catch(() => setCargos([]));
+  }, []);
+
+  useEffect(() => {
     if (isEdit) {
-      setForm({ ...user, user_password: "" });
+      setForm({ ...user, user_password: "", user_position: user.user_position ?? "" });
       setShowPassword(false);
     }
   }, [user]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+     const value =
+      e.target.name === "user_position"
+        ? e.target.value === "" ? "" : Number(e.target.value)
+        : e.target.value;
+    setForm({ ...form, [e.target.name]: value });
   };
 
   const handlePhotoChange = (e) => {
@@ -62,6 +72,9 @@ export default function UsuarioModal({ user, onClose }) {
     e.preventDefault();
     try {
       let payload = { ...form };
+      if (payload.user_position === "") {
+        payload.user_position = null;
+      }
       if (isEdit && !payload.user_password.trim()) {
         delete payload.user_password;
       }
@@ -90,8 +103,20 @@ export default function UsuarioModal({ user, onClose }) {
               <input name="last_name" className="form-control mb-2" placeholder="Apellido" value={form.last_name} onChange={handleChange} required />
               <input name="user_cod" className="form-control mb-2" placeholder="Código usuario" value={form.user_cod} onChange={handleChange} required />
               <input name="user_email" className="form-control mb-2" placeholder="Correo" type="email" value={form.user_email} onChange={handleChange} required />
-
-              <input name="user_position" className="form-control mb-2" placeholder="Cargo o Posición" value={form.user_position} onChange={handleChange} />
+    
+              <select
+                name="user_position"
+                className="form-select mb-2"
+                value={form.user_position}
+                onChange={handleChange}
+              >
+                <option value="">Seleccione cargo</option>
+                {cargos.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.Description}
+                  </option>
+                ))}
+              </select>
 
               <input type="file" accept="image/*" className="form-control mb-2" onChange={handlePhotoChange} />
               {form.user_photo && (
