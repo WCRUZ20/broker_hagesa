@@ -53,6 +53,13 @@ export default function HeatMap() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <HeatLayer points={coords} />
+      {coords.length === 1 && (
+        <Circle
+          center={coords[0]}
+          radius={1000}
+          pathOptions={{ color: "red", fillOpacity: 0.4 }}
+        />
+      )}
     </MapContainer>
   );
 }
