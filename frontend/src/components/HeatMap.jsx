@@ -9,7 +9,7 @@ function HeatLayer({ points }) {
   const map = useMap();
   useEffect(() => {
     if (!points.length) return;
-    const layer = L.heatLayer(points, { radius: 25 });
+    const layer = L.heatLayer(points, { radius: 40 });
     layer.addTo(map);
     if (points.length === 1) {
       map.setView(points[0], 14);
@@ -34,7 +34,7 @@ export default function HeatMap() {
         const res = await API.get("/clientes");
         const points = res.data
           .filter((c) => c.latitud && c.longitud)
-          .map((c) => [c.latitud, c.longitud]);
+          .map((c) => [Number(c.latitud), Number(c.longitud)]);
         if (points.length) {
           setCenter(points[0]);
           setCoords(points);
@@ -47,7 +47,7 @@ export default function HeatMap() {
   }, []);
 
   return (
-    <MapContainer center={center} zoom={5} style={{ height: "500px", width: "100%" }}>
+    <MapContainer center={center} zoom={5} style={{ height: "250px", width: "35%" }}>
       <TileLayer
         attribution="&copy; OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
