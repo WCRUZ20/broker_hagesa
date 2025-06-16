@@ -192,3 +192,29 @@ class Vehicle(Base):
     LastDateMod = Column(Date, nullable=False)
     id_usrs_create = Column(Integer, nullable=False)
     id_usrs_update = Column(Integer, nullable=False)
+
+class Policy(Base):
+    __tablename__ = "PLCY"
+
+    id = Column(Integer, primary_key=True, index=True)
+    DocType = Column(String(2), nullable=False)
+    PolicyNum = Column(String, nullable=False)
+    InitDate = Column(Date, nullable=False)
+    DueDate = Column(Date, nullable=False)
+    AscValue = Column(Float, nullable=False)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_slrs = Column(Integer, ForeignKey("SLRS.id"), nullable=False)
+    id_ctms = Column(Integer, ForeignKey("CTMS.id"), nullable=False)
+    id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False)
+    id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False)
+    id_insurance = Column(Integer, ForeignKey("ASCR.id"), nullable=False)
+
+
+class PolicyLine(Base):
+    __tablename__ = "LCY1"
+
+    id_policy = Column(Integer, ForeignKey("PLCY.id"), primary_key=True)
+    id_itm = Column(Integer, ForeignKey("ITMS.id"), primary_key=True)
+    LineNum = Column(Integer, primary_key=True)
+    LineTotal = Column(Float, nullable=False)

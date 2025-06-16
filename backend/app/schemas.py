@@ -332,3 +332,45 @@ class InsuranceCompanyOut(InsuranceCompanyBase):
 
     class Config:
         orm_mode = True
+
+class PolicyLineBase(BaseModel):
+    id_itm: int
+    LineNum: int
+    LineTotal: float
+
+
+class PolicyLineCreate(PolicyLineBase):
+    pass
+
+
+class PolicyLineOut(PolicyLineBase):
+    id_policy: int
+
+    class Config:
+        orm_mode = True
+
+
+class PolicyBase(BaseModel):
+    DocType: str
+    PolicyNum: str
+    InitDate: date
+    DueDate: date
+    AscValue: float
+    id_slrs: int
+    id_ctms: int
+    id_insurance: int
+
+
+class PolicyCreate(PolicyBase):
+    lines: list[PolicyLineCreate]
+
+
+class PolicyOut(PolicyBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True

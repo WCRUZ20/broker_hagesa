@@ -17,6 +17,8 @@ import DatosVehiculos from "./pages/DatosVehiculos";
 import VehiculosRegistrados from "./pages/VehiculosRegistrados";
 import DatosPersonas from "./pages/DatosPersonas";
 import Aseguradoras from "./pages/Aseguradoras";
+import CrearPoliza from "./pages/CrearPoliza";
+import Polizas from "./pages/Polizas";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -71,6 +73,8 @@ function App() {
           <Route path="/datos-vehiculos" element={<DatosVehiculos />} />
           <Route path="/vehiculos-registrados" element={<VehiculosRegistrados />} />
           <Route path="/cargos" element={<CargosUsuarios />} />
+          <Route path="/crear-poliza" element={<CrearPoliza />} />
+          <Route path="/polizas" element={<Polizas />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

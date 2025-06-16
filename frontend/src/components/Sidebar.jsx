@@ -11,6 +11,7 @@ export default function Sidebar({ user, onLogout }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [complementosOpen, setComplementosOpen] = useState(false);
   const [vehiculosOpen, setVehiculosOpen] = useState(false);
+  const [polizasOpen, setPolizasOpen] = useState(false);
   const [company, setCompany] = useState(null);
 
   useEffect(() => {
@@ -61,19 +62,33 @@ export default function Sidebar({ user, onLogout }) {
     });
   };
 
-  const toggleVehiculos = () => {
+   const toggleVehiculos = () => {
     setVehiculosOpen(prev => {
       const newState = !prev;
       if (newState) {
         setComplementosOpen(false);
+        setPolizasOpen(false);
       }
       return newState;
     });
   };
 
+  const togglePolizas = () => {
+    setPolizasOpen(prev => {
+      const newState = !prev;
+      if (newState) {
+        setComplementosOpen(false);
+        setVehiculosOpen(false);
+      }
+      return newState;
+    });
+  };
+
+
   const closeSubmenus = () => {
     setComplementosOpen(false);
     setVehiculosOpen(false);
+    setPolizasOpen(false);
   };
   
   const sidebarClass = "sidebar sidebar-dark"; // Siempre oscuro
@@ -142,6 +157,31 @@ export default function Sidebar({ user, onLogout }) {
             <i className="bi bi-shield-check me-2"></i>Aseguradoras
           </NavLink>
         </li>
+        <li className="nav-item">
+            <div
+              onClick={togglePolizas}
+              className="nav-link d-flex justify-content-between align-items-center"
+              style={{ cursor: "pointer" }}
+            >
+              <span>
+                <i className="bi bi-file-earmark-text me-2"></i>Pólizas
+              </span>
+            </div>
+            {polizasOpen && (
+              <ul className="nav flex-column ms-3 submenu">
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/crear-poliza" onClick={closeSubmenus}>
+                    <i className="bi bi-plus-circle me-2"></i>Crear Póliza
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/polizas" onClick={closeSubmenus}>
+                    <i className="bi bi-list-ul me-2"></i>Listado de pólizas
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </li>
         <li className="nav-item">
           <NavLink className="nav-link" to="/compania" onClick={closeSubmenus}>
             <i className="bi bi-building me-2"></i>Compañía
