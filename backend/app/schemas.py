@@ -60,6 +60,8 @@ class ClientBase(BaseModel):
     id_provincia: Optional[int] = None
     id_ciudad: Optional[int] = None
     id_parroquia: Optional[int] = None
+    latitud: Optional[float] = None
+    longitud: Optional[float] = None
 
 class ClientCreate(ClientBase):
     pass

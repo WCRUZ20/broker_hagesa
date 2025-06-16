@@ -5,3 +5,5 @@ pyodbc
 passlib[bcrypt]
 python-jose[cryptography]
 python-dotenv
+python-dotenv
+geopy

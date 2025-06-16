@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, Float
 from app.database import Base
 
 class User(Base):
@@ -31,6 +31,8 @@ class Client(Base):
     id_provincia = Column(Integer, ForeignKey("STTE.id"), nullable=True, autoincrement=False)
     id_ciudad = Column(Integer, ForeignKey("CITY.id"), nullable=True, autoincrement=False)
     id_parroquia = Column(Integer, ForeignKey("PRSH.id"), nullable=True, autoincrement=False)
+    latitud = Column(Float, nullable=True)
+    longitud = Column(Float, nullable=True)
 
 class Seller(Base):
     __tablename__ = "SLRS"
