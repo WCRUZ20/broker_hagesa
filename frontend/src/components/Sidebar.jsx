@@ -52,11 +52,28 @@ export default function Sidebar({ user, onLogout }) {
   };
 
   const toggleComplementos = () => {
-    setComplementosOpen(!complementosOpen);
+    setComplementosOpen(prev => {
+      const newState = !prev;
+      if (newState) {
+        setVehiculosOpen(false);
+      }
+      return newState;
+    });
   };
 
   const toggleVehiculos = () => {
-    setVehiculosOpen(!vehiculosOpen);
+    setVehiculosOpen(prev => {
+      const newState = !prev;
+      if (newState) {
+        setComplementosOpen(false);
+      }
+      return newState;
+    });
+  };
+
+  const closeSubmenus = () => {
+    setComplementosOpen(false);
+    setVehiculosOpen(false);
   };
   
   const sidebarClass = "sidebar sidebar-dark"; // Siempre oscuro
@@ -81,12 +98,12 @@ export default function Sidebar({ user, onLogout }) {
 
       <ul className="nav flex-column mt-3 px-2">
         <li className="nav-item">
-          <NavLink className="nav-link" to="/">
+          <NavLink className="nav-link" to="/" onClick={closeSubmenus}>
             <i className="bi bi-house me-2"></i>Inicio
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link" to="/clientes">
+          <NavLink className="nav-link" to="/clientes" onClick={closeSubmenus}>
             <i className="bi bi-person-lines-fill me-2"></i>Clientes
           </NavLink>
         </li>
@@ -103,12 +120,12 @@ export default function Sidebar({ user, onLogout }) {
             {vehiculosOpen && (
               <ul className="nav flex-column ms-3 submenu">
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/vehiculos-registrados">
+                  <NavLink className="nav-link" to="/vehiculos-registrados" onClick={closeSubmenus}>
                     <i className="bi bi-truck-front me-2"></i>Vehículos registrados
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/datos-vehiculos">
+                  <NavLink className="nav-link" to="/datos-vehiculos" onClick={closeSubmenus}>
                     <i className="bi bi-card-list me-2"></i>Datos Generales
                   </NavLink>
                 </li>
@@ -116,17 +133,17 @@ export default function Sidebar({ user, onLogout }) {
             )}
           </li>
         <li className="nav-item">
-          <NavLink className="nav-link" to="/vendedores">
+          <NavLink className="nav-link" to="/vendedores" onClick={closeSubmenus}>
             <i className="bi bi-person-lines-fill me-2"></i>Vendedores
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link" to="/aseguradoras">
+          <NavLink className="nav-link" to="/aseguradoras" onClick={closeSubmenus}>
             <i className="bi bi-shield-check me-2"></i>Aseguradoras
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link" to="/compania">
+          <NavLink className="nav-link" to="/compania" onClick={closeSubmenus}>
             <i className="bi bi-building me-2"></i>Compañía
           </NavLink>
         </li>
@@ -153,17 +170,17 @@ export default function Sidebar({ user, onLogout }) {
             {complementosOpen && (
               <ul className="nav flex-column ms-3 submenu">
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/datos-geograficos">
+                  <NavLink className="nav-link" to="/datos-geograficos" onClick={closeSubmenus}>
                     <i className="bi bi-flag me-2"></i>Datos Geográficos
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/datos-personas">
+                  <NavLink className="nav-link" to="/datos-personas" onClick={closeSubmenus}>
                     <i className="bi bi-person-vcard me-2"></i>Datos Personas
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/cargos">
+                   <NavLink className="nav-link" to="/cargos" onClick={closeSubmenus}>
                     <i className="bi bi-diagram-3 me-2"></i>Cargos usuarios
                   </NavLink>
                 </li>
