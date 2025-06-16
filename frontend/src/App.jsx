@@ -16,6 +16,7 @@ import CargosUsuarios from "./pages/CargosUsuarios";
 import DatosVehiculos from "./pages/DatosVehiculos";
 import VehiculosRegistrados from "./pages/VehiculosRegistrados";
 import DatosPersonas from "./pages/DatosPersonas";
+import Aseguradoras from "./pages/Aseguradoras";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -63,6 +64,7 @@ function App() {
           )}
           <Route path="/vendedores" element={<Vendedores />} />
           <Route path="/compania" element={<Compania />} />
+          <Route path="/aseguradoras" element={<Aseguradoras />} />
           {/* <Route path="/paises" element={<Paises />} /> */}
           <Route path="/datos-geograficos" element={<DatosGeograficos />} />
           <Route path="/datos-personas" element={<DatosPersonas />} />

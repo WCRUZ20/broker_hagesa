@@ -15,6 +15,7 @@ from app.routers import vehicle_uses
 from app.routers import vehicle_classifications
 from app.routers import vehicles
 from app.routers import identification_types
+from app.routers import insurance_companies
 
 
 
@@ -52,6 +53,7 @@ app.include_router(vehicle_types.router)
 app.include_router(vehicle_uses.router)
 app.include_router(vehicle_classifications.router)
 app.include_router(vehicles.router)
+app.include_router(insurance_companies.router)
 
 
 

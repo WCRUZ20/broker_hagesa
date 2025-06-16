@@ -309,3 +309,26 @@ class VehicleOut(VehicleBase):
 
     class Config:
         orm_mode = True
+
+class InsuranceCompanyBase(BaseModel):
+    IdentType: str
+    Identification: str
+    CompanyName: str
+    DirCompany: Optional[str] = None
+    TelepCompany: Optional[str] = None
+    ComiPrcnt: int
+
+
+class InsuranceCompanyCreate(InsuranceCompanyBase):
+    pass
+
+
+class InsuranceCompanyOut(InsuranceCompanyBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True

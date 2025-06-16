@@ -61,6 +61,21 @@ class Country(Base):
     id_usrs_create = Column(Integer, nullable=False)
     id_usrs_update = Column(Integer, nullable=False)
 
+class InsuranceCompany(Base):
+    __tablename__ = "ASCR"
+
+    id = Column(Integer, primary_key=True, index=True)
+    IdentType = Column(String(2), ForeignKey("TIDN.id"))
+    Identification = Column(String)
+    CompanyName = Column(String, nullable=False)
+    DirCompany = Column(String, nullable=True)
+    TelepCompany = Column(String, nullable=True)
+    ComiPrcnt = Column(Integer, nullable=False)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False)
+    id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False)
+
 class IdentificationType(Base):
     __tablename__ = "TIDN"
 

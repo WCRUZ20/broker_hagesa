@@ -90,18 +90,6 @@ export default function Sidebar({ user, onLogout }) {
             <i className="bi bi-person-lines-fill me-2"></i>Clientes
           </NavLink>
         </li>
-        {user.user_role === "A" && (
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/usuarios">
-              <i className="bi bi-people me-2"></i>Usuarios
-            </NavLink>
-          </li>
-        )}
-        <li className="nav-item">
-          <NavLink className="nav-link" to="/vendedores">
-            <i className="bi bi-person-lines-fill me-2"></i>Vendedores
-          </NavLink>
-        </li>
         <li className="nav-item">
             <div
               onClick={toggleVehiculos}
@@ -128,10 +116,27 @@ export default function Sidebar({ user, onLogout }) {
             )}
           </li>
         <li className="nav-item">
+          <NavLink className="nav-link" to="/vendedores">
+            <i className="bi bi-person-lines-fill me-2"></i>Vendedores
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink className="nav-link" to="/aseguradoras">
+            <i className="bi bi-shield-check me-2"></i>Aseguradoras
+          </NavLink>
+        </li>
+        <li className="nav-item">
           <NavLink className="nav-link" to="/compania">
             <i className="bi bi-building me-2"></i>Compañía
           </NavLink>
         </li>
+        {user.user_role === "A" && (
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/usuarios">
+              <i className="bi bi-people me-2"></i>Usuarios
+            </NavLink>
+          </li>
+        )}
         <li className="nav-item">
             <div
               onClick={toggleComplementos}
