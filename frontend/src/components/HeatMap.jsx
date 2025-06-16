@@ -11,6 +11,12 @@ function HeatLayer({ points }) {
     if (!points.length) return;
     const layer = L.heatLayer(points, { radius: 25 });
     layer.addTo(map);
+    if (points.length === 1) {
+      map.setView(points[0], 14);
+    } else {
+      const bounds = L.latLngBounds(points);
+      map.fitBounds(bounds);
+    }
     return () => {
       map.removeLayer(layer);
     };
