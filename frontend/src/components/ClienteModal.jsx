@@ -28,7 +28,9 @@ export default function ClienteModal({ cliente, onClose }) {
     API.get("/ciudades").then(res => setCiudades(res.data));
     API.get("/parroquias").then(res => setParroquias(res.data));
     if (isEdit) {
-      setForm({nombre: cliente.nombre || "",
+      setForm({
+        nombre: cliente.nombre || "",
+        apellidos: cliente.apellidos || "",
         identificacion: cliente.identificacion || "",
         telefono: cliente.telefono || "",
         email: cliente.email || "",
