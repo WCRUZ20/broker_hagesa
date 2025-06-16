@@ -14,6 +14,8 @@ from app.routers import vehicle_types
 from app.routers import vehicle_uses
 from app.routers import vehicle_classifications
 from app.routers import vehicles
+from app.routers import identification_types
+
 
 
 
@@ -41,6 +43,7 @@ app.include_router(sellers.router)
 app.include_router(company.router)
 app.include_router(countries.router)
 app.include_router(cargos.router)
+app.include_router(identification_types.router)
 app.include_router(states.router)
 app.include_router(cities.router)
 app.include_router(parishes.router)
@@ -49,6 +52,7 @@ app.include_router(vehicle_types.router)
 app.include_router(vehicle_uses.router)
 app.include_router(vehicle_classifications.router)
 app.include_router(vehicles.router)
+
 
 
 @app.get("/")

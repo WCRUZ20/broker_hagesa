@@ -116,6 +116,24 @@ class CountryOut(CountryBase):
     class Config:
         orm_mode = True
 
+class IdentificationTypeBase(BaseModel):
+    id: str
+    Description: str
+
+
+class IdentificationTypeCreate(IdentificationTypeBase):
+    pass
+
+
+class IdentificationTypeOut(IdentificationTypeBase):
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        orm_mode = True
+
 class CargoBase(BaseModel):
     Description: str
 

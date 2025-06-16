@@ -153,6 +153,11 @@ export default function Sidebar({ user, onLogout }) {
                   </NavLink>
                 </li>
                 <li className="nav-item">
+                  <NavLink className="nav-link" to="/datos-personas">
+                    <i className="bi bi-person-vcard me-2"></i>Datos Personas
+                  </NavLink>
+                </li>
+                <li className="nav-item">
                   <NavLink className="nav-link" to="/cargos">
                     <i className="bi bi-diagram-3 me-2"></i>Cargos usuarios
                   </NavLink>

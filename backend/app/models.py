@@ -61,6 +61,17 @@ class Country(Base):
     id_usrs_create = Column(Integer, nullable=False)
     id_usrs_update = Column(Integer, nullable=False)
 
+class IdentificationType(Base):
+    __tablename__ = "TIDN"
+
+    id = Column(String(2), primary_key=True, index=True)
+    Description = Column(String, nullable=True)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, nullable=False)
+    id_usrs_update = Column(Integer, nullable=False)
+
+
 class Cargo(Base):
     __tablename__ = "CRGO"
 
