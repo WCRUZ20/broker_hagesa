@@ -136,6 +136,7 @@ export default function MailConfig() {
                     <th scope="col">Usuario SMTP</th>
                     <th scope="col">Host</th>
                     <th scope="col">Puerto</th>
+                    <th scope="col">Estado</th>
                     <th scope="col">Acciones</th>
                   </tr>
                 </thead>
@@ -148,6 +149,7 @@ export default function MailConfig() {
                       <td>{c.USER_SMTP}</td>
                       <td>{c.HOST_SMTP}</td>
                       <td>{c.PORT_SMTP}</td>
+                      <td>{c.Estado === "A" ? "Activo" : "Desactivado"}</td>
                       <td>
                         <button className="btn btn-sm btn-outline-primary me-2" onClick={() => handleEdit(c)}>
                           <i className="bi bi-pencil"></i>

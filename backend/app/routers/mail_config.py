@@ -43,6 +43,7 @@ def create_mail_config(
         PASS_SMTP=data.PASS_SMTP,
         HOST_SMTP=data.HOST_SMTP,
         PORT_SMTP=data.PORT_SMTP,
+        Estado=data.Estado or "D",
         CreateDate=date.today(),
         LastDateMod=date.today(),
         id_usrs_create=current_user.id,
@@ -81,6 +82,8 @@ def update_mail_config(
     item.PASS_SMTP = data.PASS_SMTP
     item.HOST_SMTP = data.HOST_SMTP
     item.PORT_SMTP = data.PORT_SMTP
+    if data.Estado is not None:
+        item.Estado = data.Estado
     item.LastDateMod = date.today()
     item.id_usrs_update = current_user.id
     db.commit()

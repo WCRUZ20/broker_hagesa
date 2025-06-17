@@ -227,6 +227,7 @@ class MailConfig(Base):
     PASS_SMTP = Column(String)
     HOST_SMTP = Column(String)
     PORT_SMTP = Column(String)
+    Estado = Column(String(1), default="D", nullable=False)
     CreateDate = Column(Date, nullable=False)
     LastDateMod = Column(Date, nullable=False)
     id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)

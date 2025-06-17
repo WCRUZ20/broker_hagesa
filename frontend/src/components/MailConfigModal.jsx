@@ -8,6 +8,7 @@ export default function MailConfigModal({ config, onClose }) {
     PASS_SMTP: "",
     HOST_SMTP: "",
     PORT_SMTP: "",
+    Estado: "D",
   });
 
   useEffect(() => {
@@ -17,6 +18,7 @@ export default function MailConfigModal({ config, onClose }) {
         PASS_SMTP: config.PASS_SMTP || "",
         HOST_SMTP: config.HOST_SMTP || "",
         PORT_SMTP: config.PORT_SMTP || "",
+        Estado: config.Estado || "D",
       });
     }
   }, [config]);
@@ -83,6 +85,15 @@ export default function MailConfigModal({ config, onClose }) {
                 onChange={handleChange}
                 required
               />
+              <select
+                name="Estado"
+                className="form-select mb-2"
+                value={form.Estado}
+                onChange={handleChange}
+              >
+                <option value="D">Desactivado</option>
+                <option value="A">Activo</option>
+              </select>
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>

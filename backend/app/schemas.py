@@ -394,9 +394,10 @@ class MailConfigBase(BaseModel):
     PASS_SMTP: str
     HOST_SMTP: str
     PORT_SMTP: str
+    Estado: str = "D"
 
 class MailConfigCreate(MailConfigBase):
-    pass
+    Estado: str | None = None
 
 class MailConfigOut(MailConfigBase):
     id: int
@@ -404,6 +405,7 @@ class MailConfigOut(MailConfigBase):
     LastDateMod: date
     id_usrs_create: int
     id_usrs_update: int
+    Estado: str
 
     class Config:
         from_attributes = True
