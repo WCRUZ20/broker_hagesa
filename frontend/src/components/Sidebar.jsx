@@ -189,7 +189,7 @@ export default function Sidebar({ user, onLogout }) {
         </li>
         {user.user_role === "A" && (
           <li className="nav-item">
-            <NavLink className="nav-link" to="/usuarios">
+            <NavLink className="nav-link" to="/usuarios" onClick={closeSubmenus}>
               <i className="bi bi-people me-2"></i>Usuarios
             </NavLink>
           </li>
@@ -245,13 +245,69 @@ export default function Sidebar({ user, onLogout }) {
 
         {menuAbierto && (
           <div
-            className="position-absolute bg-white text-dark shadow-sm rounded py-2 px-3"
-            style={{ bottom: "55px", right: "10px", minWidth: "180px", zIndex: 999 }}
+            className="position-absolute shadow-lg rounded-2 py-2"
+            style={{ 
+              bottom: "65px", 
+              right: "10px", 
+              minWidth: "200px", 
+              zIndex: 999,
+              backgroundColor: "#2c2c2c",
+              border: "1px solid #404040",
+              backdropFilter: "blur(10px)"
+            }}
           >
-            <div className="dropdown-item py-1" style={{ cursor: "pointer" }}>
+            <div 
+              className="d-flex align-items-center px-3 py-2 border-bottom" 
+              style={{ 
+                borderColor: "#404040 !important",
+                color: "#e0e0e0",
+                fontSize: "0.9rem"
+              }}
+            >
+              <i className="bi bi-person-circle me-2"></i>
+              <span className="fw-medium">{user.user_name || user.user_cod}</span>
+            </div>
+            
+            <div 
+              className="d-flex align-items-center px-3 py-2 menu-item" 
+              style={{ 
+                cursor: "pointer",
+                color: "#e0e0e0",
+                fontSize: "0.9rem",
+                transition: "all 0.2s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = "#404040";
+                e.target.style.color = "#ffffff";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = "transparent";
+                e.target.style.color = "#e0e0e0";
+              }}
+            >
+              <i className="bi bi-key me-2"></i>
               Cambiar contraseña
             </div>
-            <div className="dropdown-item py-1 text-danger" style={{ cursor: "pointer" }} onClick={onLogout}>
+            
+            <div 
+              className="d-flex align-items-center px-3 py-2 menu-item" 
+              style={{ 
+                cursor: "pointer",
+                color: "#ff6b6b",
+                fontSize: "0.9rem",
+                transition: "all 0.2s ease"
+              }}
+              onClick={onLogout}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = "#ff6b6b";
+                e.target.style.color = "#ffffff";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = "transparent";
+                e.target.style.color = "#ff6b6b";
+              }}
+            >
+              <i className="bi bi-box-arrow-right me-2"></i>
               Cerrar sesión
             </div>
           </div>
