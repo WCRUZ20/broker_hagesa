@@ -19,6 +19,7 @@ import DatosPersonas from "./pages/DatosPersonas";
 import Aseguradoras from "./pages/Aseguradoras";
 import CrearPoliza from "./pages/CrearPoliza";
 import Polizas from "./pages/Polizas";
+import MailConfig from "./pages/MailConfig";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -76,6 +77,7 @@ function App() {
           <Route path="/crear-poliza" element={<CrearPoliza />} />
           <Route path="/editar-poliza/:id" element={<CrearPoliza />} />
           <Route path="/polizas" element={<Polizas />} />
+          <Route path="/seguimiento/parametrizaciones-mail" element={<MailConfig />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

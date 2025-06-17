@@ -229,5 +229,5 @@ class MailConfig(Base):
     PORT_SMTP = Column(String)
     CreateDate = Column(Date, nullable=False)
     LastDateMod = Column(Date, nullable=False)
-    id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False)
-    id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False)
+    id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)
+    id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)

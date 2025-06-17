@@ -12,6 +12,7 @@ export default function Sidebar({ user, onLogout }) {
   const [complementosOpen, setComplementosOpen] = useState(false);
   const [vehiculosOpen, setVehiculosOpen] = useState(false);
   const [polizasOpen, setPolizasOpen] = useState(false);
+  const [seguimientoOpen, setSeguimientoOpen] = useState(false);
   const [company, setCompany] = useState(null);
 
   useEffect(() => {
@@ -79,11 +80,23 @@ export default function Sidebar({ user, onLogout }) {
       if (newState) {
         setComplementosOpen(false);
         setVehiculosOpen(false);
+        setSeguimientoOpen(false);
       }
       return newState;
     });
   };
 
+  const toggleSeguimiento = () => {
+    setSeguimientoOpen(prev => {
+      const newState = !prev;
+      if (newState) {
+        setComplementosOpen(false);
+        setVehiculosOpen(false);
+        setPolizasOpen(false);
+      }
+      return newState;
+    });
+  };
 
   const closeSubmenus = () => {
     setComplementosOpen(false);
@@ -222,6 +235,26 @@ export default function Sidebar({ user, onLogout }) {
                 <li className="nav-item">
                     <NavLink className="nav-link" to="/cargos">
                     <i className="bi bi-diagram-3 me-2"></i>Cargos usuarios
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </li>
+          <li className="nav-item">
+            <div
+              onClick={toggleSeguimiento}
+              className="nav-link d-flex justify-content-between align-items-center"
+              style={{ cursor: "pointer" }}
+            >
+              <span>
+                <i className="bi bi-eye me-2"></i>Seguimiento
+              </span>
+            </div>
+            {seguimientoOpen && (
+              <ul className="nav flex-column ms-3 submenu">
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/seguimiento/parametrizaciones-mail">
+                    <i className="bi bi-envelope me-2"></i>Configuración correo
                   </NavLink>
                 </li>
               </ul>
