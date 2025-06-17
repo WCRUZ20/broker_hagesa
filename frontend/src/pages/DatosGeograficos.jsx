@@ -4,6 +4,7 @@ import PaisModal from "../components/PaisModal";
 import ProvinciaModal from "../components/ProvinciaModal";
 import CiudadModal from "../components/CiudadModal";
 import ParroquiaModal from "../components/ParroquiaModal";
+import ListStyles from "../components/ListStyles";
 
 export default function DatosGeograficos() {
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
@@ -68,7 +69,17 @@ export default function DatosGeograficos() {
   };
 
   return (
-    <div className="container py-4">
+    <div className="container-fluid py-4 px-4">
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <h2 className={`mb-1 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Datos Geográficos</h2>
+              <p className={`mb-0 ${darkMode ? 'text-muted' : 'text-secondary'}`}>Administración de catálogos geográficos</p>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* Paises y Provincias */}
       <div className="row">
         <div className="col-md-6 mb-4">
@@ -144,6 +155,7 @@ export default function DatosGeograficos() {
       {showParroquiaModal && (
         <ParroquiaModal parroquia={editParroquia} onClose={() => { setShowParroquiaModal(false); loadAll(); }} />
       )}
+      <ListStyles darkMode={darkMode} />
     </div>
   );
 }

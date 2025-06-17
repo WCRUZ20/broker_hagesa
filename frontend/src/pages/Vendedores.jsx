@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import VendedorModal from "../components/VendedorModal";
+import ListStyles from "../components/ListStyles";
 
 export default function Vendedores() {
   const [vendedores, setVendedores] = useState([]);
@@ -199,6 +200,7 @@ export default function Vendedores() {
           }}
         />
       )}
+    <ListStyles darkMode={darkMode} />
     </div>
   );
 }

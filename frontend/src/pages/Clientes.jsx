@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import ClienteModal from "../components/ClienteModal";
+import ListStyles from "../components/ListStyles";
+
 
 export default function Clientes() {
   const [clientes, setClientes] = useState([]);
@@ -210,6 +212,7 @@ export default function Clientes() {
           }}
         />
       )}
+    <ListStyles darkMode={darkMode} />
     </div>
   );
 }

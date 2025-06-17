@@ -361,7 +361,7 @@ export default function Usuarios() {
                               <div className={`fw-semibold mb-1 ${darkMode ? 'text-white' : 'text-dark'}`}>
                                 {user.user_name} {user.last_name}
                               </div>
-                              <div className={`small ${darkMode ? 'text-muted' : 'text-secondary'}`}>
+                              <div className={`small ${darkMode ? 'text-white' : 'text-dark'}`}>
                                 {user.user_email}
                               </div>
                             </div>
