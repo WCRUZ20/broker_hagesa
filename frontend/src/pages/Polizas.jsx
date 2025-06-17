@@ -65,7 +65,8 @@ export default function Polizas() {
   const filtered = items.filter(
     (p) =>
       p.PolicyNum.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.DocType.toLowerCase().includes(searchTerm.toLowerCase())
+      p.DocType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.InsuranceName || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -130,12 +131,14 @@ export default function Polizas() {
                       onChange={toggleSelectAll}
                     />
                   </th>
-                  <th>ID</th>
+                  <th>Aseguradora</th>
                   <th>Número</th>
                   <th>Tipo</th>
+                  <th>% Comisión</th>
                   <th>Inicio</th>
                   <th>Vencimiento</th>
                   <th>Valor Asegurado</th>
+                  <th>Días vencidos</th>
                   <th></th>
                 </tr>
               </thead>
@@ -150,12 +153,14 @@ export default function Polizas() {
                         onChange={() => toggleSelect(p.id)}
                       />
                     </td>
-                    <td>{p.id}</td>
+                    <td>{p.InsuranceName}</td>
                     <td>{p.PolicyNum}</td>
                     <td>{p.DocType}</td>
+                    <td>{p.ComiPrcnt}</td>
                     <td>{p.InitDate}</td>
                     <td>{p.DueDate}</td>
                     <td>{p.AscValue}</td>
+                    <td>{p.DaysOverdue}</td>
                     <td>
                       <i
                         className="bi bi-pencil-square text-warning me-3"

@@ -380,3 +380,11 @@ class PolicyDetailOut(PolicyOut):
 
     class Config:
         orm_mode = True
+
+class PolicyListOut(PolicyOut):
+    InsuranceName: Optional[str] = None
+    ComiPrcnt: Optional[int] = None
+    DaysOverdue: Optional[int] = None
+
+    class Config:
+        orm_mode = True

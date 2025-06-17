@@ -53,9 +53,24 @@ def create_policy(
     return policy
 
 
-@router.get("/", response_model=List[schemas.PolicyOut])
+@router.get("/", response_model=List[schemas.PolicyListOut])
 def list_policies(db: Session = Depends(get_db)):
-    return db.query(models.Policy).all()
+    policies = db.query(models.Policy).all()
+    today = date.today()
+    result = []
+    for p in policies:
+        ins = db.query(models.InsuranceCompany).get(p.id_insurance)
+        days_overdue = (today - p.DueDate).days if p.DueDate < today else 0
+        base = schemas.PolicyOut.from_orm(p).dict()
+        base.update(
+            {
+                "InsuranceName": ins.CompanyName if ins else None,
+                "ComiPrcnt": ins.ComiPrcnt if ins else None,
+                "DaysOverdue": days_overdue,
+            }
+        )
+        result.append(schemas.PolicyListOut(**base))
+    return result
 
 
 @router.get("/{id}", response_model=schemas.PolicyDetailOut)
