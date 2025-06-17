@@ -109,6 +109,7 @@ export default function CrearPoliza() {
       <form onSubmit={handleSubmit} className="card p-3 shadow-sm">
         <div className="row">
           <div className="col-md-6 mb-3">
+            {/* <h6>Tipo póliza</h6> */}
             <select
               name="DocType"
               className="form-select"
@@ -131,6 +132,7 @@ export default function CrearPoliza() {
             />
           </div>
           <div className="col-md-6 mb-3">
+            <h6>Fecha Inicio</h6>
             <input
               type="date"
               name="InitDate"
@@ -141,6 +143,7 @@ export default function CrearPoliza() {
             />
           </div>
           <div className="col-md-6 mb-3">
+            <h6>Fecha Vencimiento</h6>
             <input
               type="date"
               name="DueDate"
@@ -206,7 +209,7 @@ export default function CrearPoliza() {
                 type="number"
                 className="form-control"
                 value={line.LineNum}
-                readOnly
+                disabled
               />
             </div>
             <div className="col-md-5 mb-3">
@@ -225,6 +228,7 @@ export default function CrearPoliza() {
                 name="LineTotal"
                 type="number"
                 className="form-control"
+                placeholder="Valor"
                 value={line.LineTotal}
                 onChange={(e) => handleLineChange(idx, e)}
                 required
