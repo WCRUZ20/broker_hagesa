@@ -16,7 +16,9 @@ export default function CrearPoliza() {
     id_ctms: "",
     id_insurance: "",
   });
-  const [lines, setLines] = useState([{ id_itm: "", LineNum: 1, LineTotal: "", plate: "" }]);
+  const [lines, setLines] = useState([
+    { id_itm: "", LineNum: 1, LineTotal: "", plate: "" },
+  ]);
   const [sellers, setSellers] = useState([]);
   const [clients, setClients] = useState([]);
   const [insurances, setInsurances] = useState([]);
@@ -54,11 +56,15 @@ export default function CrearPoliza() {
   };
 
   const addLine = () => {
-    setLines([...lines, { id_itm: "", LineNum: lines.length + 1, LineTotal: "", plate: "" }]);
+    setLines([
+      ...lines,
+      { id_itm: "", LineNum: lines.length + 1, LineTotal: "", plate: "" },
+    ]);
   };
 
   const removeLine = (idx) => {
-    setLines(lines.filter((_, i) => i !== idx));
+    const remaining = lines.filter((_, i) => i !== idx);
+    setLines(remaining.map((l, i) => ({ ...l, LineNum: i + 1 })));
   };
 
   const handleSubmit = async (e) => {
@@ -194,6 +200,15 @@ export default function CrearPoliza() {
         <h5>Vehículos</h5>
         {lines.map((line, idx) => (
           <div className="row align-items-end" key={idx}>
+            <div className="col-md-3 mb-3">
+              <input
+                name="LineNum"
+                type="number"
+                className="form-control"
+                value={line.LineNum}
+                readOnly
+              />
+            </div>
             <div className="col-md-5 mb-3">
               <input
                 name="id_itm"
@@ -202,16 +217,6 @@ export default function CrearPoliza() {
                 value={line.plate}
                 onFocus={() => setVehicleIndex(idx)}
                 readOnly
-                required
-              />
-            </div>
-            <div className="col-md-3 mb-3">
-              <input
-                name="LineNum"
-                type="number"
-                className="form-control"
-                value={line.LineNum}
-                onChange={(e) => handleLineChange(idx, e)}
                 required
               />
             </div>
