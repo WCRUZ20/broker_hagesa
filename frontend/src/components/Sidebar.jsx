@@ -135,12 +135,12 @@ export default function Sidebar({ user, onLogout }) {
             {vehiculosOpen && (
               <ul className="nav flex-column ms-3 submenu">
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/vehiculos-registrados" onClick={closeSubmenus}>
+                  <NavLink className="nav-link" to="/vehiculos-registrados">
                     <i className="bi bi-truck-front me-2"></i>Vehículos registrados
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/datos-vehiculos" onClick={closeSubmenus}>
+                  <NavLink className="nav-link" to="/datos-vehiculos">
                     <i className="bi bi-card-list me-2"></i>Datos Generales
                   </NavLink>
                 </li>
@@ -170,12 +170,12 @@ export default function Sidebar({ user, onLogout }) {
             {polizasOpen && (
               <ul className="nav flex-column ms-3 submenu">
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/crear-poliza" onClick={closeSubmenus}>
+                  <NavLink className="nav-link" to="/crear-poliza">
                     <i className="bi bi-plus-circle me-2"></i>Crear Póliza
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/polizas" onClick={closeSubmenus}>
+                  <NavLink className="nav-link" to="/polizas">
                     <i className="bi bi-list-ul me-2"></i>Listado de pólizas
                   </NavLink>
                 </li>
@@ -210,17 +210,17 @@ export default function Sidebar({ user, onLogout }) {
             {complementosOpen && (
               <ul className="nav flex-column ms-3 submenu">
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/datos-geograficos" onClick={closeSubmenus}>
+                  <NavLink className="nav-link" to="/datos-geograficos">
                     <i className="bi bi-flag me-2"></i>Datos Geográficos
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/datos-personas" onClick={closeSubmenus}>
+                  <NavLink className="nav-link" to="/datos-personas">
                     <i className="bi bi-person-vcard me-2"></i>Datos Personas
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                   <NavLink className="nav-link" to="/cargos" onClick={closeSubmenus}>
+                    <NavLink className="nav-link" to="/cargos">
                     <i className="bi bi-diagram-3 me-2"></i>Cargos usuarios
                   </NavLink>
                 </li>
