@@ -63,6 +63,22 @@ export default function MailConfig() {
     });
   };
 
+  const renderStatusBadge = (estado) => {
+    const active = estado === "A" || estado === "Activo";
+    const color = active ? "success" : "danger";
+    const icon = active ? "bi-check-circle" : "bi-x-circle";
+    const text = active ? "Activo" : "Desactivado";
+    return (
+      <span
+        className={`badge bg-${color} px-3 py-2 rounded-pill fw-normal d-flex align-items-center gap-1`}
+        style={{ fontSize: '0.875rem', letterSpacing: '0.5px', width: 'fit-content' }}
+      >
+        <i className={`bi ${icon}`} style={{ fontSize: '0.8rem' }}></i>
+        {text}
+      </span>
+    );
+  };
+
   const filtered = items.filter((i) => i.USER_SMTP.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
@@ -127,7 +143,7 @@ export default function MailConfig() {
               </div>
             </div>
             <div className="table-responsive">
-              <table className={`table table-hover mb-0 ${darkMode ? 'table-dark' : ''}`}>
+              <table className={`table table-hover align-middle mb-0 ${darkMode ? 'table-dark' : ''}`}>
                 <thead>
                   <tr>
                     <th scope="col">
@@ -136,7 +152,12 @@ export default function MailConfig() {
                     <th scope="col">Usuario SMTP</th>
                     <th scope="col">Host</th>
                     <th scope="col">Puerto</th>
-                    <th scope="col">Estado</th>
+                    <th scope="col" style={{ width: "15%" }}>
+                      <div className="d-flex align-items-center gap-2">
+                        <i className="bi bi-activity"></i>
+                        Estado
+                      </div>
+                    </th>
                     <th scope="col">Acciones</th>
                   </tr>
                 </thead>
@@ -149,7 +170,7 @@ export default function MailConfig() {
                       <td>{c.USER_SMTP}</td>
                       <td>{c.HOST_SMTP}</td>
                       <td>{c.PORT_SMTP}</td>
-                      <td>{c.Estado === "A" ? "Activo" : "Desactivado"}</td>
+                      <td>{renderStatusBadge(c.Estado)}</td>
                       <td>
                         <button className="btn btn-sm btn-outline-primary me-2" onClick={() => handleEdit(c)}>
                           <i className="bi bi-pencil"></i>
