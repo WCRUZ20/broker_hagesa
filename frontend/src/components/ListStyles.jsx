@@ -30,6 +30,33 @@ export default function ListStyles({ darkMode }) {
       .dropdown-item:hover {
         background-color: ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,123,255,0.1)'};
       }
+    
+      
+      .table td, .table th {
+        padding-top: 0.25rem !important;
+        padding-bottom: 0.25rem !important;
+        vertical-align: middle !important;
+        line-height: 1.08 !important;
+      }
+      .table tr {
+        min-height: 0 !important;
+      }
+      /* Reduce el font-size general para hacerlo más compacto aún */
+      .table {
+        font-size: 0.80rem;
+      }
+      /* Acción: reducir botones de acciones y los iconos */
+      .btn-table-action {
+        width: 10px !important;
+        height: 10px !important;
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .btn-table-action i {
+        font-size: 1rem !important;
+      }
     `}</style>
   );
 }
