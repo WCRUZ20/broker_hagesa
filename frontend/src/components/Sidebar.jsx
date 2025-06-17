@@ -58,6 +58,8 @@ export default function Sidebar({ user, onLogout }) {
       const newState = !prev;
       if (newState) {
         setVehiculosOpen(false);
+        setSeguimientoOpen(false);
+        setPolizasOpen(false);
       }
       return newState;
     });
@@ -69,6 +71,7 @@ export default function Sidebar({ user, onLogout }) {
       if (newState) {
         setComplementosOpen(false);
         setPolizasOpen(false);
+        setSeguimientoOpen(false);
       }
       return newState;
     });
@@ -102,6 +105,7 @@ export default function Sidebar({ user, onLogout }) {
     setComplementosOpen(false);
     setVehiculosOpen(false);
     setPolizasOpen(false);
+    setSeguimientoOpen(false);
   };
   
   const sidebarClass = "sidebar sidebar-dark"; // Siempre oscuro
@@ -196,6 +200,26 @@ export default function Sidebar({ user, onLogout }) {
             )}
           </li>
         <li className="nav-item">
+            <div
+              onClick={toggleSeguimiento}
+              className="nav-link d-flex justify-content-between align-items-center"
+              style={{ cursor: "pointer" }}
+            >
+              <span>
+                <i className="bi bi-eye me-2"></i>Seguimiento
+              </span>
+            </div>
+            {seguimientoOpen && (
+              <ul className="nav flex-column ms-3 submenu">
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/seguimiento/parametrizaciones-mail">
+                    <i className="bi bi-envelope me-2"></i>Configuración correo
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </li>
+        <li className="nav-item">
           <NavLink className="nav-link" to="/compania" onClick={closeSubmenus}>
             <i className="bi bi-building me-2"></i>Compañía
           </NavLink>
@@ -235,26 +259,6 @@ export default function Sidebar({ user, onLogout }) {
                 <li className="nav-item">
                     <NavLink className="nav-link" to="/cargos">
                     <i className="bi bi-diagram-3 me-2"></i>Cargos usuarios
-                  </NavLink>
-                </li>
-              </ul>
-            )}
-          </li>
-          <li className="nav-item">
-            <div
-              onClick={toggleSeguimiento}
-              className="nav-link d-flex justify-content-between align-items-center"
-              style={{ cursor: "pointer" }}
-            >
-              <span>
-                <i className="bi bi-eye me-2"></i>Seguimiento
-              </span>
-            </div>
-            {seguimientoOpen && (
-              <ul className="nav flex-column ms-3 submenu">
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/seguimiento/parametrizaciones-mail">
-                    <i className="bi bi-envelope me-2"></i>Configuración correo
                   </NavLink>
                 </li>
               </ul>
