@@ -169,7 +169,9 @@ export default function Usuarios() {
             </span>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${
+                darkMode ? "bg-dark text-white border-secondary" : ""
+              }`}
               placeholder="Buscar usuarios"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

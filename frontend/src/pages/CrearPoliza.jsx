@@ -34,6 +34,7 @@ export default function CrearPoliza() {
   const [sellerName, setSellerName] = useState("");
   const [clientName, setClientName] = useState("");
   const [insuranceName, setInsuranceName] = useState("");
+  
 
   useEffect(() => {
     Promise.all([
