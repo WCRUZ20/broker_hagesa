@@ -218,3 +218,16 @@ class PolicyLine(Base):
     id_itm = Column(Integer, ForeignKey("ITMS.id"), primary_key=True)
     LineNum = Column(Integer, primary_key=True)
     LineTotal = Column(Float, nullable=False)
+
+class MailConfig(Base):
+    __tablename__ = "ENVC"
+
+    id = Column(Integer, primary_key=True, index=True)
+    USER_SMTP = Column(String)
+    PASS_SMTP = Column(String)
+    HOST_SMTP = Column(String)
+    PORT_SMTP = Column(String)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False)
+    id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False)

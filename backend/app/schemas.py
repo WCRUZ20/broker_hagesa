@@ -388,3 +388,22 @@ class PolicyListOut(PolicyOut):
 
     class Config:
         from_attributes = True
+    
+class MailConfigBase(BaseModel):
+    USER_SMTP: str
+    PASS_SMTP: str
+    HOST_SMTP: str
+    PORT_SMTP: str
+
+class MailConfigCreate(MailConfigBase):
+    pass
+
+class MailConfigOut(MailConfigBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        from_attributes = True
