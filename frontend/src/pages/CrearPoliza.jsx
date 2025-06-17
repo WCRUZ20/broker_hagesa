@@ -312,6 +312,7 @@ export default function CrearPoliza() {
           onSelect={(c) => {
             setForm({ ...form, id_ctms: c.id });
             setClientName(`${c.nombre} ${c.apellidos || ""}`.trim());
+            setLines([{ id_itm: "", LineNum: 1, LineTotal: "", plate: "" }]);
             setShowClientSelect(false);
           }}
           onClose={() => setShowClientSelect(false)}
@@ -330,7 +331,7 @@ export default function CrearPoliza() {
       )}
       {vehicleIndex !== null && (
         <VehicleSelectModal
-          vehicles={vehicles}
+          vehicles={vehicles.filter((v) => v.Propetary === Number(form.id_ctms))}
           onSelect={(v) => {
             const newLines = [...lines];
             newLines[vehicleIndex] = { ...newLines[vehicleIndex], id_itm: v.id, plate: v.Plate };
