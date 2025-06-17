@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import ClientSelectModal from "../components/ClientSelectModal";
+import SellerSelectModal from "../components/SellerSelectModal";
+import InsuranceSelectModal from "../components/InsuranceSelectModal";
+import VehicleSelectModal from "../components/VehicleSelectModal";
 
 export default function CrearPoliza() {
   const [form, setForm] = useState({
@@ -12,11 +16,18 @@ export default function CrearPoliza() {
     id_ctms: "",
     id_insurance: "",
   });
-  const [lines, setLines] = useState([{ id_itm: "", LineNum: 1, LineTotal: "" }]);
+  const [lines, setLines] = useState([{ id_itm: "", LineNum: 1, LineTotal: "", plate: "" }]);
   const [sellers, setSellers] = useState([]);
   const [clients, setClients] = useState([]);
   const [insurances, setInsurances] = useState([]);
   const [vehicles, setVehicles] = useState([]);
+  const [showSellerSelect, setShowSellerSelect] = useState(false);
+  const [showClientSelect, setShowClientSelect] = useState(false);
+  const [showInsuranceSelect, setShowInsuranceSelect] = useState(false);
+  const [vehicleIndex, setVehicleIndex] = useState(null);
+  const [sellerName, setSellerName] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [insuranceName, setInsuranceName] = useState("");
 
   useEffect(() => {
     Promise.all([
@@ -43,7 +54,7 @@ export default function CrearPoliza() {
   };
 
   const addLine = () => {
-    setLines([...lines, { id_itm: "", LineNum: lines.length + 1, LineTotal: "" }]);
+    setLines([...lines, { id_itm: "", LineNum: lines.length + 1, LineTotal: "", plate: "" }]);
   };
 
   const removeLine = (idx) => {
@@ -77,7 +88,10 @@ export default function CrearPoliza() {
         id_ctms: "",
         id_insurance: "",
       });
-      setLines([{ id_itm: "", LineNum: 1, LineTotal: "" }]);
+      setSellerName("");
+      setClientName("");
+      setInsuranceName("");
+      setLines([{ id_itm: "", LineNum: 1, LineTotal: "", plate: "" }]);
     } catch (err) {
       alert("Error al crear póliza");
     }
@@ -143,52 +157,37 @@ export default function CrearPoliza() {
             />
           </div>
           <div className="col-md-6 mb-3">
-            <select
+            <input
               name="id_slrs"
-              className="form-select"
-              value={form.id_slrs}
-              onChange={handleChange}
+              className="form-control"
+              placeholder="Vendedor"
+              value={sellerName}
+              onFocus={() => setShowSellerSelect(true)}
+              readOnly
               required
-            >
-              <option value="">Vendedor</option>
-              {sellers.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.nombre}
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <div className="col-md-6 mb-3">
-            <select
+            <input
               name="id_ctms"
-              className="form-select"
-              value={form.id_ctms}
-              onChange={handleChange}
+              className="form-control"
+              placeholder="Cliente"
+              value={clientName}
+              onFocus={() => setShowClientSelect(true)}
+              readOnly
               required
-            >
-              <option value="">Cliente</option>
-              {clients.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.nombre}
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <div className="col-md-6 mb-3">
-            <select
+            <input
               name="id_insurance"
-              className="form-select"
-              value={form.id_insurance}
-              onChange={handleChange}
+              className="form-control"
+              placeholder="Aseguradora"
+              value={insuranceName}
+              onFocus={() => setShowInsuranceSelect(true)}
+              readOnly
               required
-            >
-              <option value="">Aseguradora</option>
-              {insurances.map((i) => (
-                <option key={i.id} value={i.id}>
-                  {i.CompanyName}
-                </option>
-              ))}
-            </select>
+            />
           </div>
         </div>
         <hr />
@@ -196,20 +195,15 @@ export default function CrearPoliza() {
         {lines.map((line, idx) => (
           <div className="row align-items-end" key={idx}>
             <div className="col-md-5 mb-3">
-              <select
+              <input
                 name="id_itm"
-                className="form-select"
-                value={line.id_itm}
-                onChange={(e) => handleLineChange(idx, e)}
+                className="form-control"
+                placeholder="Vehículo"
+                value={line.plate}
+                onFocus={() => setVehicleIndex(idx)}
+                readOnly
                 required
-              >
-                <option value="">Vehículo</option>
-                {vehicles.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.Plate}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
             <div className="col-md-3 mb-3">
               <input
@@ -253,6 +247,51 @@ export default function CrearPoliza() {
           <button className="btn btn-primary">Guardar</button>
         </div>
       </form>
+      {showSellerSelect && (
+        <SellerSelectModal
+          sellers={sellers}
+          onSelect={(s) => {
+            setForm({ ...form, id_slrs: s.id });
+            setSellerName(s.nombre);
+            setShowSellerSelect(false);
+          }}
+          onClose={() => setShowSellerSelect(false)}
+        />
+      )}
+      {showClientSelect && (
+        <ClientSelectModal
+          clients={clients}
+          onSelect={(c) => {
+            setForm({ ...form, id_ctms: c.id });
+            setClientName(`${c.nombre} ${c.apellidos || ""}`.trim());
+            setShowClientSelect(false);
+          }}
+          onClose={() => setShowClientSelect(false)}
+        />
+      )}
+      {showInsuranceSelect && (
+        <InsuranceSelectModal
+          insurances={insurances}
+          onSelect={(i) => {
+            setForm({ ...form, id_insurance: i.id });
+            setInsuranceName(i.CompanyName);
+            setShowInsuranceSelect(false);
+          }}
+          onClose={() => setShowInsuranceSelect(false)}
+        />
+      )}
+      {vehicleIndex !== null && (
+        <VehicleSelectModal
+          vehicles={vehicles}
+          onSelect={(v) => {
+            const newLines = [...lines];
+            newLines[vehicleIndex] = { ...newLines[vehicleIndex], id_itm: v.id, plate: v.Plate };
+            setLines(newLines);
+            setVehicleIndex(null);
+          }}
+          onClose={() => setVehicleIndex(null)}
+        />
+      )}
     </div>
   );
 }
