@@ -42,7 +42,7 @@ class UserOut(UserBase):
     user_position: Optional[int] = None
     user_status: Optional[str] = "Habilitado"
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Token(BaseModel):
     access_token: str
@@ -70,7 +70,7 @@ class ClientOut(ClientBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class SellerBase(BaseModel):
     nombre: str
@@ -86,7 +86,7 @@ class SellerOut(SellerBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
         
 class CompanyBase(BaseModel):
     IdCompany: str
@@ -96,7 +96,7 @@ class CompanyBase(BaseModel):
 
 class CompanyOut(CompanyBase):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CountryBase(BaseModel):
     id: int
@@ -114,7 +114,7 @@ class CountryOut(CountryBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class IdentificationTypeBase(BaseModel):
     id: str
@@ -132,7 +132,7 @@ class IdentificationTypeOut(IdentificationTypeBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CargoBase(BaseModel):
     Description: str
@@ -150,7 +150,7 @@ class CargoOut(CargoBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class StateBase(BaseModel):
     id: int | None = None
@@ -170,7 +170,7 @@ class StateOut(StateBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class CityBase(BaseModel):
@@ -191,7 +191,7 @@ class CityOut(CityBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ParishBase(BaseModel):
@@ -212,7 +212,7 @@ class ParishOut(ParishBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class BrandBase(BaseModel):
     Description: str
@@ -228,7 +228,7 @@ class BrandOut(BrandBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class VehicleTypeBase(BaseModel):
     Description: str
@@ -244,7 +244,7 @@ class VehicleTypeOut(VehicleTypeBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class VehicleUseBase(BaseModel):
     Description: str
@@ -260,7 +260,7 @@ class VehicleUseOut(VehicleUseBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class VehicleClassificationBase(BaseModel):
@@ -279,7 +279,7 @@ class VehicleClassificationOut(VehicleClassificationBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class VehicleBase(BaseModel):
     id_itm_type: int
@@ -308,7 +308,7 @@ class VehicleOut(VehicleBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class InsuranceCompanyBase(BaseModel):
     IdentType: str
@@ -331,7 +331,7 @@ class InsuranceCompanyOut(InsuranceCompanyBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PolicyLineBase(BaseModel):
     id_itm: int
@@ -347,7 +347,7 @@ class PolicyLineOut(PolicyLineBase):
     id_policy: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class PolicyBase(BaseModel):
@@ -373,13 +373,13 @@ class PolicyOut(PolicyBase):
     id_usrs_update: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PolicyDetailOut(PolicyOut):
     lines: list[PolicyLineOut]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class PolicyListOut(PolicyOut):
     InsuranceName: Optional[str] = None
@@ -387,4 +387,4 @@ class PolicyListOut(PolicyOut):
     DaysOverdue: Optional[int] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
