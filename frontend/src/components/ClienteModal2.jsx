@@ -96,34 +96,34 @@ export default function ClienteModal({ cliente, onClose }) {
       className="modal show fade d-block" 
       tabIndex="-1" 
       style={{ 
-        backgroundColor: "rgba(22, 30, 46, 0.85)",
+        backgroundColor: "rgba(35, 42, 55, 0.93)",
         backdropFilter: "blur(8px)"
       }}
     >
       <div className="modal-dialog modal-lg modal-dialog-centered">
         <div 
-          className="modal-content border-0 shadow-2xl" 
+          className="modal-content border-0"
           style={{
             borderRadius: '16px',
             overflow: 'hidden',
-            backgroundColor: '#1a202c'
+            backgroundColor: '#232a37'
           }}
         >
           <form onSubmit={handleSubmit}>
             {/* Header Profesional */}
             <div 
-              className="modal-header border-0 py-4 px-4" 
+              className="modal-header border-0 py-4 px-4"
               style={{
-                background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
-                color: '#f7fafc',
+                background: '#232a37',
+                color: '#e2e8f0',
                 borderBottom: '2px solid #b8860b'
               }}
             >
               <div>
-                <h4 className="modal-title mb-1 fw-bold" style={{ color: '#f7fafc' }}>
+                <h4 className="modal-title mb-1 fw-bold" style={{ color: '#e2e8f0' }}>
                   {isEdit ? "✏️ Editar Cliente" : "👤 Nuevo Cliente"}
                 </h4>
-                <p className="mb-0 small" style={{ color: '#cbd5e0' }}>
+                <p className="mb-0 small" style={{ color: '#a0aec0' }}>
                   {isEdit 
                     ? "Actualiza la información del cliente seleccionado" 
                     : "Completa todos los campos para registrar el nuevo cliente"
@@ -137,15 +137,15 @@ export default function ClienteModal({ cliente, onClose }) {
                 style={{ 
                   filter: 'brightness(0) invert(1)',
                   fontSize: '1.1rem',
-                  opacity: 0.8
+                  opacity: 0.85
                 }}
               />
             </div>
 
             {/* Body */}
             <div 
-              className="modal-body px-4 py-4" 
-              style={{ backgroundColor: '#2d3748' }}
+              className="modal-body px-4 py-4"
+              style={{ backgroundColor: '#232a37' }}
             >
               {/* Información Personal */}
               <div className="mb-4">
@@ -183,10 +183,10 @@ export default function ClienteModal({ cliente, onClose }) {
                         required
                         style={{ 
                           borderRadius: '12px',
-                          backgroundColor: '#4a5568',
+                          backgroundColor: '#323b4b',
                           color: '#f7fafc',
                           fontSize: '0.95rem',
-                          border: '1px solid #718096'
+                          border: '1px solid #3c4657'
                         }}
                       />
                       <label style={{ color: '#a0aec0' }}>Nombres *</label>
@@ -204,10 +204,10 @@ export default function ClienteModal({ cliente, onClose }) {
                         required
                         style={{ 
                           borderRadius: '12px',
-                          backgroundColor: '#4a5568',
+                          backgroundColor: '#323b4b',
                           color: '#f7fafc',
                           fontSize: '0.95rem',
-                          border: '1px solid #718096'
+                          border: '1px solid #3c4657'
                         }}
                       />
                       <label style={{ color: '#a0aec0' }}>Apellidos *</label>
@@ -225,10 +225,10 @@ export default function ClienteModal({ cliente, onClose }) {
                         required
                         style={{ 
                           borderRadius: '12px',
-                          backgroundColor: '#4a5568',
+                          backgroundColor: '#323b4b',
                           color: '#f7fafc',
                           fontSize: '0.95rem',
-                          border: '1px solid #718096'
+                          border: '1px solid #3c4657'
                         }}
                       />
                       <label style={{ color: '#a0aec0' }}>Identificación *</label>
@@ -245,10 +245,10 @@ export default function ClienteModal({ cliente, onClose }) {
                         onChange={handleChange}
                         style={{ 
                           borderRadius: '12px',
-                          backgroundColor: '#4a5568',
+                          backgroundColor: '#323b4b',
                           color: '#f7fafc',
                           fontSize: '0.95rem',
-                          border: '1px solid #718096'
+                          border: '1px solid #3c4657'
                         }}
                       />
                       <label style={{ color: '#a0aec0' }}>Teléfono</label>
@@ -266,10 +266,10 @@ export default function ClienteModal({ cliente, onClose }) {
                         onChange={handleChange}
                         style={{ 
                           borderRadius: '12px',
-                          backgroundColor: '#4a5568',
+                          backgroundColor: '#323b4b',
                           color: '#f7fafc',
                           fontSize: '0.95rem',
-                          border: '1px solid #718096'
+                          border: '1px solid #3c4657'
                         }}
                       />
                       <label style={{ color: '#a0aec0' }}>Correo Electrónico</label>
@@ -312,10 +312,10 @@ export default function ClienteModal({ cliente, onClose }) {
                         onChange={handleChange}
                         style={{ 
                           borderRadius: '12px',
-                          backgroundColor: '#4a5568',
+                          backgroundColor: '#323b4b',
                           color: '#f7fafc',
                           fontSize: '0.95rem',
-                          border: '1px solid #718096'
+                          border: '1px solid #3c4657'
                         }}
                       >
                         <option value="">Seleccione país</option>
@@ -338,10 +338,10 @@ export default function ClienteModal({ cliente, onClose }) {
                         onChange={handleChange}
                         style={{ 
                           borderRadius: '12px',
-                          backgroundColor: '#4a5568',
+                          backgroundColor: '#323b4b',
                           color: '#f7fafc',
                           fontSize: '0.95rem',
-                          border: '1px solid #718096'
+                          border: '1px solid #3c4657'
                         }}
                       >
                         <option value="">Seleccione provincia</option>
@@ -364,10 +364,10 @@ export default function ClienteModal({ cliente, onClose }) {
                         onChange={handleChange}
                         style={{ 
                           borderRadius: '12px',
-                          backgroundColor: '#4a5568',
+                          backgroundColor: '#323b4b',
                           color: '#f7fafc',
                           fontSize: '0.95rem',
-                          border: '1px solid #718096'
+                          border: '1px solid #3c4657'
                         }}
                       >
                         <option value="">Seleccione ciudad</option>
@@ -390,10 +390,10 @@ export default function ClienteModal({ cliente, onClose }) {
                         onChange={handleChange}
                         style={{ 
                           borderRadius: '12px',
-                          backgroundColor: '#4a5568',
+                          backgroundColor: '#323b4b',
                           color: '#f7fafc',
                           fontSize: '0.95rem',
-                          border: '1px solid #718096'
+                          border: '1px solid #3c4657'
                         }}
                       >
                         <option value="">Seleccione parroquia</option>
@@ -417,10 +417,10 @@ export default function ClienteModal({ cliente, onClose }) {
                         onChange={handleChange}
                         style={{ 
                           borderRadius: '12px',
-                          backgroundColor: '#4a5568',
+                          backgroundColor: '#323b4b',
                           color: '#f7fafc',
                           fontSize: '0.95rem',
-                          border: '1px solid #718096'
+                          border: '1px solid #3c4657'
                         }}
                       />
                       <label style={{ color: '#a0aec0' }}>Dirección Completa</label>
@@ -434,8 +434,8 @@ export default function ClienteModal({ cliente, onClose }) {
             <div 
               className="modal-footer border-0 px-4 py-4" 
               style={{ 
-                backgroundColor: '#1a202c',
-                borderTop: '1px solid #4a5568'
+                backgroundColor: '#232a37',
+                borderTop: '1px solid #3c4657'
               }}
             >
               <div className="d-flex gap-3 w-100 justify-content-end">
@@ -446,20 +446,16 @@ export default function ClienteModal({ cliente, onClose }) {
                   disabled={isLoading}
                   style={{
                     borderRadius: '12px',
-                    backgroundColor: '#4a5568',
+                    backgroundColor: '#323b4b',
                     color: '#e2e8f0',
-                    transition: 'all 0.2s ease',
-                    border: '1px solid #718096'
+                    border: '1px solid #3c4657',
+                    transition: 'all 0.2s ease'
                   }}
-                  onMouseOver={(e) => {
-                    if (!isLoading) {
-                      e.target.style.backgroundColor = '#2d3748';
-                      e.target.style.transform = 'translateY(-1px)';
-                    }
+                  onMouseOver={e => {
+                    if (!isLoading) e.target.style.backgroundColor = '#232a37';
                   }}
-                  onMouseOut={(e) => {
-                    e.target.style.backgroundColor = '#4a5568';
-                    e.target.style.transform = 'translateY(0)';
+                  onMouseOut={e => {
+                    e.target.style.backgroundColor = '#323b4b';
                   }}
                 >
                   Cancelar
@@ -472,27 +468,17 @@ export default function ClienteModal({ cliente, onClose }) {
                   style={{
                     borderRadius: '12px',
                     backgroundColor: isLoading ? '#8b7355' : '#b8860b',
-                    boxShadow: isLoading 
-                      ? 'none' 
-                      : '0 4px 15px rgba(184, 134, 11, 0.3)',
-                    transition: 'all 0.2s ease',
                     minWidth: '140px',
                     justifyContent: 'center',
-                    border: `1px solid ${isLoading ? '#8b7355' : '#daa520'}`
+                    border: `1px solid ${isLoading ? '#8b7355' : '#b8860b'}`,
+                    boxShadow: isLoading ? 'none' : '0 4px 15px rgba(184,134,11,0.18)',
+                    transition: 'all 0.2s'
                   }}
-                  onMouseOver={(e) => {
-                    if (!isLoading) {
-                      e.target.style.transform = 'translateY(-2px)';
-                      e.target.style.backgroundColor = '#daa520';
-                      e.target.style.boxShadow = '0 6px 20px rgba(184, 134, 11, 0.4)';
-                    }
+                  onMouseOver={e => {
+                    if (!isLoading) e.target.style.backgroundColor = '#daa520';
                   }}
-                  onMouseOut={(e) => {
-                    if (!isLoading) {
-                      e.target.style.transform = 'translateY(0)';
-                      e.target.style.backgroundColor = '#b8860b';
-                      e.target.style.boxShadow = '0 4px 15px rgba(184, 134, 11, 0.3)';
-                    }
+                  onMouseOut={e => {
+                    if (!isLoading) e.target.style.backgroundColor = '#b8860b';
                   }}
                 >
                   {isLoading ? (
