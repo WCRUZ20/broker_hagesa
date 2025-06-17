@@ -128,59 +128,99 @@ export default function MailConfig() {
                         </li>
                       </ul>
                     </div>
+                    {selected.length > 0 && (
+                      <div className={`badge bg-primary px-3 py-2 rounded-pill`}>
+                        {selected.length} seleccionado{selected.length !== 1 ? 's' : ''}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="col-md-3">
+                  <div className="position-relative">
+                    <i
+                      className={`bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}
+                      style={{ fontSize: '1rem' }}
+                    ></i>
                     <input
                       type="text"
-                      className="form-control"
+                      className={`form-control rounded-3 border-0 shadow-sm ps-5 py-2 ${darkMode ? 'bg-secondary text-white' : 'bg-light'}`}
                       placeholder="Buscar"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
+                      style={{ fontSize: '0.95rem', transition: 'all 0.3s ease' }}
                     />
                   </div>
                 </div>
-                <div className="col-md-4 text-end">
+                <div className="col-md-2 text-end">
                   <span className="text-muted">{filtered.length} registros</span>
                 </div>
               </div>
             </div>
             <div className="table-responsive">
               <table className={`table table-hover align-middle mb-0 ${darkMode ? 'table-dark' : ''}`}>
-                <thead>
-                  <tr>
-                    <th scope="col">
-                      <input type="checkbox" checked={selected.length === filtered.length && filtered.length > 0} onChange={toggleSelectAll} />
+                <thead className={`${darkMode ? 'border-secondary' : 'bg-light border-0'}`}
+                >
+                  <tr style={{ fontSize: '0.9rem', fontWeight: '600' }}>
+                    <th className="ps-4 py-3 border-0">
+                      <input
+                        type="checkbox"
+                        className="form-check-input rounded"
+                        checked={filtered.length > 0 && selected.length === filtered.length}
+                        onChange={toggleSelectAll}
+                        style={{ transform: 'scale(1.1)' }}
+                      />
                     </th>
-                    <th scope="col">Usuario SMTP</th>
-                    <th scope="col">Host</th>
-                    <th scope="col">Puerto</th>
-                    <th scope="col" style={{ width: "15%" }}>
+                    <th className="py-3 border-0">Usuario SMTP</th>
+                    <th className="py-3 border-0">Host</th>
+                    <th className="py-3 border-0">Puerto</th>
+                    <th className="py-3 border-0" style={{ width: '15%' }}>
                       <div className="d-flex align-items-center gap-2">
                         <i className="bi bi-activity"></i>
                         Estado
                       </div>
                     </th>
-                    <th scope="col">Acciones</th>
+                    <th className="py-3 border-0">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filtered.map((c) => (
-                    <tr key={c.id}>
-                      <td>
-                        <input type="checkbox" checked={selected.includes(c.id)} onChange={() => toggleSelect(c.id)} />
+                    <tr key={c.id} className={`${darkMode ? 'border-secondary' : ''}`} style={{ transition: 'all 0.2s ease', fontSize: '0.95rem' }}>
+                      <td className="ps-4 py-3 border-0">
+                        <input
+                          type="checkbox"
+                          className="form-check-input rounded"
+                          checked={selected.includes(c.id)}
+                          onChange={() => toggleSelect(c.id)}
+                          style={{ transform: 'scale(1.1)' }}
+                        />
                       </td>
-                      <td>{c.USER_SMTP}</td>
-                      <td>{c.HOST_SMTP}</td>
-                      <td>{c.PORT_SMTP}</td>
-                      <td>{renderStatusBadge(c.Estado)}</td>
-                      <td>
-                        <button className="btn btn-sm btn-outline-primary me-2" onClick={() => handleEdit(c)}>
-                          <i className="bi bi-pencil"></i>
-                        </button>
-                        <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(c.id)}>
-                          <i className="bi bi-trash"></i>
-                        </button>
+                      <td className="py-3 border-0">{c.USER_SMTP}</td>
+                      <td className="py-3 border-0">{c.HOST_SMTP}</td>
+                      <td className="py-3 border-0">{c.PORT_SMTP}</td>
+                      <td className="py-3 border-0">{renderStatusBadge(c.Estado)}</td>
+                      <td className="py-3 border-0">
+                        <div className="d-flex gap-2">
+                          <button className="btn btn-sm btn-outline-primary rounded-circle p-2" onClick={() => handleEdit(c)} style={{ width: '36px', height: '36px', transition: 'all 0.3s ease' }} title="Editar">
+                            <i className="bi bi-pencil" style={{ fontSize: '0.875rem' }}></i>
+                          </button>
+                          <button className="btn btn-sm btn-outline-danger rounded-circle p-2" onClick={() => handleDelete(c.id)} style={{ width: '36px', height: '36px', transition: 'all 0.3s ease' }} title="Eliminar">
+                            <i className="bi bi-trash" style={{ fontSize: '0.875rem' }}></i>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
+                  {filtered.length === 0 && (
+                    <tr>
+                      <td colSpan="6" className="text-center py-5">
+                        <div className={`text-muted ${darkMode ? 'text-secondary' : ''}`}>
+                          <i className="bi bi-search mb-3" style={{ fontSize: '2rem' }}></i>
+                          <p className="mb-0">No se encontraron configuraciones</p>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
