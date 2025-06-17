@@ -56,3 +56,60 @@ def create_policy(
 @router.get("/", response_model=List[schemas.PolicyOut])
 def list_policies(db: Session = Depends(get_db)):
     return db.query(models.Policy).all()
+
+
+@router.get("/{id}", response_model=schemas.PolicyDetailOut)
+def get_policy(id: int, db: Session = Depends(get_db)):
+    policy = db.query(models.Policy).get(id)
+    if not policy:
+        raise HTTPException(status_code=404, detail="Póliza no encontrada")
+    lines = db.query(models.PolicyLine).filter_by(id_policy=id).all()
+    return {**policy.__dict__, "lines": lines}
+
+
+@router.put("/{id}", response_model=schemas.PolicyOut)
+def update_policy(
+    id: int,
+    data: schemas.PolicyCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    policy = db.query(models.Policy).get(id)
+    if not policy:
+        raise HTTPException(status_code=404, detail="Póliza no encontrada")
+
+    policy.DocType = data.DocType
+    policy.PolicyNum = data.PolicyNum
+    policy.InitDate = data.InitDate
+    policy.DueDate = data.DueDate
+    policy.AscValue = data.AscValue
+    policy.LastDateMod = date.today()
+    policy.id_slrs = data.id_slrs
+    policy.id_ctms = data.id_ctms
+    policy.id_usrs_update = current_user.id
+    policy.id_insurance = data.id_insurance
+
+    db.query(models.PolicyLine).filter_by(id_policy=id).delete()
+    for line in data.lines:
+        db.add(
+            models.PolicyLine(
+                id_policy=id,
+                id_itm=line.id_itm,
+                LineNum=line.LineNum,
+                LineTotal=line.LineTotal,
+            )
+        )
+    db.commit()
+    db.refresh(policy)
+    return policy
+
+
+@router.delete("/{id}")
+def delete_policy(id: int, db: Session = Depends(get_db)):
+    policy = db.query(models.Policy).get(id)
+    if not policy:
+        raise HTTPException(status_code=404, detail="Póliza no encontrada")
+    db.query(models.PolicyLine).filter_by(id_policy=id).delete()
+    db.delete(policy)
+    db.commit()
+    return {"msg": "Póliza eliminada"}

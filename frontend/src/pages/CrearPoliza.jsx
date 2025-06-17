@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import API from "../services/api";
 import ClientSelectModal from "../components/ClientSelectModal";
 import SellerSelectModal from "../components/SellerSelectModal";
@@ -6,6 +7,9 @@ import InsuranceSelectModal from "../components/InsuranceSelectModal";
 import VehicleSelectModal from "../components/VehicleSelectModal";
 
 export default function CrearPoliza() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isEdit = !!id;
   const [form, setForm] = useState({
     DocType: "N",
     PolicyNum: "",
@@ -37,13 +41,41 @@ export default function CrearPoliza() {
       API.get("/clientes"),
       API.get("/aseguradoras"),
       API.get("/vehiculos"),
-    ]).then(([s, c, a, v]) => {
+    ]).then(async ([s, c, a, v]) => {
       setSellers(s.data);
       setClients(c.data);
       setInsurances(a.data);
       setVehicles(v.data);
+    if (isEdit) {
+        const res = await API.get(`/polizas/${id}`);
+        const p = res.data;
+        setForm({
+          DocType: p.DocType,
+          PolicyNum: p.PolicyNum,
+          InitDate: p.InitDate,
+          DueDate: p.DueDate,
+          AscValue: p.AscValue,
+          id_slrs: p.id_slrs,
+          id_ctms: p.id_ctms,
+          id_insurance: p.id_insurance,
+        });
+        const sell = s.data.find((s0) => s0.id === p.id_slrs);
+        if (sell) setSellerName(sell.nombre);
+        const cli = c.data.find((cl) => cl.id === p.id_ctms);
+        if (cli) setClientName(`${cli.nombre} ${cli.apellidos || ""}`.trim());
+        const ins = a.data.find((i) => i.id === p.id_insurance);
+        if (ins) setInsuranceName(ins.CompanyName);
+        setLines(
+          p.lines.map((l) => ({
+            id_itm: l.id_itm,
+            LineNum: l.LineNum,
+            LineTotal: l.LineTotal,
+            plate: v.data.find((veh) => veh.id === l.id_itm)?.Plate || "",
+          }))
+        );
+      }
     });
-  }, []);
+  }, [id]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -82,8 +114,14 @@ export default function CrearPoliza() {
       })),
     };
     try {
-      await API.post("/polizas", payload);
-      alert("Póliza creada");
+      if (isEdit) {
+        await API.put(`/polizas/${id}`, payload);
+        alert("Póliza actualizada");
+      } else {
+        await API.post("/polizas", payload);
+        alert("Póliza creada");
+      }
+      navigate("/polizas");
       setForm({
         DocType: "N",
         PolicyNum: "",
@@ -99,13 +137,13 @@ export default function CrearPoliza() {
       setInsuranceName("");
       setLines([{ id_itm: "", LineNum: 1, LineTotal: "", plate: "" }]);
     } catch (err) {
-      alert("Error al crear póliza");
+      alert("Error al guardar póliza");
     }
   };
 
   return (
     <div className="container py-4">
-      <h2 className="mb-4">Crear Póliza</h2>
+      <h2 className="mb-4">{isEdit ? "Editar Póliza" : "Crear Póliza"}</h2>
       <form onSubmit={handleSubmit} className="card p-3 shadow-sm">
         <div className="row">
           <div className="col-md-6 mb-3">

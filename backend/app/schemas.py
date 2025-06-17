@@ -374,3 +374,9 @@ class PolicyOut(PolicyBase):
 
     class Config:
         orm_mode = True
+
+class PolicyDetailOut(PolicyOut):
+    lines: list[PolicyLineOut]
+
+    class Config:
+        orm_mode = True

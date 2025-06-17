@@ -74,6 +74,7 @@ function App() {
           <Route path="/vehiculos-registrados" element={<VehiculosRegistrados />} />
           <Route path="/cargos" element={<CargosUsuarios />} />
           <Route path="/crear-poliza" element={<CrearPoliza />} />
+          <Route path="/editar-poliza/:id" element={<CrearPoliza />} />
           <Route path="/polizas" element={<Polizas />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
