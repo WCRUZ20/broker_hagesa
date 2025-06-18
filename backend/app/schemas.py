@@ -390,6 +390,7 @@ class PolicyListOut(PolicyOut):
     InsuranceName: Optional[str] = None
     ComiPrcnt: Optional[int] = None
     DaysOverdue: Optional[int] = None
+    RelatedPolicyNum: Optional[str] = None
 
     class Config:
         from_attributes = True

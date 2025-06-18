@@ -158,11 +158,13 @@ export default function Polizas() {
                       </th>
                       <th className="py-3 border-0">Aseguradora</th>
                       <th className="py-3 border-0">Número</th>
+                      <th className="py-3 border-0">Póliza Rel.</th>
                       <th className="py-3 border-0">Tipo</th>
                       <th className="py-3 border-0">% Comisión</th>
                       <th className="py-3 border-0">Inicio</th>
                       <th className="py-3 border-0">Vencimiento</th>
                       <th className="py-3 border-0">Valor Asegurado</th>
+                      <th className="py-3 border-0">Activo</th>
                       <th className="py-3 border-0">Días vencidos</th>
                       <th className="py-3 border-0 text-center"><i className="bi bi-gear"></i></th>
                     </tr>
@@ -181,11 +183,13 @@ export default function Polizas() {
                         </td>
                         <td className="py-3 border-0">{p.InsuranceName}</td>
                         <td className="py-3 border-0">{p.PolicyNum}</td>
+                        <td className="py-3 border-0">{p.RelatedPolicyNum}</td>
                         <td className="py-3 border-0">{p.DocType}</td>
                         <td className="py-3 border-0">{p.ComiPrcnt}</td>
                         <td className="py-3 border-0">{p.InitDate}</td>
                         <td className="py-3 border-0">{p.DueDate}</td>
                         <td className="py-3 border-0">{p.AscValue}</td>
+                        <td className="py-3 border-0">{p.activo}</td>
                         <td className="py-3 border-0">{p.DaysOverdue}</td>
                         <td className="py-3 border-0 text-center">
                           <div className="d-flex justify-content-center gap-2">
@@ -201,7 +205,7 @@ export default function Polizas() {
                     ))}
                     {filtered.length === 0 && (
                       <tr>
-                        <td colSpan="10" className="text-center py-5">
+                        <td colSpan="12" className="text-center py-5">
                           <div className={`text-muted ${darkMode ? 'text-secondary' : ''}`}>
                             <i className="bi bi-search mb-3" style={{ fontSize: '2rem' }}></i>
                             <p className="mb-0">No se encontraron pólizas</p>

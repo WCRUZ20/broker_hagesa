@@ -74,6 +74,7 @@ def list_policies(db: Session = Depends(get_db)):
                 "InsuranceName": ins.CompanyName if ins else None,
                 "ComiPrcnt": ins.ComiPrcnt if ins else None,
                 "DaysOverdue": days_overdue,
+                "RelatedPolicyNum": db.query(models.Policy.PolicyNum).filter(models.Policy.id == p.id_poliza_rel).scalar() if p.id_poliza_rel else None,
             }
         )
         result.append(schemas.PolicyListOut(**base))
