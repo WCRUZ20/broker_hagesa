@@ -21,6 +21,7 @@ import CrearPoliza from "./pages/CrearPoliza";
 import Polizas from "./pages/Polizas";
 import MailConfig from "./pages/MailConfig";
 import MailTemplates from "./pages/MailTemplates";
+import MailParams from "./pages/MailParams";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -79,6 +80,7 @@ function App() {
           <Route path="/editar-poliza/:id" element={<CrearPoliza />} />
           <Route path="/polizas" element={<Polizas />} />
           <Route path="/seguimiento/parametrizaciones-mail" element={<MailConfig />} />
+          <Route path="/seguimiento/parametros-envio" element={<MailParams />} />
           <Route path="/seguimiento/plantillas-mail" element={<MailTemplates />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

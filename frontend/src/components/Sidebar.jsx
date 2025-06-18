@@ -212,6 +212,11 @@ export default function Sidebar({ user, onLogout }) {
             {seguimientoOpen && (
               <ul className="nav flex-column ms-3 submenu">
                 <li className="nav-item">
+                  <NavLink className="nav-link" to="/seguimiento/parametros-envio">
+                    <i className="bi bi-gear me-2"></i>Parámetros envío
+                  </NavLink>
+                </li>
+                <li className="nav-item">
                   <NavLink className="nav-link" to="/seguimiento/parametrizaciones-mail">
                     <i className="bi bi-envelope me-2"></i>Config. Correo
                   </NavLink>
