@@ -17,6 +17,9 @@ export default function MailParams() {
     maxdaysallow: "",
   });
   const [id, setId] = useState(null);
+  const [clientes, setClientes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   useEffect(() => {
     API.get("/seguimiento/parametros-envio").then((res) => {
@@ -38,6 +41,10 @@ export default function MailParams() {
         setId(p.id);
       }
     });
+  }, []);
+
+  useEffect(() => {
+    API.get("/clientes").then((res) => setClientes(res.data));
   }, []);
 
   useEffect(() => {
@@ -80,33 +87,69 @@ export default function MailParams() {
     ["sunday", "Dom"],
   ];
 
+  const filteredClients = clientes.filter(
+    (c) =>
+      c.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (c.apellidos || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.identificacion.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (c.email || "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="container" style={{ maxWidth: 500 }}>
+    <div className="container" style={{ maxWidth: 900 }}>
       <h2 className={`mb-3 fw-bold ${darkMode ? "text-white" : "text-dark"}`}>Parámetros para envíos de correos</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-check form-switch mb-3">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            id="manual-switch"
-            checked={form.manualsending === "Y"}
-            onChange={() =>
-              setForm({ ...form, manualsending: form.manualsending === "Y" ? "N" : "Y" })
-            }
-          />
-          <label className="form-check-label ms-2" htmlFor="manual-switch">
-            Envío manual
-          </label>
+      <form onSubmit={handleSubmit} className="mb-4">
+        <div className="row g-2 align-items-end">
+          <div className="col-auto form-check form-switch">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="manual-switch"
+              checked={form.manualsending === "Y"}
+              onChange={() =>
+                setForm({ ...form, manualsending: form.manualsending === "Y" ? "N" : "Y" })
+              }
+            />
+            <label className="form-check-label ms-2" htmlFor="manual-switch">
+              Envío manual
+            </label>
+          </div>
+          <div className="col">
+            <input
+              name="daystodue"
+              type="number"
+              className="form-control"
+              placeholder="Días antes de vencer"
+              value={form.daystodue}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col">
+            <input
+              name="hoursending"
+              type="time"
+              className="form-control"
+              value={form.hoursending}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col">
+            <input
+              name="maxdaysallow"
+              type="number"
+              className="form-control"
+              placeholder="Máx. días posteriores"
+              value={form.maxdaysallow}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-auto">
+            <button className="btn btn-primary" type="submit">
+              Guardar
+            </button>
+          </div>
         </div>
-        <input
-          name="daystodue"
-          type="number"
-          className="form-control mb-2"
-          placeholder="Días antes de vencer"
-          value={form.daystodue}
-          onChange={handleChange}
-        />
-        <div className="d-flex flex-wrap gap-2 mb-2">
+        <div className="d-flex flex-wrap gap-2 mt-3">
           {days.map(([field, label]) => (
             <button
               type="button"
@@ -118,25 +161,44 @@ export default function MailParams() {
             </button>
           ))}
         </div>
-        <input
-          name="hoursending"
-          type="time"
-          className="form-control mb-2"
-          value={form.hoursending}
-          onChange={handleChange}
-        />
-        <input
-          name="maxdaysallow"
-          type="number"
-          className="form-control mb-2"
-          placeholder="Máx. días posteriores"
-          value={form.maxdaysallow}
-          onChange={handleChange}
-        />
-        <button className="btn btn-primary mt-2" type="submit">
-          Guardar
-        </button>
       </form>
+
+      <div className="mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Buscar cliente"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+      <div className="table-responsive">
+        <table className={`table table-hover ${darkMode ? "table-dark" : ""}`}>
+          <thead>
+            <tr>
+              <th>Identificación</th>
+              <th>Nombre</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredClients.map((c) => (
+              <tr key={c.id}>
+                <td>{c.identificacion}</td>
+                <td>{`${c.nombre} ${c.apellidos || ""}`}</td>
+                <td>{c.email}</td>
+              </tr>
+            ))}
+            {filteredClients.length === 0 && (
+              <tr>
+                <td colSpan="3" className="text-center">
+                  No hay clientes
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
