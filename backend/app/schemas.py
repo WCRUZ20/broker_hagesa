@@ -409,3 +409,25 @@ class MailConfigOut(MailConfigBase):
 
     class Config:
         from_attributes = True
+
+class MailTemplateBase(BaseModel):
+    Name: str
+    Subject: str
+    Body: str
+    Estado: str = "A"
+
+
+class MailTemplateCreate(MailTemplateBase):
+    Estado: str | None = None
+
+
+class MailTemplateOut(MailTemplateBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+    Estado: str
+
+    class Config:
+        from_attributes = True

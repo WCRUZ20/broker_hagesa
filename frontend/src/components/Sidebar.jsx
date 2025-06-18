@@ -216,6 +216,11 @@ export default function Sidebar({ user, onLogout }) {
                     <i className="bi bi-envelope me-2"></i>Config. Correo
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/seguimiento/plantillas-mail">
+                    <i className="bi bi-file-text me-2"></i>Plantilla Correo
+                  </NavLink>
+                </li>
               </ul>
             )}
           </li>

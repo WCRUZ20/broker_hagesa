@@ -18,6 +18,7 @@ from app.routers import identification_types
 from app.routers import insurance_companies
 from app.routers import policies
 from app.routers import mail_config
+from app.routers import mail_templates
 
 
 
@@ -58,6 +59,7 @@ app.include_router(vehicles.router)
 app.include_router(insurance_companies.router)
 app.include_router(policies.router)
 app.include_router(mail_config.router)
+app.include_router(mail_templates.router)
 
 
 
