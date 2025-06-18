@@ -361,11 +361,12 @@ class PolicyBase(BaseModel):
     id_insurance: int
     id_poliza_rel: Optional[int] = None
     comentario: Optional[str] = None
-
+    activo: str = "Y"
 
 
 class PolicyCreate(PolicyBase):
     lines: list[PolicyLineCreate]
+    activo: str | None = None
 
 
 class PolicyOut(PolicyBase):
@@ -374,6 +375,7 @@ class PolicyOut(PolicyBase):
     LastDateMod: date
     id_usrs_create: int
     id_usrs_update: int
+    activo: str
 
     class Config:
         from_attributes = True

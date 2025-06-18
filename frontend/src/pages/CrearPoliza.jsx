@@ -22,6 +22,7 @@ export default function CrearPoliza() {
     id_insurance: "",
     id_poliza_rel: "",
     comentario: "",
+    activo: "Y",
   });
   const [lines, setLines] = useState([
     { id_itm: "", LineNum: 1, LineTotal: "", plate: "" },
@@ -69,6 +70,7 @@ export default function CrearPoliza() {
           id_insurance: p.id_insurance,
           id_poliza_rel: p.id_poliza_rel || "",
           comentario: p.comentario || "",
+          activo: p.activo,
         });
         const sell = s.data.find((s0) => s0.id === p.id_slrs);
         if (sell) setSellerName(sell.nombre);
@@ -91,7 +93,13 @@ export default function CrearPoliza() {
   }, [id]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    const updated = { ...form, [name]: value };
+    if (name === "DocType" && value !== "R") {
+      updated.id_poliza_rel = "";
+      setPolicyRelName("");
+    }
+    setForm(updated);
   };
 
   const handleLineChange = (idx, e) => {
@@ -122,6 +130,7 @@ export default function CrearPoliza() {
       id_insurance: Number(form.id_insurance),
       id_poliza_rel: form.id_poliza_rel ? Number(form.id_poliza_rel) : null,
       comentario: form.comentario,
+      activo: form.activo,
       lines: lines.map((l) => ({
         id_itm: Number(l.id_itm),
         LineNum: Number(l.LineNum),
@@ -148,6 +157,7 @@ export default function CrearPoliza() {
         id_insurance: "",
         id_poliza_rel: "",
         comentario: "",
+        activo: "Y",
       });
       setSellerName("");
       setClientName("");
@@ -262,7 +272,24 @@ export default function CrearPoliza() {
               value={policyRelName}
               onFocus={() => setShowPolicySelect(true)}
               readOnly
+              disabled={form.DocType !== "R"}
             />
+          </div>
+          <div className="col-md-6 mb-3 d-flex align-items-center">
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="activo-switch"
+                checked={form.activo === "Y"}
+                onChange={() =>
+                  setForm({ ...form, activo: form.activo === "Y" ? "N" : "Y" })
+                }
+              />
+              <label className="form-check-label ms-2" htmlFor="activo-switch">
+                Activo
+              </label>
+            </div>
           </div>
           <div className="col-md-12 mb-3">
             <textarea

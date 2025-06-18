@@ -39,8 +39,13 @@ def create_policy(
         id_insurance=data.id_insurance,
         id_poliza_rel=data.id_poliza_rel,
         comentario=data.comentario,
+        activo=data.activo or "Y",
     )
     db.add(policy)
+    if data.DocType == "R" and data.id_poliza_rel:
+        prev_policy = db.query(models.Policy).get(data.id_poliza_rel)
+        if prev_policy:
+            prev_policy.activo = "N"
     db.commit()
     db.refresh(policy)
     for line in data.lines:
@@ -107,6 +112,12 @@ def update_policy(
     policy.id_insurance = data.id_insurance
     policy.id_poliza_rel = data.id_poliza_rel
     policy.comentario = data.comentario
+    policy.activo = data.activo or policy.activo
+
+    if data.DocType == "R" and data.id_poliza_rel:
+        prev_policy = db.query(models.Policy).get(data.id_poliza_rel)
+        if prev_policy:
+            prev_policy.activo = "N"
 
     db.query(models.PolicyLine).filter_by(id_policy=id).delete()
     for line in data.lines:
