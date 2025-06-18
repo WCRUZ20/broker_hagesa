@@ -1,0 +1,8 @@
+.rich-editor .toolbar button {
+  margin-right: 0.25rem;
+}
+
+.rich-editor .editor:empty:before {
+  content: attr(data-placeholder);
+  color: #6c757d;
+}

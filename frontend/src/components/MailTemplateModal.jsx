@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import API from "../services/api";
+import RichTextEditor from "./RichTextEditor";
 
 const VARIABLES = [
   "{NOMBRE_CLIENTE}",
@@ -41,15 +42,22 @@ export default function MailTemplateModal({ template, onClose }) {
   };
 
   const insertVar = (field, value) => {
-    const ref = field === "Subject" ? subjRef : bodyRef;
-    const el = ref.current;
-    if (!el) return;
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const text = el.value;
-    const newText = text.slice(0, start) + value + text.slice(end);
-    el.value = newText;
-    setForm({ ...form, [field]: newText });
+    if (field === "Subject") {
+      const el = subjRef.current;
+      if (!el) return;
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      const text = el.value;
+      const newText = text.slice(0, start) + value + text.slice(end);
+      el.value = newText;
+      setForm({ ...form, Subject: newText });
+    } else {
+      const el = bodyRef.current;
+      if (!el) return;
+      el.focus();
+      document.execCommand("insertText", false, value);
+      setForm({ ...form, Body: el.innerHTML });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -97,7 +105,7 @@ export default function MailTemplateModal({ template, onClose }) {
                     {v}
                   </button>
                 ))}
-                <textarea
+                {/* <textarea
                   ref={subjRef}
                   name="Subject"
                   className="form-control mt-1"
@@ -106,6 +114,12 @@ export default function MailTemplateModal({ template, onClose }) {
                   onChange={handleChange}
                   rows="2"
                   required
+                /> */}
+                <RichTextEditor
+                  ref={subjRef}
+                  value={form.Subject}
+                  onChange={(val) => setForm({ ...form, Subject: val })}
+                  placeholder="Asunto"
                 />
               </div>
 
@@ -120,15 +134,11 @@ export default function MailTemplateModal({ template, onClose }) {
                     {v}
                   </button>
                 ))}
-                <textarea
+                <RichTextEditor
                   ref={bodyRef}
-                  name="Body"
-                  className="form-control mt-1"
-                  placeholder="Cuerpo del correo"
                   value={form.Body}
-                  onChange={handleChange}
-                  rows="6"
-                  required
+                  onChange={(val) => setForm({ ...form, Body: val })}
+                  placeholder="Cuerpo del correo"
                 />
               </div>
 
