@@ -18,6 +18,7 @@ export default function MailParams() {
   });
   const [id, setId] = useState(null);
   const [clientes, setClientes] = useState([]);
+  const [polizas, setPolizas] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
 
@@ -45,6 +46,10 @@ export default function MailParams() {
 
   useEffect(() => {
     API.get("/clientes").then((res) => setClientes(res.data));
+  }, []);
+
+  useEffect(() => {
+    API.get("/polizas").then((res) => setPolizas(res.data));
   }, []);
 
   useEffect(() => {
@@ -87,13 +92,35 @@ export default function MailParams() {
     ["sunday", "Dom"],
   ];
 
-  const filteredClients = clientes.filter(
-    (c) =>
-      c.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (c.apellidos || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.identificacion.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (c.email || "").toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const clientesMap = clientes.reduce((acc, c) => {
+    acc[c.id] = c;
+    return acc;
+  }, {});
+
+  const shouldSend = (p) => {
+    if (p.activo !== "Y") return false;
+    const due = new Date(p.DueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diff = Math.floor((due - today) / 86400000); // days until due
+    const beforeDue = diff >= 0 && diff <= parseInt(form.daystodue || 0, 10);
+    const afterDue = diff < 0 && Math.abs(diff) <= parseInt(form.maxdaysallow || 0, 10);
+    return beforeDue || afterDue;
+  };
+
+  const basePolicies = polizas.filter(shouldSend);
+
+  const filteredPolicies = basePolicies.filter((p) => {
+    const c = clientesMap[p.id_ctms] || {};
+    const term = searchTerm.toLowerCase();
+    return (
+      p.PolicyNum.toLowerCase().includes(term) ||
+      (c.identificacion || "").toLowerCase().includes(term) ||
+      (c.nombre || "").toLowerCase().includes(term) ||
+      (c.apellidos || "").toLowerCase().includes(term) ||
+      (c.email || "").toLowerCase().includes(term)
+    );
+  });
 
   return (
     <div className="container" style={{ maxWidth: 900 }}>
@@ -167,7 +194,7 @@ export default function MailParams() {
         <input
           type="text"
           className="form-control"
-          placeholder="Buscar cliente"
+          placeholder="Buscar póliza o cliente"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -176,23 +203,28 @@ export default function MailParams() {
         <table className={`table table-hover ${darkMode ? "table-dark" : ""}`}>
           <thead>
             <tr>
+              <th>Nro. Póliza</th>
               <th>Identificación</th>
               <th>Nombre</th>
               <th>Email</th>
             </tr>
           </thead>
           <tbody>
-            {filteredClients.map((c) => (
-              <tr key={c.id}>
-                <td>{c.identificacion}</td>
-                <td>{`${c.nombre} ${c.apellidos || ""}`}</td>
-                <td>{c.email}</td>
-              </tr>
-            ))}
-            {filteredClients.length === 0 && (
+            {filteredPolicies.map((p) => {
+              const c = clientesMap[p.id_ctms] || {};
+              return (
+                <tr key={p.id}>
+                  <td>{p.PolicyNum}</td>
+                  <td>{c.identificacion}</td>
+                  <td>{`${c.nombre || ""} ${c.apellidos || ""}`}</td>
+                  <td>{c.email}</td>
+                </tr>
+              );
+            })}
+            {filteredPolicies.length === 0 && (
               <tr>
-                <td colSpan="3" className="text-center">
-                  No hay clientes
+                <td colSpan="4" className="text-center">
+                  No hay pólizas
                 </td>
               </tr>
             )}
