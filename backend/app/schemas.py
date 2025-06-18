@@ -359,6 +359,9 @@ class PolicyBase(BaseModel):
     id_slrs: int
     id_ctms: int
     id_insurance: int
+    id_poliza_rel: Optional[int] = None
+    comentario: Optional[str] = None
+
 
 
 class PolicyCreate(PolicyBase):

@@ -209,6 +209,8 @@ class Policy(Base):
     id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False)
     id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False)
     id_insurance = Column(Integer, ForeignKey("ASCR.id"), nullable=False)
+    id_poliza_rel = Column(Integer, ForeignKey("PLCY.id"), nullable=True)
+    comentario = Column(String, nullable=True)
 
 
 class PolicyLine(Base):

@@ -5,6 +5,7 @@ import ClientSelectModal from "../components/ClientSelectModal";
 import SellerSelectModal from "../components/SellerSelectModal";
 import InsuranceSelectModal from "../components/InsuranceSelectModal";
 import VehicleSelectModal from "../components/VehicleSelectModal";
+import PolicySelectModal from "../components/PolicySelectModal";
 
 export default function CrearPoliza() {
   const { id } = useParams();
@@ -19,6 +20,8 @@ export default function CrearPoliza() {
     id_slrs: "",
     id_ctms: "",
     id_insurance: "",
+    id_poliza_rel: "",
+    comentario: "",
   });
   const [lines, setLines] = useState([
     { id_itm: "", LineNum: 1, LineTotal: "", plate: "" },
@@ -27,13 +30,16 @@ export default function CrearPoliza() {
   const [clients, setClients] = useState([]);
   const [insurances, setInsurances] = useState([]);
   const [vehicles, setVehicles] = useState([]);
+  const [policies, setPolicies] = useState([]);
   const [showSellerSelect, setShowSellerSelect] = useState(false);
   const [showClientSelect, setShowClientSelect] = useState(false);
   const [showInsuranceSelect, setShowInsuranceSelect] = useState(false);
+  const [showPolicySelect, setShowPolicySelect] = useState(false);
   const [vehicleIndex, setVehicleIndex] = useState(null);
   const [sellerName, setSellerName] = useState("");
   const [clientName, setClientName] = useState("");
   const [insuranceName, setInsuranceName] = useState("");
+  const [policyRelName, setPolicyRelName] = useState("");
   
 
   useEffect(() => {
@@ -41,12 +47,13 @@ export default function CrearPoliza() {
       API.get("/vendedores"),
       API.get("/clientes"),
       API.get("/aseguradoras"),
-      API.get("/vehiculos"),
-    ]).then(async ([s, c, a, v]) => {
+       API.get("/polizas"),
+    ]).then(async ([s, c, a, v, p0]) => {
       setSellers(s.data);
       setClients(c.data);
       setInsurances(a.data);
       setVehicles(v.data);
+      setPolicies(p0.data);
     if (isEdit) {
         const res = await API.get(`/polizas/${id}`);
         const p = res.data;
@@ -59,6 +66,8 @@ export default function CrearPoliza() {
           id_slrs: p.id_slrs,
           id_ctms: p.id_ctms,
           id_insurance: p.id_insurance,
+          id_poliza_rel: p.id_poliza_rel || "",
+          comentario: p.comentario || "",
         });
         const sell = s.data.find((s0) => s0.id === p.id_slrs);
         if (sell) setSellerName(sell.nombre);
@@ -66,6 +75,8 @@ export default function CrearPoliza() {
         if (cli) setClientName(`${cli.nombre} ${cli.apellidos || ""}`.trim());
         const ins = a.data.find((i) => i.id === p.id_insurance);
         if (ins) setInsuranceName(ins.CompanyName);
+        const prel = p0.data.find((pl) => pl.id === p.id_poliza_rel);
+        if (prel) setPolicyRelName(prel.PolicyNum);
         setLines(
           p.lines.map((l) => ({
             id_itm: l.id_itm,
@@ -108,6 +119,8 @@ export default function CrearPoliza() {
       id_slrs: Number(form.id_slrs),
       id_ctms: Number(form.id_ctms),
       id_insurance: Number(form.id_insurance),
+      id_poliza_rel: form.id_poliza_rel ? Number(form.id_poliza_rel) : null,
+      comentario: form.comentario,
       lines: lines.map((l) => ({
         id_itm: Number(l.id_itm),
         LineNum: Number(l.LineNum),
@@ -132,10 +145,13 @@ export default function CrearPoliza() {
         id_slrs: "",
         id_ctms: "",
         id_insurance: "",
+        id_poliza_rel: "",
+        comentario: "",
       });
       setSellerName("");
       setClientName("");
       setInsuranceName("");
+      setPolicyRelName("");
       setLines([{ id_itm: "", LineNum: 1, LineTotal: "", plate: "" }]);
     } catch (err) {
       alert("Error al guardar póliza");
@@ -237,6 +253,25 @@ export default function CrearPoliza() {
               required
             />
           </div>
+          <div className="col-md-6 mb-3">
+            <input
+              name="id_poliza_rel"
+              className="form-control"
+              placeholder="Póliza relacionada"
+              value={policyRelName}
+              onFocus={() => setShowPolicySelect(true)}
+              readOnly
+            />
+          </div>
+          <div className="col-md-12 mb-3">
+            <textarea
+              name="comentario"
+              className="form-control"
+              placeholder="Comentario"
+              value={form.comentario}
+              onChange={handleChange}
+            />
+          </div>
         </div>
         <hr />
         <h5>Vehículos</h5>
@@ -304,6 +339,17 @@ export default function CrearPoliza() {
             setShowSellerSelect(false);
           }}
           onClose={() => setShowSellerSelect(false)}
+        />
+      )}
+      {showPolicySelect && (
+        <PolicySelectModal
+          policies={policies}
+          onSelect={(p) => {
+            setForm({ ...form, id_poliza_rel: p.id });
+            setPolicyRelName(p.PolicyNum);
+            setShowPolicySelect(false);
+          }}
+          onClose={() => setShowPolicySelect(false)}
         />
       )}
       {showClientSelect && (

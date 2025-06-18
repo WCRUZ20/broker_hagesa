@@ -37,6 +37,8 @@ def create_policy(
         id_usrs_create=current_user.id,
         id_usrs_update=current_user.id,
         id_insurance=data.id_insurance,
+        id_poliza_rel=data.id_poliza_rel,
+        comentario=data.comentario,
     )
     db.add(policy)
     db.commit()
@@ -103,6 +105,8 @@ def update_policy(
     policy.id_ctms = data.id_ctms
     policy.id_usrs_update = current_user.id
     policy.id_insurance = data.id_insurance
+    policy.id_poliza_rel = data.id_poliza_rel
+    policy.comentario = data.comentario
 
     db.query(models.PolicyLine).filter_by(id_policy=id).delete()
     for line in data.lines:
