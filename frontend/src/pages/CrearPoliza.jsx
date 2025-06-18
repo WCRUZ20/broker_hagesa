@@ -47,14 +47,15 @@ export default function CrearPoliza() {
       API.get("/vendedores"),
       API.get("/clientes"),
       API.get("/aseguradoras"),
-       API.get("/polizas"),
+      API.get("/vehiculos"),
+      API.get("/polizas"),
     ]).then(async ([s, c, a, v, p0]) => {
       setSellers(s.data);
       setClients(c.data);
       setInsurances(a.data);
       setVehicles(v.data);
       setPolicies(p0.data);
-    if (isEdit) {
+      if (isEdit) {
         const res = await API.get(`/polizas/${id}`);
         const p = res.data;
         setForm({
@@ -341,17 +342,6 @@ export default function CrearPoliza() {
           onClose={() => setShowSellerSelect(false)}
         />
       )}
-      {showPolicySelect && (
-        <PolicySelectModal
-          policies={policies}
-          onSelect={(p) => {
-            setForm({ ...form, id_poliza_rel: p.id });
-            setPolicyRelName(p.PolicyNum);
-            setShowPolicySelect(false);
-          }}
-          onClose={() => setShowPolicySelect(false)}
-        />
-      )}
       {showClientSelect && (
         <ClientSelectModal
           clients={clients}
@@ -373,6 +363,17 @@ export default function CrearPoliza() {
             setShowInsuranceSelect(false);
           }}
           onClose={() => setShowInsuranceSelect(false)}
+        />
+      )}
+      {showPolicySelect && (
+        <PolicySelectModal
+          policies={policies}
+          onSelect={(p) => {
+            setForm({ ...form, id_poliza_rel: p.id });
+            setPolicyRelName(p.PolicyNum);
+            setShowPolicySelect(false);
+          }}
+          onClose={() => setShowPolicySelect(false)}
         />
       )}
       {vehicleIndex !== null && (
