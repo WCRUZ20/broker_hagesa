@@ -1,0 +1,74 @@
+/* Global modal theming derived from ClienteModal2.jsx */
+
+.modal.show.fade.d-block {
+  background-color: rgba(35, 42, 55, 0.93);
+  backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #232a37;
+  border: none;
+}
+
+.modal-header {
+  background-color: #232a37;
+  color: #e2e8f0;
+  border-bottom: 2px solid #b8860b;
+}
+
+.modal-body {
+  background-color: #232a37;
+}
+
+.modal-footer {
+  background-color: #232a37;
+  border-top: 1px solid #3c4657;
+}
+
+.modal .form-control,
+.modal .form-select {
+  border-radius: 12px;
+  background-color: #323b4b;
+  color: #f7fafc;
+  font-size: 0.95rem;
+  border: 1px solid #3c4657;
+}
+
+.modal label {
+  color: #a0aec0;
+}
+
+.modal .btn-secondary {
+  border-radius: 12px;
+  background-color: #323b4b;
+  color: #e2e8f0;
+  border: 1px solid #3c4657;
+  transition: all 0.2s ease;
+}
+
+.modal .btn-secondary:hover {
+  background-color: #232a37;
+}
+
+.modal .btn-primary {
+  border-radius: 12px;
+  color: #fff;
+  background-color: #b8860b;
+  border: 1px solid #b8860b;
+  min-width: 140px;
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.18);
+  transition: all 0.2s;
+}
+
+.modal .btn-primary:hover {
+  background-color: #daa520;
+  border-color: #daa520;
+}
+
+.modal .btn-primary:disabled {
+  background-color: #8b7355;
+  border-color: #8b7355;
+  box-shadow: none;
+}
