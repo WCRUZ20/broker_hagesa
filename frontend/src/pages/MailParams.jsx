@@ -102,7 +102,7 @@ export default function MailParams() {
           name="daystodue"
           type="number"
           className="form-control mb-2"
-          placeholder="D\u00edas antes de vencer"
+          placeholder="Días antes de vencer"
           value={form.daystodue}
           onChange={handleChange}
         />
@@ -129,7 +129,7 @@ export default function MailParams() {
           name="maxdaysallow"
           type="number"
           className="form-control mb-2"
-          placeholder="M\u00e1x. d\u00edas posteriores"
+          placeholder="Máx. días posteriores"
           value={form.maxdaysallow}
           onChange={handleChange}
         />
