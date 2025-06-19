@@ -10,24 +10,24 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
+/* Fondo negro profundo + texto dorado */
 .sidebar-dark {
-  background-color: #212529;
-  color: white;
-}
-
-.sidebar-light {
-  background-color: #f8f9fa;
-  color: #212529;
+  background-color: rgb(20, 20, 20);  /* negro profundo */
+  color: rgb(200, 150, 82);           /* dorado metálico */
 }
 
 .sidebar .nav-link {
-  color: inherit;
+  color: rgb(212, 176, 131); /* dorado claro */
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .sidebar .nav-link:hover,
 .sidebar .nav-link.active {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 0.25rem;
+  background-color: rgba(200, 150, 82, 0.15); /* brillo dorado suave */
+  border-left: 4px solid rgb(200, 150, 82);   /* barra dorada lateral */
+  padding-left: 1.25rem;
+  color: white;
 }
 
 .sidebar .nav-item {
@@ -35,10 +35,23 @@
 }
 
 .sidebar .submenu .nav-link {
-  padding-left: 1.5rem;
-  font-size: 0.875rem;
+  padding-left: 1.75rem;
+  font-size: 0.85rem;
+  color: rgb(212, 176, 131);
+}
+
+.sidebar .submenu .nav-link:hover {
+  color: white;
+  background-color: rgba(200, 150, 82, 0.1);
 }
 
 .sidebar .submenu .nav-item {
   margin-bottom: 0.25rem;
+}
+
+/* Footer */
+.sidebar-footer {
+  border-top: 1px solid rgb(110, 92, 59); /* marrón oscuro */
+  background-color: rgb(20, 20, 20);
+  color: rgb(212, 176, 131);
 }

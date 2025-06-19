@@ -298,8 +298,9 @@ export default function Sidebar({ user, onLogout }) {
               right: "10px", 
               minWidth: "200px", 
               zIndex: 999,
-              backgroundColor: "#2c2c2c",
-              border: "1px solid #404040",
+              backgroundColor: "rgb(30, 30, 30)",
+              border: "1px solid rgb(110, 92, 59)",
+              color: "rgb(212, 176, 131)",
               backdropFilter: "blur(10px)"
             }}
           >
