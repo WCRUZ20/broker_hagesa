@@ -159,7 +159,7 @@ export default function Clientes() {
         <div className="col-12">
           <div className={`card border-0 shadow-sm ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-body p-0">
-              <div className="table-responsive">
+               <div className="table-responsive" style={{ maxHeight: "40vh", overflowY: "auto" }}>
                 <table className={`table table-hover align-middle mb-0 ${darkMode ? 'table-dark' : ''}`}>
                   <thead className={`${darkMode ? 'border-secondary' : 'bg-light border-0'}`}>
                     <tr style={{ fontSize: '0.9rem', fontWeight: '600' }}>
