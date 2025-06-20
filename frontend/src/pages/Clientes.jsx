@@ -3,7 +3,6 @@ import API from "../services/api";
 import ClienteModal from "../components/ClienteModal";
 import ListStyles from "../components/ListStyles";
 
-
 export default function Clientes() {
   const [clientes, setClientes] = useState([]);
   const [darkMode, setDarkMode] = useState(
