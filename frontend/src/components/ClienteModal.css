@@ -425,3 +425,9 @@
   animation: spin 1s linear infinite;
 }
 
+/* Animaciones
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to { */
