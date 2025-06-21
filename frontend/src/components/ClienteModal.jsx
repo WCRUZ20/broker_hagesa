@@ -430,7 +430,7 @@ export default function ClienteModal({ cliente, onClose }) {
                     <button
                       type="button"
                       className="btn-next"
-                      onClick={nextStep}
+                      onClick={(e) => { e.preventDefault(); nextStep(); }}
                       disabled={loading || (!isEdit && !isStep1Valid)}
                       style={{
                         padding: '0.875rem 1.5rem',
