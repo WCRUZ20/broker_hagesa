@@ -142,7 +142,9 @@ export default function ClienteModal({ cliente, onClose }) {
             <div className="success-overlay">
               <div className="success-animation">
                 <div className="checkmark-circle">
-                  <div className="checkmark"></div>
+                  <svg className="checkmark" viewBox="0 0 52 52">
+                    <path d="M14 27 L22 35 L38 19" />
+                  </svg>
                 </div>
                 <h3 className="success-title">
                   {isEdit ? "¡Cliente Actualizado!" : "¡Cliente Creado!"}
