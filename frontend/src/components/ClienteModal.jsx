@@ -323,7 +323,7 @@ export default function ClienteModal({ cliente, onClose }) {
                       <option value="">Seleccionar país</option>
                       {paises.map((pais) => (
                         <option key={pais.id} value={pais.id}>
-                          {pais.nombre}
+                          {pais.Description}
                         </option>
                       ))}
                     </select>
@@ -341,7 +341,7 @@ export default function ClienteModal({ cliente, onClose }) {
                       <option value="">Seleccionar provincia</option>
                       {provincias.map((provincia) => (
                         <option key={provincia.id} value={provincia.id}>
-                          {provincia.nombre}
+                          {provincia.Description}
                         </option>
                       ))}
                     </select>
@@ -359,7 +359,7 @@ export default function ClienteModal({ cliente, onClose }) {
                       <option value="">Seleccionar ciudad</option>
                       {ciudades.map((ciudad) => (
                         <option key={ciudad.id} value={ciudad.id}>
-                          {ciudad.nombre}
+                          {ciudad.Description}
                         </option>
                       ))}
                     </select>
@@ -377,7 +377,7 @@ export default function ClienteModal({ cliente, onClose }) {
                       <option value="">Seleccionar parroquia</option>
                       {parroquias.map((parroquia) => (
                         <option key={parroquia.id} value={parroquia.id}>
-                          {parroquia.nombre}
+                          {parroquia.Description}
                         </option>
                       ))}
                     </select>
