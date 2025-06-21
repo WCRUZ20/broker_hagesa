@@ -18,7 +18,7 @@
 
 .modal-container {
   width: 90%;
-  max-width: 800px;
+  max-width: 650px;
   max-height: calc(100vh - 40px);
   animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   margin: auto;
@@ -105,7 +105,7 @@
 .modal-header-custom {
   background: linear-gradient(135deg, rgb(25, 25, 25) 0%, rgb(30, 30, 30) 100%);
   border-bottom: 2px solid rgb(200, 150, 82);
-  padding: 2rem;
+  padding: 1.5rem;
   position: relative;
   flex-shrink: 0;
 }
@@ -122,9 +122,9 @@
 
 .modal-title-custom {
   color: rgb(200, 150, 82);
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1.25rem 0;
   letter-spacing: 0.5px;
 }
 
@@ -150,15 +150,15 @@
 }
 
 .step-number {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: rgb(45, 45, 45);
   color: rgb(212, 176, 131);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   transition: all 0.3s ease;
 }
@@ -170,7 +170,7 @@
 
 .step-label {
   color: rgb(212, 176, 131);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -190,11 +190,11 @@
   background: none;
   border: none;
   color: rgb(212, 176, 131);
-  font-size: 2rem;
+  font-size: 1.5rem;
   cursor: pointer;
   padding: 0;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,7 +211,7 @@
 
 /* Body */
 .modal-body-custom {
-  padding: 2rem;
+  padding: 1.5rem;
   background: rgb(20, 20, 20);
   position: relative;
   overflow-y: auto;
@@ -243,14 +243,14 @@
 .step-header {
   display: flex;
   align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
   border-bottom: 1px solid rgba(200, 150, 82, 0.2);
 }
 
 .step-icon {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(135deg, rgb(200, 150, 82) 0%, rgb(180, 130, 62) 100%);
   border-radius: 12px;
   display: flex;
@@ -262,7 +262,7 @@
 
 .step-title {
   color: rgb(200, 150, 82);
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
   margin: 0 0 0.25rem 0;
   letter-spacing: 0.3px;
@@ -270,7 +270,7 @@
 
 .step-description {
   color: rgb(212, 176, 131);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   margin: 0;
   opacity: 0.8;
 }
@@ -278,7 +278,7 @@
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .form-group-modern {
@@ -297,8 +297,8 @@
   border: 2px solid rgb(45, 45, 45);
   border-radius: 12px;
   color: white;
-  padding: 1rem 1rem 1rem 1rem;
-  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   outline: none;
 }
@@ -323,10 +323,10 @@
 
 .form-label-modern {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 0.75rem;
+  left: 0.75rem;
   color: rgb(150, 146, 138);
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 500;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
@@ -359,7 +359,7 @@
 .modal-footer-custom {
   background: linear-gradient(135deg, rgb(15, 15, 15) 0%, rgb(20, 20, 20) 100%);
   border-top: 1px solid rgb(60, 50, 35);
-  padding: 1.5rem 2rem;
+  padding: 1rem 1.5rem;
   flex-shrink: 0;
 }
 
@@ -373,16 +373,16 @@
 .btn-secondary,
 .btn-next,
 .btn-primary {
-  padding: 0.875rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  min-width: 140px;
+  min-width: 120px;
   justify-content: center;
   border: 2px solid transparent;
 }
@@ -523,7 +523,7 @@
   .modal-header-custom,
   .modal-body-custom,
   .modal-footer-custom {
-    padding: 1.5rem;
+    padding: 1rem;
   }
   
   .form-grid {
@@ -560,11 +560,11 @@
   }
   
   .modal-header-custom {
-    padding: 1.5rem;
+    padding: 1rem;
   }
   
   .modal-body-custom {
-    padding: 1.5rem;
+    padding: 1rem;
   }
   
   .modal-footer-custom {

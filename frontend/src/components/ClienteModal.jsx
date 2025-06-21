@@ -414,9 +414,9 @@ export default function ClienteModal({ cliente, onClose }) {
                       onClick={prevStep}
                       disabled={loading}
                       style={{
-                        padding: '0.875rem 1.5rem',
+                        padding: '0.75rem 1.25rem',
                         minWidth: '120px',
-                        height: '44px'
+                        height: '36px'
                       }}
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -435,9 +435,9 @@ export default function ClienteModal({ cliente, onClose }) {
                       onClick={(e) => { e.preventDefault(); nextStep(); }}
                       disabled={loading || (!isEdit && !isStep1Valid)}
                       style={{
-                        padding: '0.875rem 1.5rem',
+                        padding: '0.75rem 1.25rem',
                         minWidth: '120px',
-                        height: '44px'
+                        height: '36px'
                       }}
                     >
                       Siguiente
@@ -451,9 +451,9 @@ export default function ClienteModal({ cliente, onClose }) {
                       className="btn-primary"
                       disabled={loading || (!isEdit && !isStep1Valid)}
                       style={{
-                        padding: '0.875rem 1.5rem',
-                        minWidth: '160px',
-                        height: '44px'
+                        padding: '0.75rem 1.25rem',
+                        minWidth: '140px',
+                        height: '36px'
                       }}
                     >
                       {loading ? (
