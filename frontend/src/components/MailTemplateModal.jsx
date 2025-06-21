@@ -42,20 +42,13 @@ export default function MailTemplateModal({ template, onClose }) {
   };
 
   const insertVar = (field, value) => {
+    const el = field === "Subject" ? subjRef.current : bodyRef.current;
+    if (!el) return;
+    el.focus();
+    document.execCommand("insertText", false, value);
     if (field === "Subject") {
-      const el = subjRef.current;
-      if (!el) return;
-      const start = el.selectionStart;
-      const end = el.selectionEnd;
-      const text = el.value;
-      const newText = text.slice(0, start) + value + text.slice(end);
-      el.value = newText;
-      setForm({ ...form, Subject: newText });
+      setForm({ ...form, Subject: el.innerHTML });
     } else {
-      const el = bodyRef.current;
-      if (!el) return;
-      el.focus();
-      document.execCommand("insertText", false, value);
       setForm({ ...form, Body: el.innerHTML });
     }
   };
