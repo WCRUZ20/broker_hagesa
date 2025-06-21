@@ -91,7 +91,7 @@ export default function ClienteModal({ cliente, onClose }) {
       setShowSuccess(true);
       setTimeout(() => {
         onClose();
-      }, 2000);
+      }, 2500);
       
     } catch (err) {
       console.error("Error saving client:", err);
@@ -114,12 +114,28 @@ export default function ClienteModal({ cliente, onClose }) {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
+  // Permitir navegación directa por los pasos al hacer clic en el indicador
+  const goToStep = (step) => {
+    if (!loading && !showSuccess) {
+      // Para edición, permitir navegar a cualquier paso
+      // Para nuevo registro, validar que el paso 1 esté completo
+      if (step === 1 || (step === 2 && (isEdit || isStep1Valid))) {
+        setCurrentStep(step);
+      }
+    }
+  };
+
   const isStep1Valid = form.nombre && form.apellidos && form.identificacion;
 
   return (
     <div className="modal-backdrop" onClick={handleBackdropClick}>
       <div className="modal-container">
-        <div className="modal-content-custom">
+        <div className="modal-content-custom" style={{ 
+          maxHeight: 'calc(100vh - 40px)',
+          height: 'auto',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
           
           {/* Success Animation Overlay */}
           {showSuccess && (
@@ -147,12 +163,23 @@ export default function ClienteModal({ cliente, onClose }) {
                     {isEdit ? "Editar Cliente" : "Nuevo Cliente"}
                   </h2>
                   <div className="progress-indicators">
-                    <div className={`progress-step ${currentStep >= 1 ? 'active' : ''}`}>
+                    <div 
+                      className={`progress-step ${currentStep >= 1 ? 'active' : ''}`}
+                      onClick={() => goToStep(1)}
+                      style={{ cursor: !loading && !showSuccess ? 'pointer' : 'default' }}
+                    >
                       <span className="step-number">1</span>
                       <span className="step-label">Datos Personales</span>
                     </div>
                     <div className="progress-line"></div>
-                    <div className={`progress-step ${currentStep >= 2 ? 'active' : ''}`}>
+                    <div 
+                      className={`progress-step ${currentStep >= 2 ? 'active' : ''}`}
+                      onClick={() => goToStep(2)}
+                      style={{ 
+                        cursor: !loading && !showSuccess && (isEdit || isStep1Valid) ? 'pointer' : 'default',
+                        opacity: !isEdit && !isStep1Valid ? 0.5 : 1
+                      }}
+                    >
                       <span className="step-number">2</span>
                       <span className="step-label">Ubicación</span>
                     </div>
@@ -170,7 +197,12 @@ export default function ClienteModal({ cliente, onClose }) {
             </div>
 
             {/* Body with Steps */}
-            <div className="modal-body-custom">
+            <div className="modal-body-custom" style={{
+              overflowY: 'auto',
+              flex: '1',
+              minHeight: '0',
+              maxHeight: 'calc(100vh - 280px)' // Ajustar según header y footer
+            }}>
               
               {/* Step 1: Personal Information */}
               <div className={`form-step ${currentStep === 1 ? 'active' : ''}`}>
@@ -288,10 +320,10 @@ export default function ClienteModal({ cliente, onClose }) {
                       value={form.id_pais}
                       onChange={handleChange}
                     >
-                      <option value="">Seleccione...</option>
-                      {paises.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.Description}
+                      <option value="">Seleccionar país</option>
+                      {paises.map((pais) => (
+                        <option key={pais.id} value={pais.id}>
+                          {pais.nombre}
                         </option>
                       ))}
                     </select>
@@ -306,10 +338,10 @@ export default function ClienteModal({ cliente, onClose }) {
                       value={form.id_provincia}
                       onChange={handleChange}
                     >
-                      <option value="">Seleccione...</option>
-                      {provincias.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.Description}
+                      <option value="">Seleccionar provincia</option>
+                      {provincias.map((provincia) => (
+                        <option key={provincia.id} value={provincia.id}>
+                          {provincia.nombre}
                         </option>
                       ))}
                     </select>
@@ -324,10 +356,10 @@ export default function ClienteModal({ cliente, onClose }) {
                       value={form.id_ciudad}
                       onChange={handleChange}
                     >
-                      <option value="">Seleccione...</option>
-                      {ciudades.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.Description}
+                      <option value="">Seleccionar ciudad</option>
+                      {ciudades.map((ciudad) => (
+                        <option key={ciudad.id} value={ciudad.id}>
+                          {ciudad.nombre}
                         </option>
                       ))}
                     </select>
@@ -342,10 +374,10 @@ export default function ClienteModal({ cliente, onClose }) {
                       value={form.id_parroquia}
                       onChange={handleChange}
                     >
-                      <option value="">Seleccione...</option>
-                      {parroquias.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.Description}
+                      <option value="">Seleccionar parroquia</option>
+                      {parroquias.map((parroquia) => (
+                        <option key={parroquia.id} value={parroquia.id}>
+                          {parroquia.nombre}
                         </option>
                       ))}
                     </select>
@@ -357,52 +389,75 @@ export default function ClienteModal({ cliente, onClose }) {
             </div>
 
             {/* Footer with Navigation */}
-            <div className="modal-footer-custom">
-              <div className="footer-actions">
-                {currentStep === 1 ? (
-                  <>
-                    <button 
-                      type="button" 
-                      className="btn-secondary" 
-                      onClick={onClose}
-                      disabled={loading}
-                    >
-                      Cancelar
-                    </button>
-                    <button 
-                      type="button" 
-                      className="btn-next" 
-                      onClick={nextStep}
-                      disabled={!isStep1Valid || loading}
-                    >
-                      Siguiente
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-                      </svg>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button 
-                      type="button" 
-                      className="btn-secondary" 
+            <div className="modal-footer-custom" style={{
+              flexShrink: 0,
+              borderTop: '1px solid rgb(60, 50, 35)',
+              background: 'linear-gradient(135deg, rgb(15, 15, 15) 0%, rgb(20, 20, 20) 100%)',
+              position: 'sticky',
+              bottom: 0,
+              zIndex: 10
+            }}>
+              <div className="footer-actions" style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: '1rem',
+                minHeight: '60px' // Asegurar altura mínima
+              }}>
+                <div style={{ flex: '0 0 auto' }}>
+                  {currentStep > 1 && (
+                    <button
+                      type="button"
+                      className="btn-secondary"
                       onClick={prevStep}
                       disabled={loading}
+                      style={{
+                        padding: '0.875rem 1.5rem',
+                        minWidth: '120px',
+                        height: '44px'
+                      }}
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+                        <path d="M15.41 16.58L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.42z"/>
                       </svg>
                       Anterior
                     </button>
-                    <button 
-                      type="submit" 
-                      className="btn-primary" 
-                      disabled={loading}
+                  )}
+                </div>
+                
+                <div style={{ display: 'flex', gap: '1rem', flex: '0 0 auto' }}>
+                  {currentStep < 2 ? (
+                    <button
+                      type="button"
+                      className="btn-next"
+                      onClick={nextStep}
+                      disabled={loading || (!isEdit && !isStep1Valid)}
+                      style={{
+                        padding: '0.875rem 1.5rem',
+                        minWidth: '120px',
+                        height: '44px'
+                      }}
+                    >
+                      Siguiente
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/>
+                      </svg>
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="btn-primary"
+                      disabled={loading || (!isEdit && !isStep1Valid)}
+                      style={{
+                        padding: '0.875rem 1.5rem',
+                        minWidth: '160px',
+                        height: '44px'
+                      }}
                     >
                       {loading ? (
                         <>
-                          <span className="spinner"></span>
-                          {isEdit ? "Actualizando..." : "Guardando..."}
+                          <div className="spinner"></div>
+                          Guardando...
                         </>
                       ) : (
                         <>
@@ -413,8 +468,8 @@ export default function ClienteModal({ cliente, onClose }) {
                         </>
                       )}
                     </button>
-                  </>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </form>

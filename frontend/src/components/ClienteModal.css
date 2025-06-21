@@ -12,13 +12,18 @@
   justify-content: center;
   z-index: 1050;
   animation: fadeIn 0.4s ease-out;
+  overflow-y: auto;
+  padding: 20px;
 }
 
 .modal-container {
   width: 90%;
   max-width: 800px;
-  max-height: 90vh;
+  max-height: calc(100vh - 40px);
   animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-content-custom {
@@ -28,6 +33,9 @@
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
 }
 
 /* Success Animation Overlay */
@@ -92,6 +100,7 @@
   border-bottom: 2px solid rgb(200, 150, 82);
   padding: 2rem;
   position: relative;
+  flex-shrink: 0;
 }
 
 .header-content {
@@ -197,9 +206,11 @@
 .modal-body-custom {
   padding: 2rem;
   background: rgb(20, 20, 20);
-  min-height: 400px;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
 }
 
 .form-step {
@@ -342,6 +353,7 @@
   background: linear-gradient(135deg, rgb(15, 15, 15) 0%, rgb(20, 20, 20) 100%);
   border-top: 1px solid rgb(60, 50, 35);
   padding: 1.5rem 2rem;
+  flex-shrink: 0;
 }
 
 .footer-actions {
@@ -425,9 +437,139 @@
   animation: spin 1s linear infinite;
 }
 
-/* Animaciones
+/* Animaciones completas */
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
-  to { */
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(-100px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes checkmarkDraw {
+  0% {
+    opacity: 0;
+    transform: rotate(45deg) scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(45deg) scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-container {
+    width: 95%;
+    max-height: calc(100vh - 20px);
+  }
+  
+  .modal-header-custom,
+  .modal-body-custom,
+  .modal-footer-custom {
+    padding: 1.5rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .form-group-modern.full-width {
+    grid-column: span 1;
+  }
+  
+  .progress-indicators {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .step-label {
+    display: none;
+  }
+  
+  .progress-line {
+    width: 20px;
+  }
+}
+
+@media (max-height: 600px) {
+  .modal-backdrop {
+    align-items: flex-start;
+    padding: 10px;
+  }
+  
+  .modal-container {
+    margin: 0;
+  }
+  
+  .modal-header-custom {
+    padding: 1.5rem;
+  }
+  
+  .modal-body-custom {
+    padding: 1.5rem;
+  }
+  
+  .modal-footer-custom {
+    padding: 1rem 1.5rem;
+  }
+}
