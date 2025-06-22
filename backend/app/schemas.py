@@ -444,6 +444,7 @@ class MailTemplateOut(MailTemplateBase):
 class MailParamBase(BaseModel):
     manualsending: str
     daystodue: Optional[int] = None
+    daystodueSeller: Optional[int] = None
     monday: str
     tuesday: str
     wednesday: str

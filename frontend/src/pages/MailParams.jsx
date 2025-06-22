@@ -6,6 +6,7 @@ export default function MailParams() {
   const [form, setForm] = useState({
     manualsending: "Y",
     daystodue: "",
+    daystodueSeller: "",
     monday: "N",
     tuesday: "N",
     wednesday: "N",
@@ -29,6 +30,7 @@ export default function MailParams() {
         setForm({
           manualsending: p.manualsending || "Y",
           daystodue: p.daystodue ?? "",
+          daystodueSeller: p.daystodueSeller ?? "",
           monday: p.monday || "N",
           tuesday: p.tuesday || "N",
           wednesday: p.wednesday || "N",
@@ -142,16 +144,27 @@ export default function MailParams() {
             </label>
           </div>
           <div className="col">
+            <label className="form-label">Días aviso antes de vencer cliente</label>
             <input
               name="daystodue"
               type="number"
               className="form-control"
-              placeholder="Días antes de vencer"
               value={form.daystodue}
               onChange={handleChange}
             />
           </div>
           <div className="col">
+            <label className="form-label">Días aviso antes de vencer vendedor</label>
+            <input
+              name="daystodueSeller"
+              type="number"
+              className="form-control"
+              value={form.daystodueSeller}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col">
+            <label className="form-label">Hora de envío</label>
             <input
               name="hoursending"
               type="time"
@@ -161,11 +174,11 @@ export default function MailParams() {
             />
           </div>
           <div className="col">
+            <label className="form-label">Máx. días envíos posteriores al vencimiento</label>
             <input
               name="maxdaysallow"
               type="number"
               className="form-control"
-              placeholder="Máx. días posteriores"
               value={form.maxdaysallow}
               onChange={handleChange}
             />
@@ -176,7 +189,8 @@ export default function MailParams() {
             </button>
           </div>
         </div>
-        <div className="d-flex flex-wrap gap-2 mt-3">
+        <label className="form-label d-block mt-3">Frecuencia de envío a la semana</label>
+        <div className="d-flex flex-wrap gap-2">
           {days.map(([field, label]) => (
             <button
               type="button"
@@ -191,10 +205,10 @@ export default function MailParams() {
       </form>
 
       <div className="mb-3">
+        <label className="form-label">Buscar póliza o cliente</label>
         <input
           type="text"
           className="form-control"
-          placeholder="Buscar póliza o cliente"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

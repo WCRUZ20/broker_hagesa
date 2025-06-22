@@ -6,6 +6,7 @@ export default function MailParamsModal({ param, onClose }) {
   const [form, setForm] = useState({
     manualsending: "Y",
     daystodue: "",
+    daystodueSeller: "",
     monday: "N",
     tuesday: "N",
     wednesday: "N",
@@ -22,6 +23,7 @@ export default function MailParamsModal({ param, onClose }) {
       setForm({
         manualsending: param.manualsending || "Y",
         daystodue: param.daystodue ?? "",
+        daystodueSeller: param.daystodueSeller ?? "",
         monday: param.monday || "N",
         tuesday: param.tuesday || "N",
         wednesday: param.wednesday || "N",
@@ -80,14 +82,23 @@ export default function MailParamsModal({ param, onClose }) {
                   Envío manual
                 </label>
               </div>
+              <label className="form-label">Días aviso antes de vencer al cliente</label>
               <input
                 name="daystodue"
                 type="number"
                 className="form-control mb-2"
-                placeholder="Días antes de vencer"
                 value={form.daystodue}
                 onChange={handleChange}
               />
+               <label className="form-label">Días aviso antes de vencer al vendedor</label>
+              <input
+                name="daystodueSeller"
+                type="number"
+                className="form-control mb-2"
+                value={form.daystodueSeller}
+                onChange={handleChange}
+              />
+              <label className="form-label">Freciencia a la semana</label>
               <div className="d-flex flex-wrap gap-2 mb-2">
                 {[
                   ["monday", "Lun"],
@@ -108,6 +119,7 @@ export default function MailParamsModal({ param, onClose }) {
                   </button>
                 ))}
               </div>
+              <label className="form-label">Hora de envío</label>
               <input
                 name="hoursending"
                 type="time"
@@ -115,11 +127,11 @@ export default function MailParamsModal({ param, onClose }) {
                 value={form.hoursending}
                 onChange={handleChange}
               />
+              <label className="form-label">Máx. días envíos posteriores al vecimiento</label>
               <input
                 name="maxdaysallow"
                 type="number"
                 className="form-control mb-2"
-                placeholder="Máx. días posteriores"
                 value={form.maxdaysallow}
                 onChange={handleChange}
               />

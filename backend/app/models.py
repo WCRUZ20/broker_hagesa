@@ -256,6 +256,7 @@ class MailSendingParam(Base):
     id = Column(Integer, primary_key=True, index=True)
     manualsending = Column(String(1))
     daystodue = Column(Integer, nullable=True)
+    daystodueSeller = Column(Integer, nullable=True)
     monday = Column(String(1))
     tuesday = Column(String(1))
     wednesday = Column(String(1))

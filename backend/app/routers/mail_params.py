@@ -26,6 +26,7 @@ def create_param(
     item = models.MailSendingParam(
         manualsending=data.manualsending,
         daystodue=data.daystodue,
+        daystodueSeller=data.daystodueSeller,
         monday=data.monday,
         tuesday=data.tuesday,
         wednesday=data.wednesday,
@@ -67,6 +68,7 @@ def update_param(
         raise HTTPException(status_code=404, detail="Par\u00e1metro no encontrado")
     item.manualsending = data.manualsending
     item.daystodue = data.daystodue
+    item.daystodueSeller = data.daystodueSeller
     item.monday = data.monday
     item.tuesday = data.tuesday
     item.wednesday = data.wednesday
