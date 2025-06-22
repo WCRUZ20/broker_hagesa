@@ -212,6 +212,16 @@ export default function Sidebar({ user, onLogout }) {
             {seguimientoOpen && (
               <ul className="nav flex-column ms-3 submenu">
                 <li className="nav-item">
+                  <NavLink className="nav-link" to="/seguimiento/clientes">
+                    <i className="bi bi-people me-2"></i>Clientes
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/seguimiento/vendedores">
+                    <i className="bi bi-person-lines-fill me-2"></i>Vendedores
+                  </NavLink>
+                </li>
+                <li className="nav-item">
                   <NavLink className="nav-link" to="/seguimiento/parametros-envio">
                     <i className="bi bi-gear me-2"></i>Parámetros envío
                   </NavLink>

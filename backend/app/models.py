@@ -265,3 +265,19 @@ class MailSendingParam(Base):
     sunday = Column(String(1))
     hoursending = Column(Time, nullable=True)
     maxdaysallow = Column(Integer, nullable=True)
+
+class MailHistory(Base):
+    __tablename__ = "HCOR"
+
+    id = Column(Integer, primary_key=True, index=True)
+    Name = Column(String, nullable=False)
+    Subject = Column(String, nullable=False)
+    Body = Column(String, nullable=False)
+    id_formato_mail = Column(Integer, ForeignKey("ENTM.id"), nullable=False)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False)
+    id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False)
+    Destination = Column(String(1), nullable=False)
+    id_seller = Column(Integer, ForeignKey("SLRS.id"), nullable=True)
+    id_client = Column(Integer, ForeignKey("CTMS.id"), nullable=True)

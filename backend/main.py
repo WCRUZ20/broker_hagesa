@@ -20,6 +20,7 @@ from app.routers import policies
 from app.routers import mail_config
 from app.routers import mail_templates
 from app.routers import mail_params
+from app.routers import mail_history
 
 
 
@@ -62,6 +63,7 @@ app.include_router(policies.router)
 app.include_router(mail_config.router)
 app.include_router(mail_templates.router)
 app.include_router(mail_params.router)
+app.include_router(mail_history.router)
 
 
 

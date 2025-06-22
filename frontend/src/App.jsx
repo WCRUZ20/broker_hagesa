@@ -22,6 +22,8 @@ import Polizas from "./pages/Polizas";
 import MailConfig from "./pages/MailConfig";
 import MailTemplates from "./pages/MailTemplates";
 import MailParams from "./pages/MailParams";
+import SeguimientoClientes from "./pages/SeguimientoClientes";
+import SeguimientoVendedores from "./pages/SeguimientoVendedores";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -82,6 +84,8 @@ function App() {
           <Route path="/seguimiento/parametrizaciones-mail" element={<MailConfig />} />
           <Route path="/seguimiento/parametros-envio" element={<MailParams />} />
           <Route path="/seguimiento/plantillas-mail" element={<MailTemplates />} />
+          <Route path="/seguimiento/clientes" element={<SeguimientoClientes />} />
+          <Route path="/seguimiento/vendedores" element={<SeguimientoVendedores />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
