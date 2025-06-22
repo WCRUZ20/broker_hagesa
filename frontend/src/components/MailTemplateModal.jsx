@@ -21,6 +21,7 @@ export default function MailTemplateModal({ template, onClose }) {
     Name: "",
     Subject: "",
     Body: "",
+    Destination: "C",
     Estado: "A",
   });
   const subjRef = useRef(null);
@@ -32,6 +33,7 @@ export default function MailTemplateModal({ template, onClose }) {
         Name: template.Name || "",
         Subject: template.Subject || "",
         Body: template.Body || "",
+        Destination: template.Destination || "C",
         Estado: template.Estado || "A",
       });
     }
@@ -134,6 +136,16 @@ export default function MailTemplateModal({ template, onClose }) {
                   placeholder="Cuerpo del correo"
                 />
               </div>
+
+               <select
+                name="Destination"
+                className="form-select mb-2"
+                value={form.Destination}
+                onChange={handleChange}
+              >
+                <option value="C">Cliente</option>
+                <option value="S">Vendedor</option>
+              </select>
 
               <select
                 name="Estado"

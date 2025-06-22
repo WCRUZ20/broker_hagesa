@@ -136,6 +136,7 @@ export default function MailTemplates() {
                       <input type="checkbox" className="form-check-input rounded" checked={filtered.length > 0 && selected.length === filtered.length} onChange={toggleSelectAll} style={{transform:'scale(1.1)'}} />
                     </th>
                     <th className="py-3 border-0">Nombre</th>
+                    <th className="py-3 border-0">Destino</th>
                     <th className="py-3 border-0">Estado</th>
                     <th className="py-3 border-0">Acciones</th>
                   </tr>
@@ -147,6 +148,7 @@ export default function MailTemplates() {
                         <input type="checkbox" className="form-check-input rounded" checked={selected.includes(t.id)} onChange={() => toggleSelect(t.id)} style={{transform:'scale(1.1)'}} />
                       </td>
                       <td className="py-3 border-0">{t.Name}</td>
+                      <td className="py-3 border-0">{t.Destination === "S" ? "Vendedor" : "Cliente"}</td>
                       <td className="py-3 border-0">{renderStatusBadge(t.Estado)}</td>
                       <td className="py-3 border-0">
                         <div className="d-flex gap-2">
@@ -162,7 +164,7 @@ export default function MailTemplates() {
                   ))}
                   {filtered.length === 0 && (
                     <tr>
-                      <td colSpan="4" className="text-center py-5">
+                      <td colSpan="5" className="text-center py-5">
                         <div className={`text-muted ${darkMode ? 'text-secondary' : ''}`}>
                           <i className="bi bi-search mb-3" style={{fontSize:'2rem'}}></i>
                           <p className="mb-0">No se encontraron plantillas</p>

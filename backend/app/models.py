@@ -243,6 +243,7 @@ class MailTemplate(Base):
     Name = Column(String, nullable=False)
     Subject = Column(String, nullable=False)
     Body = Column(String, nullable=False)
+    Destination = Column(String(1), nullable=False, default="C")
     Estado = Column(String(1), default="A", nullable=False)
     CreateDate = Column(Date, nullable=False)
     LastDateMod = Column(Date, nullable=False)

@@ -420,11 +420,13 @@ class MailTemplateBase(BaseModel):
     Name: str
     Subject: str
     Body: str
+    Destination: str = "C"
     Estado: str = "A"
 
 
 class MailTemplateCreate(MailTemplateBase):
     Estado: str | None = None
+    Destination: str | None = None
 
 
 class MailTemplateOut(MailTemplateBase):
@@ -434,6 +436,7 @@ class MailTemplateOut(MailTemplateBase):
     id_usrs_create: int
     id_usrs_update: int
     Estado: str
+    Destination: str
 
     class Config:
         from_attributes = True

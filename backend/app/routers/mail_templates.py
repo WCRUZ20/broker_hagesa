@@ -28,6 +28,7 @@ def create_template(
         Name=data.Name,
         Subject=data.Subject,
         Body=data.Body,
+        Destination=data.Destination or "C",
         Estado=data.Estado or "A",
         CreateDate=date.today(),
         LastDateMod=date.today(),
@@ -66,6 +67,8 @@ def update_template(
     item.Name = data.Name
     item.Subject = data.Subject
     item.Body = data.Body
+    if data.Destination is not None:
+        item.Destination = data.Destination
     if data.Estado is not None:
         item.Estado = data.Estado
     item.LastDateMod = date.today()
