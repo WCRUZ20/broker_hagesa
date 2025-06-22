@@ -59,8 +59,10 @@ export default function ClientSelectModal({ clients = [], onSelect, onClose }) {
           {/* Body */}
           <div className="modal-body-custom" style={{
             padding: '1.5rem',
-            maxHeight: '60vh',
-            overflowY: 'auto'
+            maxHeight: '70vh',
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column'
           }}>
             
             {/* Search Input */}
@@ -82,7 +84,11 @@ export default function ClientSelectModal({ clients = [], onSelect, onClose }) {
               border: '2px solid rgb(45, 45, 45)',
               borderRadius: '12px',
               overflow: 'hidden',
-              background: 'rgb(25, 25, 25)'
+              background: 'rgb(25, 25, 25)',
+              flex: '1',
+              minHeight: '0',
+              display: 'flex',
+              flexDirection: 'column'
             }}>
               
               {/* Table Header */}
@@ -105,7 +111,12 @@ export default function ClientSelectModal({ clients = [], onSelect, onClose }) {
               </div>
 
               {/* Client Rows */}
-              <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              <div style={{ 
+                flex: '1',
+                overflowY: 'auto',
+                minHeight: '200px',
+                maxHeight: 'calc(70vh - 200px)'
+              }}>
                 {filtered.length === 0 ? (
                   <div style={{
                     padding: '2rem',
