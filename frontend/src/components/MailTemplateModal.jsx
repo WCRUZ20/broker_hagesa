@@ -12,7 +12,8 @@ const VARIABLES = [
   "{NUMERO_POLIZA}",
   "{FECHA_INICIO}",
   "{FECHA_VENCIMIENTO}",
-  "{VALOR_ASEGURADO}"
+  "{VALOR_ASEGURADO}",
+  "{LISTA_DETALLES}"
 ];
 
 export default function MailTemplateModal({ template, onClose }) {

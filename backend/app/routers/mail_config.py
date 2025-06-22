@@ -18,7 +18,7 @@ def get_db():
 
 
 def send_email(cfg: models.MailConfig, to: str, subject: str, body: str):
-    msg = MIMEText(body, "plain")
+    mmsg = MIMEText(body, "html")
     msg["Subject"] = subject
     msg["From"] = cfg.USER_SMTP
     msg["To"] = to
@@ -107,12 +107,17 @@ def send_test_mail(
     to: str,
     subject: str = "Prueba de correo",
     body: str = "Esto es un correo de prueba",
+    items: list[str] | None = None,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
     cfg = db.query(models.MailConfig).get(id)
     if not cfg:
-        raise HTTPException(status_code=404, detail="Configuraci\u00f3n no encontrada")
+        raise HTTPException(status_code=404, detail="Configuracion no encontrada")
+        list_html = ""
+    if items:
+        list_html = "<ul>" + "".join(f"<li>{i}</li>" for i in items) + "</ul>"
+    body = body.replace("{LISTA_DETALLES}", list_html)
     try:
         send_email(cfg, to, subject, body)
     except Exception as e:
