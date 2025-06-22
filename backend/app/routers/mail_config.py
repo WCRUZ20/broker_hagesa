@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Any
 from datetime import date
 from .. import models, schemas
 from app.database import SessionLocal
@@ -17,8 +17,8 @@ def get_db():
         db.close()
 
 
-def send_email(cfg: models.MailConfig, to: str, subject: str, body: str):
-    mmsg = MIMEText(body, "html")
+def send_email(cfg: Any, to: str, subject: str, body: str):
+    msg = MIMEText(body, "html")
     msg["Subject"] = subject
     msg["From"] = cfg.USER_SMTP
     msg["To"] = to
@@ -123,3 +123,23 @@ def send_test_mail(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {"msg": "Correo enviado"}
+
+@router.post("/test-config")
+def test_mail_config(data: schemas.MailConfigBase):
+    """Validate SMTP parameters without saving them."""
+    cfg = models.MailConfig(
+        USER_SMTP=data.USER_SMTP,
+        PASS_SMTP=data.PASS_SMTP,
+        HOST_SMTP=data.HOST_SMTP,
+        PORT_SMTP=data.PORT_SMTP,
+        Estado=data.Estado,
+        CreateDate=date.today(),
+        LastDateMod=date.today(),
+        id_usrs_create=0,
+        id_usrs_update=0,
+    )
+    try:
+        send_email(cfg, data.USER_SMTP, "Prueba de correo", "Configuración correcta")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {"msg": "Configuración válida"}

@@ -42,6 +42,16 @@ export default function MailConfigModal({ config, onClose }) {
     }
   };
 
+  const handleTest = async () => {
+    try {
+      await API.post("/seguimiento/parametrizaciones-mail/test-config", form);
+      alert("Configuración válida");
+    } catch (err) {
+      const msg = err.response?.data?.detail || "Error al validar configuración";
+      alert(msg);
+    }
+  };
+
   return (
     <div className="modal show fade d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
       <div className="modal-dialog">
@@ -97,6 +107,9 @@ export default function MailConfigModal({ config, onClose }) {
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+              <button className="btn btn-outline-primary" type="button" onClick={handleTest}>
+                Validar
+              </button>
               <button className="btn btn-primary" type="submit">Guardar</button>
             </div>
           </form>
