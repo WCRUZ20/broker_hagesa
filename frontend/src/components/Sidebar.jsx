@@ -14,6 +14,7 @@ export default function Sidebar({ user, onLogout }) {
   const [polizasOpen, setPolizasOpen] = useState(false);
   const [seguimientoOpen, setSeguimientoOpen] = useState(false);
   const [company, setCompany] = useState(null);
+  const [cargos, setCargos] = useState([]);
 
   useEffect(() => {
     const loadCompany = async () => {
@@ -27,6 +28,19 @@ export default function Sidebar({ user, onLogout }) {
       }
     };
     loadCompany();
+  }, []);
+
+  useEffect(() => {
+    const loadCargos = async () => {
+      try {
+        const res = await API.get("/cargos");
+        setCargos(res.data);
+      } catch (err) {
+        console.error("Error cargando cargos", err);
+        setCargos([]);
+      }
+    };
+    loadCargos();
   }, []);
 
   useEffect(() => {
@@ -340,7 +354,7 @@ export default function Sidebar({ user, onLogout }) {
                   {user?.user_role === "A" ? "Administrador" : "Usuario"}
                 </div> */}
                 <div style={{ fontSize: "0.75rem", opacity: 0.7 }}>
-                   {user?.user_position === 1 ? "Developer" : "Usuario"}
+                  {cargos.find(c => c.id === user?.user_position)?.Description || "Usuario"}
                 </div>
               </div>
             </div>
