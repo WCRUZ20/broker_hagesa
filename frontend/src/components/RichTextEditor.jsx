@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState, useCallback } from "react";
 import "./RichTextEditor.css";
 
 const RichTextEditor = forwardRef(function RichTextEditor({ 
@@ -7,11 +7,16 @@ const RichTextEditor = forwardRef(function RichTextEditor({
   placeholder = "Escribe tu contenido aquí...",
   darkMode = true,
   disabled = false,
-  className = ""
+  className = "",
+  label = "",
+  required = false,
+  error = ""
 }, ref) {
   const localRef = useRef(null);
   const editorRef = ref || localRef;
+  const fileInputRef = useRef(null);
   const [isActive, setIsActive] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
 
   useEffect(() => {
     if (editorRef.current && editorRef.current.innerHTML !== value) {
@@ -19,13 +24,13 @@ const RichTextEditor = forwardRef(function RichTextEditor({
     }
   }, [value]);
 
-  const emitChange = () => {
+  const emitChange = useCallback(() => {
     if (onChange && editorRef.current) {
       onChange(editorRef.current.innerHTML);
     }
-  };
+  }, [onChange]);
 
-  const exec = (cmd, val = null) => {
+  const exec = useCallback((cmd, val = null) => {
     if (disabled) return;
     
     try {
@@ -37,48 +42,58 @@ const RichTextEditor = forwardRef(function RichTextEditor({
     } catch (error) {
       console.error('Error ejecutando comando:', error);
     }
-  };
+  }, [disabled, emitChange]);
 
-  const handleImage = (e) => {
+  const handleImage = useCallback(async (e) => {
     if (disabled) return;
     
     const file = e.target.files[0];
-    if (file) {
-      // Validar tamaño de archivo (máximo 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('La imagen es demasiado grande. Máximo 5MB.');
-        e.target.value = "";
-        return;
-      }
-      
-      // Validar tipo de archivo
-      if (!file.type.startsWith('image/')) {
-        alert('Por favor selecciona un archivo de imagen válido.');
-        e.target.value = "";
-        return;
-      }
-      
+    if (!file) return;
+
+    // Validar tamaño de archivo (máximo 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('La imagen es demasiado grande. Máximo 5MB.');
+      e.target.value = "";
+      return;
+    }
+    
+    // Validar tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor selecciona un archivo de imagen válido.');
+      e.target.value = "";
+      return;
+    }
+    
+    setImageUploading(true);
+    
+    try {
       const reader = new FileReader();
       reader.onload = (ev) => {
         exec("insertImage", ev.target.result);
+        setImageUploading(false);
       };
       reader.onerror = () => {
         alert('Error al cargar la imagen.');
+        setImageUploading(false);
       };
       reader.readAsDataURL(file);
+    } catch (error) {
+      alert('Error al procesar la imagen.');
+      setImageUploading(false);
     }
+    
     e.target.value = "";
-  };
+  }, [disabled, exec]);
 
-  const handleFocus = () => {
+  const handleFocus = useCallback(() => {
     setIsActive(true);
-  };
+  }, []);
 
-  const handleBlur = () => {
+  const handleBlur = useCallback(() => {
     setIsActive(false);
-  };
+  }, []);
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (disabled) return;
     
     // Atajos de teclado
@@ -107,7 +122,7 @@ const RichTextEditor = forwardRef(function RichTextEditor({
           break;
       }
     }
-  };
+  }, [disabled, exec]);
 
   const toolbarButtons = [
     {
@@ -129,69 +144,43 @@ const RichTextEditor = forwardRef(function RichTextEditor({
       type: "button"
     },
     {
-      title: "Aumentar tamaño",
-      text: "A+",
-      action: () => exec("fontSize", 5),
-      type: "button"
-    },
-    {
-      title: "Reducir tamaño",
-      text: "A-", 
-      action: () => exec("fontSize", 3),
-      type: "button"
-    },
-    {
-      title: "Color de texto",
-      type: "color",
-      action: (e) => exec("foreColor", e.target.value)
-    },
-    {
-      title: "Color de fondo",
-      type: "highlight",
-      action: (e) => exec("hiliteColor", e.target.value)
-    },
-    {
       title: "Lista con viñetas",
       icon: "bi-list-ul",
       action: () => exec("insertUnorderedList"),
       type: "button"
     },
     {
-      title: "Lista numerada", 
+      title: "Lista numerada",
       icon: "bi-list-ol",
       action: () => exec("insertOrderedList"),
       type: "button"
     },
     {
-      title: "Alinear izquierda",
-      icon: "bi-text-left",
-      action: () => exec("justifyLeft"),
+      title: "Aumentar tamaño",
+      text: "A+",
+      action: () => exec("fontSize", "5"),
       type: "button"
     },
     {
-      title: "Centrar",
-      icon: "bi-text-center", 
-      action: () => exec("justifyCenter"),
+      title: "Reducir tamaño", 
+      text: "A-",
+      action: () => exec("fontSize", "3"),
       type: "button"
     },
     {
-      title: "Alinear derecha",
-      icon: "bi-text-right",
-      action: () => exec("justifyRight"),
-      type: "button"
+      title: "Color de texto",
+      action: (e) => exec("foreColor", e.target.value),
+      type: "color"
+    },
+    {
+      title: "Color de fondo",
+      action: (e) => exec("hiliteColor", e.target.value),
+      type: "highlight"
     },
     {
       title: "Insertar imagen",
       icon: "bi-image",
-      type: "file"
-    },
-    {
-      title: "Insertar enlace",
-      icon: "bi-link-45deg",
-      action: () => {
-        const url = prompt("Ingresa la URL del enlace:");
-        if (url) exec("createLink", url);
-      },
+      action: () => fileInputRef.current?.click(),
       type: "button"
     },
     {
@@ -202,116 +191,114 @@ const RichTextEditor = forwardRef(function RichTextEditor({
     },
     {
       title: "Rehacer (Ctrl+Shift+Z)",
-      icon: "bi-arrow-clockwise", 
+      icon: "bi-arrow-clockwise",
       action: () => exec("redo"),
-      type: "button"
-    },
-    {
-      title: "Limpiar formato",
-      icon: "bi-eraser",
-      action: () => exec("removeFormat"),
       type: "button"
     }
   ];
 
   return (
-    <div 
-      className={`rich-editor ${darkMode ? '' : 'light-theme'} ${className} ${isActive ? 'active' : ''} ${disabled ? 'disabled' : ''}`}
-    >
-      <div className="toolbar">
-        {toolbarButtons.map((button, index) => {
-          if (button.type === "color") {
-            return (
-              <input
-                key={index}
-                type="color"
-                onChange={button.action}
-                title={button.title}
-                disabled={disabled}
-                defaultValue="#ffffff"
-              />
-            );
-          }
-          
-          if (button.type === "highlight") {
-            return (
-              <input
-                key={index}
-                type="color"
-                onChange={button.action}
-                title={button.title}
-                disabled={disabled}
-                defaultValue="#ffff00"
-              />
-            );
-          }
-          
-          if (button.type === "file") {
-            return (
-              <label key={index} title={button.title} className={disabled ? 'disabled' : ''}>
-                {button.icon && <i className={`bi ${button.icon}`}></i>}
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleImage}
-                  disabled={disabled}
-                />
-              </label>
-            );
-          }
-          
-          return (
-            <button
-              key={index}
-              type="button"
-              onClick={button.action}
-              title={button.title}
-              disabled={disabled}
-            >
-              {button.icon && <i className={`bi ${button.icon}`}></i>}
-              {button.text && <span>{button.text}</span>}
-            </button>
-          );
-        })}
-      </div>
+    <div className="form-group-modern">
+      {label && (
+        <label className="form-label-modern-static">
+          {label} {required && <span className="text-danger">*</span>}
+        </label>
+      )}
       
       <div
-        ref={editorRef}
-        className="editor"
-        contentEditable={!disabled}
-        onInput={emitChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
-        data-placeholder={placeholder}
-        suppressContentEditableWarning={true}
-        style={{ 
-          minHeight: "200px",
-          opacity: disabled ? 0.6 : 1,
-          pointerEvents: disabled ? 'none' : 'auto'
-        }}
-      />
+        className={`rich-editor-modern ${darkMode ? 'dark-theme' : 'light-theme'} ${className} ${isActive ? 'active' : ''} ${disabled ? 'disabled' : ''} ${error ? 'error' : ''}`}
+      >
+        <div className="toolbar-modern">
+          {toolbarButtons.map((button, index) => {
+            if (button.type === "color") {
+              return (
+                <div key={index} className="color-input-wrapper" title={button.title}>
+                  <input
+                    type="color"
+                    onChange={button.action}
+                    disabled={disabled}
+                    defaultValue="#ffffff"
+                    className="color-input-modern"
+                  />
+                  <i className="bi bi-palette color-icon"></i>
+                </div>
+              );
+            }
+            
+            if (button.type === "highlight") {
+              return (
+                <div key={index} className="color-input-wrapper" title={button.title}>
+                  <input
+                    type="color"
+                    onChange={button.action}
+                    disabled={disabled}
+                    defaultValue="#ffff00"
+                    className="color-input-modern"
+                  />
+                  <i className="bi bi-paint-bucket color-icon"></i>
+                </div>
+              );
+            }
+            
+            return (
+              <button
+                key={index}
+                type="button"
+                onClick={button.action}
+                title={button.title}
+                disabled={disabled || (button.title.includes("imagen") && imageUploading)}
+                className="toolbar-btn-modern"
+              >
+                {button.icon && <i className={`bi ${button.icon}`}></i>}
+                {button.text && <span>{button.text}</span>}
+                {button.title.includes("imagen") && imageUploading && (
+                  <div className="btn-spinner"></div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+        
+        <div
+          ref={editorRef}
+          className="editor-modern"
+          contentEditable={!disabled}
+          onInput={emitChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          data-placeholder={placeholder}
+          suppressContentEditableWarning={true}
+          role="textbox"
+          aria-multiline="true"
+          aria-required={required}
+          aria-invalid={!!error}
+          aria-describedby={error ? `editor-error-${Math.random()}` : undefined}
+        />
+        
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImage}
+          style={{ display: 'none' }}
+          disabled={disabled}
+        />
+        
+        {disabled && (
+          <div className="editor-overlay-modern">
+            <div className="overlay-content">
+              <i className="bi bi-lock"></i>
+              <span>Editor deshabilitado</span>
+            </div>
+          </div>
+        )}
+      </div>
       
-      {disabled && (
-        <div className="editor-overlay" style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0, 0, 0, 0.1)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '16px'
-        }}>
-          <span style={{ 
-            color: 'rgb(150, 146, 138)', 
-            fontSize: '0.9rem',
-            fontWeight: '500'
-          }}>
-            Editor deshabilitado
-          </span>
+      {error && (
+        <div className="form-error-modern" role="alert">
+          <i className="bi bi-exclamation-circle me-1"></i>
+          {error}
         </div>
       )}
     </div>

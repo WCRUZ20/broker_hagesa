@@ -45,6 +45,7 @@ export default function VendedorModal({ vendedor, onClose, onSave }) {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
 
   // Memoized validation function
   const validateField = useCallback((name, value) => {
@@ -83,126 +84,46 @@ export default function VendedorModal({ vendedor, onClose, onSave }) {
     return isValid;
   }, [form, validateField]);
 
+  // Check if step 1 is valid (basic required fields)
+  const isStep1Valid = useMemo(() => {
+    return form.nombre.trim() && form.identificacion.trim() &&
+           !validateField('nombre', form.nombre) &&
+           !validateField('identificacion', form.identificacion);
+  }, [form.nombre, form.identificacion, validateField]);
+
   // Initialize form data
   useEffect(() => {
     if (isEdit && vendedor) {
       setForm(prevForm => ({ ...prevForm, ...vendedor }));
-    } else {
-      setForm(INITIAL_FORM_STATE);
     }
-    setErrors({});
-  }, [vendedor, isEdit]);
+  }, [isEdit, vendedor]);
 
-  // Focus management
+  // Focus first input on mount
   useEffect(() => {
-    if (firstInputRef.current) {
-      const timer = setTimeout(() => {
-        firstInputRef.current?.focus();
+    if (firstInputRef.current && !loading && !showSuccess) {
+      setTimeout(() => {
+        firstInputRef.current.focus();
       }, 100);
-      return () => clearTimeout(timer);
     }
-  }, []);
+  }, [loading, showSuccess]);
 
-  // Escape key handler
+  // Handle keyboard navigation
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape' && !loading && !showSuccess) {
+    const handleKeyDown = (e) => {
+      if (showSuccess || loading) return;
+      
+      if (e.key === 'Escape') {
         onClose();
+      }
+      
+      if (e.key === 'Enter' && e.ctrlKey) {
+        handleSubmit(e);
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [loading, showSuccess, onClose]);
-
-  // Handle form field changes with validation
-  const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
-    
-    setForm(prev => ({
-      ...prev,
-      [name]: value
-    }));
-
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: null
-      }));
-    }
-
-    // Real-time validation for better UX
-    const error = validateField(name, value);
-    if (error && value.length > 0) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: error
-      }));
-    }
-  }, [errors, validateField]);
-
-  // Handle form submission
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    
-    if (isSubmitting) return;
-    
-    if (!validateForm()) {
-      // Focus first error field
-      const firstErrorField = Object.keys(errors)[0];
-      if (firstErrorField) {
-        const fieldElement = document.querySelector(`input[name="${firstErrorField}"]`);
-        fieldElement?.focus();
-      }
-      return;
-    }
-
-    setIsSubmitting(true);
-    setLoading(true);
-
-    try {
-      let response;
-      if (isEdit) {
-        response = await API.put(`/vendedores/${vendedor.id}`, form);
-      } else {
-        response = await API.post("/vendedores", form);
-      }
-
-      setShowSuccess(true);
-      
-      // Call onSave callback if provided
-      if (onSave) {
-        onSave(response.data);
-      }
-
-      // Auto close after success animation
-      setTimeout(() => {
-        onClose();
-      }, 2500);
-      
-    } catch (err) {
-      console.error('Error saving vendedor:', err);
-      
-      // Handle different error types
-      if (err.response?.status === 422) {
-        // Validation errors from backend
-        const backendErrors = err.response.data.errors || {};
-        setErrors(backendErrors);
-      } else if (err.response?.status === 409) {
-        // Conflict error (duplicate identification)
-        setErrors({
-          identificacion: "Esta identificación ya existe"
-        });
-      } else {
-        // Generic error
-        alert("Error al guardar vendedor. Por favor, intente nuevamente.");
-      }
-    } finally {
-      setLoading(false);
-      setIsSubmitting(false);
-    }
-  }, [form, errors, isEdit, vendedor, onSave, onClose, validateForm, isSubmitting]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showSuccess, loading, onClose]);
 
   // Handle backdrop click
   const handleBackdropClick = useCallback((e) => {
@@ -211,162 +132,386 @@ export default function VendedorModal({ vendedor, onClose, onSave }) {
     }
   }, [loading, showSuccess, onClose]);
 
-  // Memoized form fields configuration
-  const formFields = useMemo(() => [
-    {
-      name: "nombre",
-      label: "Nombre *",
-      type: "text",
-      required: true,
-      autoComplete: "name",
-      ref: firstInputRef
-    },
-    {
-      name: "identificacion",
-      label: "Identificación *",
-      type: "text",
-      required: true,
-      autoComplete: "off"
-    },
-    {
-      name: "telefono",
-      label: "Teléfono",
-      type: "tel",
-      autoComplete: "tel"
-    },
-    {
-      name: "email",
-      label: "Correo",
-      type: "email",
-      autoComplete: "email"
-    },
-    {
-      name: "direccion",
-      label: "Dirección",
-      type: "text",
-      autoComplete: "street-address"
+  // Handle input changes with real-time validation
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    
+    setForm(prev => ({ ...prev, [name]: value }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: null }));
     }
-  ], []);
+    
+    // Real-time validation for immediate feedback
+    const error = validateField(name, value);
+    if (error) {
+      setErrors(prev => ({ ...prev, [name]: error }));
+    }
+  }, [errors, validateField]);
 
-  // Memoized success message
-  const successMessage = useMemo(() => ({
-    title: isEdit ? '¡Vendedor Actualizado!' : '¡Vendedor Creado!',
-    message: 'La información se ha guardado correctamente'
-  }), [isEdit]);
+  // Navigation between steps
+  const goToStep = useCallback((step) => {
+    if (loading || showSuccess) return;
+    
+    if (step === 2 && !isEdit && !isStep1Valid) {
+      return; // Prevent navigation if step 1 is invalid
+    }
+    
+    setCurrentStep(step);
+  }, [loading, showSuccess, isEdit, isStep1Valid]);
+
+  // Handle next step
+  const handleNextStep = useCallback(() => {
+    if (currentStep === 1 && isStep1Valid) {
+      setCurrentStep(2);
+    }
+  }, [currentStep, isStep1Valid]);
+
+  // Handle previous step
+  const handlePreviousStep = useCallback(() => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  }, [currentStep]);
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (isSubmitting || loading || showSuccess) return;
+    
+    if (!validateForm()) {
+      // If there are validation errors, go to step 1
+      setCurrentStep(1);
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setLoading(true);
+    
+    try {
+      const dataToSend = { ...form };
+      
+      if (isEdit) {
+        await API.put(`/vendedores/${vendedor.id}`, dataToSend);
+      } else {
+        await API.post("/vendedores", dataToSend);
+      }
+      
+      // Show success animation
+      setShowSuccess(true);
+      
+      // Call onSave callback if provided
+      if (onSave) {
+        onSave();
+      }
+      
+      // Close modal after animation
+      setTimeout(() => {
+        onClose();
+      }, 2500);
+      
+    } catch (error) {
+      console.error("Error saving vendedor:", error);
+      
+      // Show user-friendly error message
+      const errorMessage = error.response?.data?.message || 
+                          "Error al guardar el vendedor. Por favor, intente nuevamente.";
+      alert(errorMessage);
+      
+      setLoading(false);
+      setIsSubmitting(false);
+    }
+  };
+
+  // Success Animation Component
+  const SuccessAnimation = () => (
+    <div className="success-overlay">
+      <div className="success-animation">
+        <div className="checkmark-circle">
+          <svg className="checkmark" viewBox="0 0 52 52">
+            <path d="M14 27l8 8L38 19" />
+          </svg>
+        </div>
+        <h3 className="success-title">
+          ¡{isEdit ? 'Actualizado' : 'Registrado'} Exitosamente!
+        </h3>
+        <p className="success-message">
+          El vendedor ha sido {isEdit ? 'actualizado' : 'registrado'} correctamente
+        </p>
+      </div>
+    </div>
+  );
 
   return (
-    <div 
-      className="modal-backdrop" 
-      onClick={handleBackdropClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-    >
-      <div className="modal-container" ref={modalRef}>
+    <div className="modal-backdrop" onClick={handleBackdropClick} ref={modalRef}>
+      <div className="modal-container">
         <div className="modal-content-custom">
           
-          {showSuccess && (
-            <div className="success-overlay" role="status" aria-live="polite">
-              <div className="success-animation">
-                <div className="checkmark-circle">
-                  <svg className="checkmark" viewBox="0 0 52 52" aria-hidden="true">
-                    <path d="M14 27 L22 35 L38 19" />
+          {/* Success Overlay */}
+          {showSuccess && <SuccessAnimation />}
+          
+          {/* Header */}
+          <div className="modal-header-custom">
+            <div className="header-content">
+              <div className="title-section">
+                <h2 className="modal-title-custom">
+                  {isEdit ? "✏️ Editar Vendedor" : "👤 Nuevo Vendedor"}
+                </h2>
+                <div className="progress-indicators">
+                  <div 
+                    className={`progress-step ${currentStep >= 1 ? 'active' : ''}`}
+                    onClick={() => goToStep(1)}
+                    style={{ cursor: !loading && !showSuccess ? 'pointer' : 'default' }}
+                  >
+                    <span className="step-number">1</span>
+                    <span className="step-label">Datos Básicos</span>
+                  </div>
+                  <div className="progress-line"></div>
+                  <div 
+                    className={`progress-step ${currentStep >= 2 ? 'active' : ''}`}
+                    onClick={() => goToStep(2)}
+                    style={{ 
+                      cursor: !loading && !showSuccess && (isEdit || isStep1Valid) ? 'pointer' : 'default',
+                      opacity: !isEdit && !isStep1Valid ? 0.5 : 1
+                    }}
+                  >
+                    <span className="step-number">2</span>
+                    <span className="step-label">Contacto</span>
+                  </div>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                className="modal-close-btn" 
+                onClick={onClose}
+                disabled={loading}
+              >
+                ×
+              </button>
+            </div>
+          </div>
+
+          {/* Body with Steps */}
+          <div className="modal-body-custom" style={{
+            overflowY: 'auto',
+            flex: '1',
+            minHeight: '0',
+            maxHeight: 'calc(100vh - 280px)'
+          }}>
+            
+            {/* Step 1: Basic Information */}
+            <div className={`form-step ${currentStep === 1 ? 'active' : ''}`}>
+              <div className="step-header">
+                <div className="step-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                   </svg>
                 </div>
-                <h3 className="success-title">
-                  {successMessage.title}
-                </h3>
-                <p className="success-message">
-                  {successMessage.message}
-                </p>
-              </div>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} noValidate>
-            <div className="modal-header-custom">
-              <div className="header-content">
-                <div className="title-section">
-                  <h2 id="modal-title" className="modal-title-custom">
-                    {isEdit ? 'Editar Vendedor' : 'Nuevo Vendedor'}
-                  </h2>
+                <div>
+                  <h3 className="step-title">Información Básica</h3>
+                  <p className="step-description">Complete los datos fundamentales del vendedor</p>
                 </div>
-                <button
-                  type="button"
-                  className="modal-close-btn"
-                  onClick={onClose}
-                  disabled={loading}
-                  aria-label="Cerrar modal"
-                >
-                  ×
-                </button>
               </div>
+
+              <form onSubmit={handleSubmit}>
+                <div className="form-grid">
+                  <div className={`form-group-modern ${errors.nombre ? 'error' : ''}`}>
+                    <input
+                      ref={firstInputRef}
+                      name="nombre"
+                      className="form-input-modern"
+                      placeholder=" "
+                      value={form.nombre}
+                      onChange={handleChange}
+                      required
+                      disabled={loading}
+                    />
+                    <label className="form-label-modern">Nombre Completo *</label>
+                    <div className="form-highlight"></div>
+                    {errors.nombre && <div className="form-error">{errors.nombre}</div>}
+                  </div>
+
+                  <div className={`form-group-modern ${errors.identificacion ? 'error' : ''}`}>
+                    <input
+                      name="identificacion"
+                      className="form-input-modern"
+                      placeholder=" "
+                      value={form.identificacion}
+                      onChange={handleChange}
+                      required
+                      disabled={loading}
+                    />
+                    <label className="form-label-modern">Identificación *</label>
+                    <div className="form-highlight"></div>
+                    {errors.identificacion && <div className="form-error">{errors.identificacion}</div>}
+                  </div>
+                </div>
+              </form>
             </div>
 
-            <div className="modal-body-custom">
-              {formFields.map((field) => (
-                <div 
-                  key={field.name}
-                  className={`form-group-modern ${errors[field.name] ? 'error' : ''}`}
-                >
-                  <input
-                    ref={field.ref}
-                    name={field.name}
-                    type={field.type}
-                    className="form-input-modern"
-                    placeholder=" "
-                    value={form[field.name]}
-                    onChange={handleChange}
-                    required={field.required}
-                    autoComplete={field.autoComplete}
-                    disabled={loading}
-                    aria-invalid={!!errors[field.name]}
-                    aria-describedby={errors[field.name] ? `${field.name}-error` : undefined}
-                  />
-                  <label className="form-label-modern">
-                    {field.label}
-                  </label>
-                  <div className="form-highlight"></div>
-                  {errors[field.name] && (
-                    <div 
-                      id={`${field.name}-error`}
-                      className="form-error"
-                      role="alert"
+            {/* Step 2: Contact Information */}
+            <div className={`form-step ${currentStep === 2 ? 'active' : ''}`}>
+              <div className="step-header">
+                <div className="step-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="step-title">Información de Contacto</h3>
+                  <p className="step-description">Complete los datos de contacto (opcional)</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit}>
+                <div className="form-grid">
+                  <div className={`form-group-modern ${errors.telefono ? 'error' : ''}`}>
+                    <input
+                      name="telefono"
+                      className="form-input-modern"
+                      placeholder=" "
+                      type="tel"
+                      value={form.telefono}
+                      onChange={handleChange}
+                      disabled={loading}
+                    />
+                    <label className="form-label-modern">Teléfono</label>
+                    <div className="form-highlight"></div>
+                    {errors.telefono && <div className="form-error">{errors.telefono}</div>}
+                  </div>
+
+                  <div className={`form-group-modern ${errors.email ? 'error' : ''}`}>
+                    <input
+                      name="email"
+                      className="form-input-modern"
+                      placeholder=" "
+                      type="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      disabled={loading}
+                    />
+                    <label className="form-label-modern">Correo Electrónico</label>
+                    <div className="form-highlight"></div>
+                    {errors.email && <div className="form-error">{errors.email}</div>}
+                  </div>
+
+                  <div className="form-group-modern full-width">
+                    <input
+                      name="direccion"
+                      className="form-input-modern"
+                      placeholder=" "
+                      value={form.direccion}
+                      onChange={handleChange}
+                      disabled={loading}
+                    />
+                    <label className="form-label-modern">Dirección</label>
+                    <div className="form-highlight"></div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="modal-footer-custom">
+            <div className="footer-actions">
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem',
+                color: 'rgb(150, 146, 138)',
+                fontSize: '0.75rem'
+              }}>
+                {currentStep === 1 && (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    Complete los campos obligatorios (*)
+                  </>
+                )}
+                {currentStep === 2 && (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    Información adicional de contacto
+                  </>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                {currentStep === 1 ? (
+                  <>
+                    <button 
+                      type="button" 
+                      className="btn-secondary"
+                      onClick={onClose}
+                      disabled={loading}
                     >
-                      {errors[field.name]}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="modal-footer-custom">
-              <div className="footer-actions">
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  onClick={onClose}
-                  disabled={loading}
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="btn-primary"
-                  disabled={loading || isSubmitting}
-                >
-                  {loading ? (
-                    <>
-                      <div className="spinner" aria-hidden="true"></div>
-                      Guardando...
-                    </>
-                  ) : (
-                    'Guardar'
-                  )}
-                </button>
+                      Cancelar
+                    </button>
+                    <button 
+                      type="button" 
+                      className="btn-next"
+                      onClick={handleNextStep}
+                      disabled={loading || !isStep1Valid}
+                    >
+                      {loading ? (
+                        <>
+                          <div className="spinner"></div>
+                          Procesando...
+                        </>
+                      ) : (
+                        <>
+                          Siguiente
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                          </svg>
+                        </>
+                      )}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button 
+                      type="button" 
+                      className="btn-secondary"
+                      onClick={handlePreviousStep}
+                      disabled={loading}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+                      </svg>
+                      Anterior
+                    </button>
+                    <button 
+                      type="submit" 
+                      className="btn-primary"
+                      onClick={handleSubmit}
+                      disabled={loading || isSubmitting}
+                    >
+                      {loading ? (
+                        <>
+                          <div className="spinner"></div>
+                          {isEdit ? 'Actualizando...' : 'Guardando...'}
+                        </>
+                      ) : (
+                        <>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+                          </svg>
+                          {isEdit ? 'Actualizar' : 'Guardar'} Vendedor
+                        </>
+                      )}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

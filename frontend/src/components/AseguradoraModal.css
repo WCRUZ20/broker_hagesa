@@ -1,0 +1,131 @@
+/* Importamos los estilos base del ClienteModal */
+@import './ClienteModal.css';
+
+/* Personalizaciones específicas para AseguradoraModal */
+
+/* Grid layout personalizado para aseguradoras */
+.aseguradora-modal .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.aseguradora-modal .form-group-modern.full-width {
+  grid-column: span 2;
+}
+
+/* Iconos específicos para aseguradoras con colores temáticos */
+.aseguradora-modal .form-label-modern svg {
+  color: rgb(200, 150, 82);
+  transition: color 0.3s ease;
+}
+
+.aseguradora-modal .form-group-modern:focus-within .form-label-modern svg {
+  color: rgb(220, 170, 102);
+}
+
+/* Validación visual para campos numéricos */
+.aseguradora-modal input[type="number"]:invalid {
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.aseguradora-modal input[type="number"]:valid {
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+/* Estilo especial para el campo de comisión */
+.aseguradora-modal input[name="ComiPrcnt"] {
+  position: relative;
+}
+
+.aseguradora-modal input[name="ComiPrcnt"]::after {
+  content: "%";
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgb(150, 146, 138);
+  pointer-events: none;
+}
+
+/* Animación específica para el icono de empresa */
+.aseguradora-modal .form-label-modern svg[viewBox="0 0 24 24"] {
+  animation: subtle-pulse 3s ease-in-out infinite;
+}
+
+@keyframes subtle-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* Mejoras responsive específicas */
+@media (max-width: 768px) {
+  .aseguradora-modal .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .aseguradora-modal .form-group-modern.full-width {
+    grid-column: span 1;
+  }
+}
+
+/* Estados hover mejorados para botones */
+.aseguradora-modal .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgb(34, 197, 94) 0%, rgb(22, 163, 74) 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(34, 197, 94, 0.5);
+}
+
+.aseguradora-modal .btn-secondary:hover:not(:disabled) {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Indicador de campo requerido mejorado */
+.aseguradora-modal .form-label-modern:has(+ .form-input-modern[required])::after,
+.aseguradora-modal .form-label-modern:has(+ .form-select-modern[required])::after {
+  content: " *";
+  color: rgb(239, 68, 68);
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+/* Estilos para el estado de carga */
+.aseguradora-modal .form-input-modern:disabled,
+.aseguradora-modal .form-select-modern:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(45, 45, 45, 0.5);
+}
+
+/* Mejora del foco para accesibilidad */
+.aseguradora-modal .form-input-modern:focus,
+.aseguradora-modal .form-select-modern:focus {
+  outline: 2px solid rgba(200, 150, 82, 0.5);
+  outline-offset: 2px;
+}
+
+/* Animación de entrada específica para aseguradoras */
+.aseguradora-modal .modal-content-custom {
+  animation: slideInAseguradora 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideInAseguradora {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.98) rotateX(10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+  }
+}
