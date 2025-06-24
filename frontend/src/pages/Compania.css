@@ -1,0 +1,781 @@
+/* Compania.css - Estilo empresarial oscuro consistente con Sidebar */
+
+.compania-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, 
+    rgba(15, 15, 15, 0.98) 0%, 
+    rgba(25, 25, 25, 0.95) 50%,
+    rgba(20, 20, 20, 0.97) 100%);
+  color: #f8f9fa;
+  font-family: 'Montserrat', sans-serif;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Header con gradiente y efectos */
+.compania-header {
+  background: linear-gradient(135deg, 
+    rgba(200, 150, 82, 0.15) 0%, 
+    rgba(200, 150, 82, 0.08) 50%,
+    rgba(0, 0, 0, 0.1) 100%);
+  border-bottom: 1px solid rgba(200, 150, 82, 0.2);
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.compania-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(200, 150, 82, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(200, 150, 82, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.header-text {
+  flex: 1;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: rgb(212, 176, 131);
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+}
+
+.page-title i {
+  color: rgb(200, 150, 82);
+  filter: drop-shadow(0 0 8px rgba(200, 150, 82, 0.3));
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: rgba(212, 176, 131, 0.8);
+  margin: 0;
+  font-weight: 400;
+}
+
+.header-decoration {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.decoration-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, 
+    rgba(200, 150, 82, 0.3) 0%, 
+    rgba(200, 150, 82, 0.1) 100%);
+  border: 2px solid rgba(200, 150, 82, 0.4);
+  position: relative;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.decoration-circle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: rgb(200, 150, 82);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(200, 150, 82, 0.6);
+}
+
+.decoration-line {
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    rgba(200, 150, 82, 0.8) 0%, 
+    rgba(200, 150, 82, 0.2) 100%);
+  border-radius: 2px;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(200, 150, 82, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(200, 150, 82, 0);
+    transform: scale(1.05);
+  }
+}
+
+/* Notificación de éxito */
+.success-notification {
+  position: fixed;
+  top: 20px;
+  right: -400px;
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.95) 0%, 
+    rgba(22, 163, 74, 0.95) 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(34, 197, 94, 0.3);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  min-width: 350px;
+}
+
+.success-notification.show {
+  right: 20px;
+  animation: slideInRight 0.5s ease-out;
+}
+
+.success-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.success-icon {
+  font-size: 2rem;
+  opacity: 0.9;
+}
+
+.success-text h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.success-text p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Contenido principal */
+.compania-content {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  align-items: start;
+}
+
+.form-container {
+  background: rgba(25, 25, 25, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  border: 1px solid rgba(200, 150, 82, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    rgba(200, 150, 82, 0.8) 0%, 
+    rgba(200, 150, 82, 0.3) 50%,
+    rgba(200, 150, 82, 0.8) 100%);
+}
+
+/* Campos de formulario modernos */
+.form-group-modern {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.form-input-modern {
+  width: 100%;
+  padding: 1.25rem 1rem 1rem 1rem;
+  background: rgba(40, 40, 40, 0.8);
+  border: 2px solid rgba(200, 150, 82, 0.2);
+  border-radius: 12px;
+  color: #f8f9fa;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.form-input-modern:focus {
+  outline: none;
+  border-color: rgb(200, 150, 82);
+  box-shadow: 
+    0 0 0 3px rgba(200, 150, 82, 0.1),
+    0 10px 30px rgba(200, 150, 82, 0.1);
+  background: rgba(45, 45, 45, 0.9);
+  transform: translateY(-2px);
+}
+
+.form-input-modern:not(:placeholder-shown) {
+  border-color: rgba(200, 150, 82, 0.4);
+}
+
+.form-label-modern {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(212, 176, 131, 0.8);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  z-index: 1;
+}
+
+.form-input-modern:focus + .form-label-modern,
+.form-input-modern:not(:placeholder-shown) + .form-label-modern {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: rgb(200, 150, 82);
+  background: rgba(25, 25, 25, 0.9);
+  padding: 0 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.form-highlight {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    rgba(200, 150, 82, 0.8) 0%, 
+    rgb(200, 150, 82) 50%,
+    rgba(200, 150, 82, 0.8) 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+}
+
+.form-input-modern:focus ~ .form-highlight {
+  width: 100%;
+}
+
+/* Sección de logo */
+.logo-section {
+  margin: 2.5rem 0;
+}
+
+.logo-label {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgb(212, 176, 131);
+  margin-bottom: 1rem;
+}
+
+.logo-upload-zone {
+  border: 2px dashed rgba(200, 150, 82, 0.3);
+  border-radius: 16px;
+  padding: 2.5rem;
+  text-align: center;
+  background: rgba(40, 40, 40, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-upload-zone.drag-over {
+  border-color: rgb(200, 150, 82);
+  background: rgba(200, 150, 82, 0.1);
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(200, 150, 82, 0.2);
+}
+
+.logo-upload-zone.has-image {
+  padding: 1rem;
+  border-style: solid;
+  border-color: rgba(200, 150, 82, 0.4);
+  background: rgba(45, 45, 45, 0.6);
+}
+
+/* Vista previa del logo */
+.logo-preview {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.company-logo {
+  max-width: 200px;
+  max-height: 150px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.logo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+}
+
+.logo-preview:hover .logo-overlay {
+  opacity: 1;
+}
+
+.btn-logo-action {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-change {
+  background: rgba(200, 150, 82, 0.9);
+  color: white;
+}
+
+.btn-change:hover {
+  background: rgb(200, 150, 82);
+  transform: translateY(-2px);
+}
+
+.btn-remove {
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+}
+
+.btn-remove:hover {
+  background: rgb(239, 68, 68);
+  transform: translateY(-2px);
+}
+
+/* Placeholder de carga */
+.upload-placeholder {
+  color: rgba(212, 176, 131, 0.8);
+}
+
+.upload-icon {
+  font-size: 3rem;
+  color: rgb(200, 150, 82);
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.upload-placeholder h4 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: rgb(212, 176, 131);
+}
+
+.upload-placeholder p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.upload-specs {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.btn-upload {
+  background: linear-gradient(135deg, 
+    rgba(200, 150, 82, 0.8) 0%, 
+    rgba(200, 150, 82, 0.6) 100%);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.btn-upload:hover {
+  background: linear-gradient(135deg, 
+    rgb(200, 150, 82) 0%, 
+    rgba(200, 150, 82, 0.8) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(200, 150, 82, 0.3);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Botón de envío */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.9) 0%, 
+    rgba(22, 163, 74, 0.9) 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, 
+    rgb(34, 197, 94) 0%, 
+    rgb(22, 163, 74) 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(34, 197, 94, 0.4);
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-submit.loading {
+  pointer-events: none;
+}
+
+/* Spinner de carga */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Panel de información */
+.info-panel {
+  background: rgba(30, 30, 30, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid rgba(200, 150, 82, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(200, 150, 82, 0.2);
+}
+
+.info-header i {
+  font-size: 1.5rem;
+  color: rgb(200, 150, 82);
+}
+
+.info-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: rgb(212, 176, 131);
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(40, 40, 40, 0.4);
+  border-radius: 12px;
+  border-left: 3px solid rgba(200, 150, 82, 0.6);
+  transition: all 0.3s ease;
+}
+
+.info-item:hover {
+  background: rgba(45, 45, 45, 0.6);
+  border-left-color: rgb(200, 150, 82);
+  transform: translateX(5px);
+}
+
+.info-item i {
+  font-size: 1.5rem;
+  color: rgb(200, 150, 82);
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.info-item h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(212, 176, 131);
+}
+
+.info-item p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(212, 176, 131, 0.8);
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .compania-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .info-panel {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .compania-header {
+    padding: 2rem 1rem;
+  }
+
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .compania-content {
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .form-container {
+    padding: 1.5rem;
+  }
+
+  .logo-upload-zone {
+    padding: 1.5rem;
+    min-height: 150px;
+  }
+
+  .upload-specs {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .success-notification {
+    right: -100%;
+    left: 10px;
+    right: 10px;
+    min-width: auto;
+  }
+
+  .success-notification.show {
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.6rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .page-title i {
+    font-size: 2rem;
+  }
+
+  .form-container {
+    padding: 1rem;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 1.2rem;
+  }
+
+  .logo-upload-zone {
+    padding: 1rem;
+  }
+
+  .company-logo {
+    max-width: 150px;
+    max-height: 100px;
+  }
+}
+
+/* Animaciones adicionales */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-container,
+.info-panel {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.form-container {
+  animation-delay: 0.1s;
+}
+
+.info-panel {
+  animation-delay: 0.2s;
+}
+
+/* Estados de carga mejorados */
+.form-input-modern:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(30, 30, 30, 0.8);
+}
+
+.form-label-modern i {
+  color: rgb(200, 150, 82);
+  transition: all 0.3s ease;
+}
+
+.form-group-modern:focus-within .form-label-modern i {
+  color: rgb(220, 170, 102);
+  transform: scale(1.1);
+}
+
+/* Efectos de glassmorphism */
+.compania-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(200, 150, 82, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 60%, rgba(200, 150, 82, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 40% 90%, rgba(200, 150, 82, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Mejoras de accesibilidad */
+.btn-submit:focus,
+.btn-upload:focus,
+.btn-logo-action:focus {
+  outline: 2px solid rgba(200, 150, 82, 0.6);
+  outline-offset: 2px;
+}
+
+.form-input-modern:focus {
+  outline: none;
+}
+
+/* Transiciones suaves para modo oscuro */
+* {
+  transition-property: background-color, border-color, color, box-shadow, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
