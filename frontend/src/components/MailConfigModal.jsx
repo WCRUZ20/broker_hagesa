@@ -35,7 +35,7 @@ export default function MailConfigModal({ config, onClose }) {
   };
 
   const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
+    if (e.target === e.currentTarget && !loading) {
       onClose();
     }
   };
@@ -44,9 +44,9 @@ export default function MailConfigModal({ config, onClose }) {
     setIsValidating(true);
     try {
       await API.post("/seguimiento/parametrizaciones-mail/test-config", form);
-      alert("Configuración SMTP válida");
+      alert("✅ Configuración SMTP válida");
     } catch (error) {
-      const msg = error.response?.data?.detail || "Error al validar configuración";
+      const msg = error.response?.data?.detail || "❌ Error al validar configuración";
       alert(msg);
     } finally {
       setIsValidating(false);
@@ -73,7 +73,7 @@ export default function MailConfigModal({ config, onClose }) {
     } catch (err) {
       console.error("Error saving mail config:", err);
       const msg = err.response?.data?.detail || "Error al guardar configuración";
-      alert(msg);
+      alert(`❌ ${msg}`);
     } finally {
       setLoading(false);
     }
@@ -106,25 +106,23 @@ export default function MailConfigModal({ config, onClose }) {
             <div className="header-content">
               <div className="title-section">
                 <h2 className="modal-title-custom">
-                  {isEdit ? "Editar Configuración SMTP" : "Nueva Configuración SMTP"}
+                  {isEdit ? "Editar SMTP" : "Nueva Configuración SMTP"}
                 </h2>
                 <div className="subtitle-section">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                   </svg>
-                  <span>Configuración del servidor de correo</span>
+                  <span>Servidor de correo</span>
                 </div>
               </div>
               <button 
                 type="button" 
-                className="close-button" 
+                className="modal-close-btn" 
                 onClick={onClose}
                 disabled={loading}
+                title="Cerrar"
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
+                ×
               </button>
             </div>
           </div>
@@ -144,14 +142,14 @@ export default function MailConfigModal({ config, onClose }) {
                   <div className="form-grid">
                     <div className="form-group">
                       <label className="form-label-modern">Usuario SMTP</label>
-                      <div className="input-container">
+                      <div className="form-input-container">
                         <input
-                          name="USER_SMTP"
                           type="email"
-                          className="form-input-modern"
-                          placeholder="usuario@dominio.com"
+                          name="USER_SMTP"
                           value={form.USER_SMTP}
                           onChange={handleChange}
+                          className="form-input-modern"
+                          placeholder="usuario@dominio.com"
                           required
                           disabled={loading}
                         />
@@ -160,15 +158,15 @@ export default function MailConfigModal({ config, onClose }) {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label-modern">Contraseña SMTP</label>
-                      <div className="input-container">
+                      <label className="form-label-modern">Contraseña</label>
+                      <div className="form-input-container">
                         <input
-                          name="PASS_SMTP"
                           type="password"
-                          className="form-input-modern"
-                          placeholder="••••••••••••"
+                          name="PASS_SMTP"
                           value={form.PASS_SMTP}
                           onChange={handleChange}
+                          className="form-input-modern"
+                          placeholder="••••••••"
                           required
                           disabled={loading}
                         />
@@ -182,20 +180,20 @@ export default function MailConfigModal({ config, onClose }) {
                 <div className="form-section">
                   <div className="section-header">
                     <h4 className="section-title">Configuración del Servidor</h4>
-                    <p className="section-subtitle">Parámetros de conexión SMTP</p>
+                    <p className="section-subtitle">Datos de conexión al servidor SMTP</p>
                   </div>
                   
                   <div className="form-grid">
                     <div className="form-group">
                       <label className="form-label-modern">Host SMTP</label>
-                      <div className="input-container">
+                      <div className="form-input-container">
                         <input
-                          name="HOST_SMTP"
                           type="text"
-                          className="form-input-modern"
-                          placeholder="smtp.gmail.com"
+                          name="HOST_SMTP"
                           value={form.HOST_SMTP}
                           onChange={handleChange}
+                          className="form-input-modern"
+                          placeholder="smtp.gmail.com"
                           required
                           disabled={loading}
                         />
@@ -204,15 +202,17 @@ export default function MailConfigModal({ config, onClose }) {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label-modern">Puerto SMTP</label>
-                      <div className="input-container">
+                      <label className="form-label-modern">Puerto</label>
+                      <div className="form-input-container">
                         <input
-                          name="PORT_SMTP"
                           type="number"
-                          className="form-input-modern"
-                          placeholder="587"
+                          name="PORT_SMTP"
                           value={form.PORT_SMTP}
                           onChange={handleChange}
+                          className="form-input-modern"
+                          placeholder="587"
+                          min="1"
+                          max="65535"
                           required
                           disabled={loading}
                         />
@@ -225,85 +225,92 @@ export default function MailConfigModal({ config, onClose }) {
                 {/* Sección de Estado */}
                 <div className="form-section">
                   <div className="section-header">
-                    <h4 className="section-title">Estado de la Configuración</h4>
-                    <p className="section-subtitle">Activar o desactivar la configuración</p>
+                    <h4 className="section-title">Estado</h4>
+                    <p className="section-subtitle">Estado de la configuración</p>
                   </div>
                   
                   <div className="form-group">
                     <label className="form-label-modern">Estado</label>
-                    <div className="input-container">
+                    <div className="form-input-container">
                       <select
                         name="Estado"
-                        className="form-select-modern"
                         value={form.Estado}
                         onChange={handleChange}
+                        className="form-select-modern"
                         disabled={loading}
                       >
                         <option value="A">Activo</option>
-                        <option value="D">Desactivado</option>
+                        <option value="I">Inactivo</option>
                       </select>
                       <div className="form-highlight"></div>
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
 
             {/* Footer */}
             <div className="modal-footer-custom">
               <div className="footer-actions">
-                <button 
-                  type="button" 
-                  className="btn-secondary" 
+                <button
+                  type="button"
+                  className="btn-secondary"
                   onClick={onClose}
                   disabled={loading}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 6L6 18M6 6l12 12"/>
+                    <path d="m15 18-6-6 6-6"/>
                   </svg>
                   Cancelar
                 </button>
-                
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                  <button 
-                    type="button" 
-                    className="btn-next" 
+
+                <div style={{ display: 'flex', gap: '0.8rem' }}>
+                  <button
+                    type="button"
+                    className="btn-next"
                     onClick={handleTest}
-                    disabled={loading || isValidating}
+                    disabled={loading || isValidating || !form.USER_SMTP || !form.PASS_SMTP || !form.HOST_SMTP || !form.PORT_SMTP}
                   >
                     {isValidating ? (
                       <>
-                        <div className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}>
+                          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                          <path d="M3 3v5h5"/>
+                          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                          <path d="M21 21v-5h-5"/>
+                        </svg>
                         Validando...
                       </>
                     ) : (
                       <>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M9 12l2 2 4-4"/>
-                          <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.68 0 3.25.46 4.6 1.27"/>
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                          <polyline points="22,4 12,14.01 9,11.01"/>
                         </svg>
-                        Validar
+                        Probar
                       </>
                     )}
                   </button>
-                  
-                  <button 
-                    type="submit" 
+
+                  <button
+                    type="submit"
                     className="btn-primary"
-                    disabled={loading}
+                    disabled={loading || !form.USER_SMTP || !form.PASS_SMTP || !form.HOST_SMTP || !form.PORT_SMTP}
                   >
                     {loading ? (
                       <>
-                        <div className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}>
+                          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                          <path d="M3 3v5h5"/>
+                          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                          <path d="M21 21v-5h-5"/>
+                        </svg>
                         Guardando...
                       </>
                     ) : (
                       <>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                          <polyline points="17,21 17,13 7,13 7,21"/>
-                          <polyline points="7,3 7,8 15,8"/>
+                          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
                         </svg>
                         {isEdit ? 'Actualizar' : 'Guardar'}
                       </>
@@ -315,6 +322,17 @@ export default function MailConfigModal({ config, onClose }) {
           </form>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }
