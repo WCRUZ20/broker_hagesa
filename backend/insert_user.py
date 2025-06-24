@@ -24,7 +24,7 @@ else:
         user_cod=user_cod,
         user_email=user_email,
         user_role="A",
-        user_position="Administrador",
+        user_position=1,
         user_status="Habilitado",
         user_password=hash_password(password_clara),
     )

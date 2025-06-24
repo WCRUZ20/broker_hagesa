@@ -3,12 +3,27 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import Sidebar from "./components/Sidebar";
 import API from "./services/api";
-import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
 import Users from "./pages/Users";
 import Customers from "./pages/Customers";
 import Usuarios from "./pages/Usuarios";
 import Clientes from "./pages/Clientes";
 import Vendedores from "./pages/Vendedores";
+import Compania from "./pages/Compania";
+// import Paises from "./pages/Paises";
+import DatosGeograficos from "./pages/DatosGeograficos";
+import CargosUsuarios from "./pages/CargosUsuarios";
+import DatosVehiculos from "./pages/DatosVehiculos";
+import VehiculosRegistrados from "./pages/VehiculosRegistrados";
+import DatosPersonas from "./pages/DatosPersonas";
+import Aseguradoras from "./pages/Aseguradoras";
+import CrearPoliza from "./pages/CrearPoliza";
+import Polizas from "./pages/Polizas";
+import MailConfig from "./pages/MailConfig";
+import MailTemplates from "./pages/MailTemplates";
+import MailParams from "./pages/MailParams";
+import SeguimientoClientes from "./pages/SeguimientoClientes";
+import SeguimientoVendedores from "./pages/SeguimientoVendedores";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -49,12 +64,28 @@ function App() {
       <Sidebar user={user} onLogout={handleLogout} />
       <div style={{ marginLeft: "260px", padding: "2rem" }}>
         <Routes>
-          <Route path="/" element={<Dashboard user={user} />} />
+          <Route path="/" element={<Home user={user} />} />
           <Route path="/clientes" element={<Clientes />} />
           {user.user_role === "A" && (
             <Route path="/usuarios" element={<Usuarios />} />
           )}
           <Route path="/vendedores" element={<Vendedores />} />
+          <Route path="/compania" element={<Compania />} />
+          <Route path="/aseguradoras" element={<Aseguradoras />} />
+          {/* <Route path="/paises" element={<Paises />} /> */}
+          <Route path="/datos-geograficos" element={<DatosGeograficos />} />
+          <Route path="/datos-personas" element={<DatosPersonas />} />
+          <Route path="/datos-vehiculos" element={<DatosVehiculos />} />
+          <Route path="/vehiculos-registrados" element={<VehiculosRegistrados />} />
+          <Route path="/cargos" element={<CargosUsuarios />} />
+          <Route path="/crear-poliza" element={<CrearPoliza />} />
+          <Route path="/editar-poliza/:id" element={<CrearPoliza />} />
+          <Route path="/polizas" element={<Polizas />} />
+          <Route path="/seguimiento/parametrizaciones-mail" element={<MailConfig />} />
+          <Route path="/seguimiento/parametros-envio" element={<MailParams />} />
+          <Route path="/seguimiento/plantillas-mail" element={<MailTemplates />} />
+          <Route path="/seguimiento/clientes" element={<SeguimientoClientes />} />
+          <Route path="/seguimiento/vendedores" element={<SeguimientoVendedores />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

@@ -208,34 +208,26 @@ export default function LoginForm({ onLogin }) {
 
               <div className="mb-4">
               <label htmlFor="password" className="form-label" style={{ fontSize: "0.8rem" }}>
-                CONTRASEÑA
-              </label>
-              <div className="position-relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className="form-control"
-                  id="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    right: "10px",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "1.2rem",
-                  }}
-                >
-                  {showPassword ? "👁" : "👁"}
-                </button>
+                  CONTRASEÑA
+                </label>
+                <div className="input-group">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="form-control"
+                    id="password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline-dark"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                  </button>
+                </div>
               </div>
-            </div>
 
               <button
                 type="submit"

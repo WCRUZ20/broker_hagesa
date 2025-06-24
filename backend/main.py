@@ -3,6 +3,27 @@ from app.routers import users
 from app.routers import clients
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import sellers
+from app.routers import company
+from app.routers import countries
+from app.routers import cargos
+from app.routers import states
+from app.routers import cities
+from app.routers import parishes
+from app.routers import brands
+from app.routers import vehicle_types
+from app.routers import vehicle_uses
+from app.routers import vehicle_classifications
+from app.routers import vehicles
+from app.routers import identification_types
+from app.routers import insurance_companies
+from app.routers import policies
+from app.routers import mail_config
+from app.routers import mail_templates
+from app.routers import mail_params
+from app.routers import mail_history
+
+
+
 
 app = FastAPI(
     title="HAGESA API BACKEND",
@@ -25,6 +46,26 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(clients.router)
 app.include_router(sellers.router)
+app.include_router(company.router)
+app.include_router(countries.router)
+app.include_router(cargos.router)
+app.include_router(identification_types.router)
+app.include_router(states.router)
+app.include_router(cities.router)
+app.include_router(parishes.router)
+app.include_router(brands.router)
+app.include_router(vehicle_types.router)
+app.include_router(vehicle_uses.router)
+app.include_router(vehicle_classifications.router)
+app.include_router(vehicles.router)
+app.include_router(insurance_companies.router)
+app.include_router(policies.router)
+app.include_router(mail_config.router)
+app.include_router(mail_templates.router)
+app.include_router(mail_params.router)
+app.include_router(mail_history.router)
+
+
 
 @app.get("/")
 def read_root():

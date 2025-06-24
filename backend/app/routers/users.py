@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -43,10 +43,11 @@ def validate_image_base64(base64_data):
 
 @router.post("/login", response_model=schemas.Token)
 def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email_or_cod(db, user.identifier)
-    if not db_user or not auth.verify_password(user.password, db_user.user_password):
-        raise HTTPException(status_code=400, detail="Credenciales inválidas")
-
+    identifier = user.identifier.strip()
+    password = user.password.strip()
+    db_user = crud.get_user_by_email_or_cod(db, identifier)
+    if not db_user or not auth.verify_password(password, db_user.user_password):
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
     if db_user.user_status != "Habilitado":
         raise HTTPException(status_code=403, detail="Su cuenta está deshabilitada. Contacte al administrador.")
         
@@ -98,26 +99,32 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/{user_id}", response_model=schemas.UserOut)
-def update_user(user_id: int, user_data: schemas.UserCreate, db: Session = Depends(get_db)):
+def update_user(
+    user_id: int,
+    user_data: schemas.UserUpdate = Body(...),
+    db: Session = Depends(get_db),
+):
     user = db.query(models.User).get(user_id)
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
-    # Validar imagen si viene incluida
-    if user_data.user_photo:
+    data = user_data.dict(exclude_unset=True, exclude_none=True)
+    
+    if not data:
+        raise HTTPException(status_code=400, detail="Datos inválidos")
+
+    if "user_photo" in data:
         try:
-            user_data.user_photo = validate_image_base64(user_data.user_photo)
+            data["user_photo"] = validate_image_base64(data["user_photo"])
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
 
     # Actualizar campos
-    for key, value in user_data.dict().items():
-        if value is None:
-            continue
-        if key == "user_password":
-            setattr(user, key, auth.hash_password(value))
-        else:
-            setattr(user, key, value)
+    if "user_password" in data:
+        data["user_password"] = auth.hash_password(data["user_password"])
+
+    for key, value in data.items():
+        setattr(user, key, value)
 
     db.commit()
     db.refresh(user)
