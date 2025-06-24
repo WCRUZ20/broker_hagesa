@@ -257,7 +257,7 @@ export default function VendedorModal({ vendedor, onClose, onSave }) {
             <div className="header-content">
               <div className="title-section">
                 <h2 className="modal-title-custom">
-                  {isEdit ? "✏️ Editar Vendedor" : "👤 Nuevo Vendedor"}
+                  {isEdit ? "Editar Vendedor" : "Nuevo Vendedor"}
                 </h2>
                 <div className="progress-indicators">
                   <div 
