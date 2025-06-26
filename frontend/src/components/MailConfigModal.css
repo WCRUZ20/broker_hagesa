@@ -53,8 +53,199 @@
   min-height: 0;
 }
 
-/* Success Animation Overlay */
-.success-overlay {
+/* Error Animation for Email Test */
+.error-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  margin: 0 auto 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: errorShake 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.error-icon {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.error-icon .error-line-1,
+.error-icon .error-line-2 {
+  animation: errorLineDraw 0.3s ease-out forwards;
+}
+
+.error-icon .error-line-2 {
+  animation-delay: 0.1s;
+}
+
+.error-title {
+  color: #EF4444;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: 0.3px;
+}
+
+.error-message {
+  color: var(--modal-secondary);
+  font-size: 0.8rem;
+  margin: 0 0 0.4rem 0;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.error-suggestion {
+  color: var(--modal-text-muted);
+  font-size: 0.7rem;
+  margin: 0;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Error Animation Keyframes */
+@keyframes errorShake {
+  0% { 
+    transform: scale(0) rotate(0deg); 
+    opacity: 0; 
+  }
+  25% { 
+    transform: scale(1.1) rotate(-5deg); 
+  }
+  50% { 
+    transform: scale(0.9) rotate(5deg); 
+  }
+  75% { 
+    transform: scale(1.05) rotate(-2deg); 
+  }
+  100% { 
+    transform: scale(1) rotate(0deg); 
+    opacity: 1; 
+  }
+}
+
+@keyframes errorLineDraw {
+  0% { 
+    opacity: 0;
+    stroke-dasharray: 10;
+    stroke-dashoffset: 10;
+  }
+  100% { 
+    opacity: 1;
+    stroke-dasharray: 10;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Success Animation for Email Test */
+.email-success-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  margin: 0 auto 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: emailBounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+}
+
+.email-success-circle::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  animation: emailPulse 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+.email-icon {
+  width: 32px;
+  height: 32px;
+  color: white;
+  animation: emailFloat 2s ease-in-out infinite;
+}
+
+.email-icon .check-path {
+  animation: checkDraw 0.8s ease-out 0.5s forwards;
+}
+
+.email-highlight {
+  color: var(--modal-primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  display: inline-block;
+  margin-top: 0.2rem;
+  animation: textGlow 0.5s ease-out 0.3s forwards;
+  opacity: 0;
+}
+
+/* Email Animation Keyframes */
+@keyframes emailBounce {
+  0% { 
+    transform: scale(0) rotate(-180deg); 
+    opacity: 0; 
+  }
+  50% { 
+    transform: scale(1.2) rotate(-90deg); 
+  }
+  70% { 
+    transform: scale(0.9) rotate(-45deg); 
+  }
+  100% { 
+    transform: scale(1) rotate(0deg); 
+    opacity: 1; 
+  }
+}
+
+@keyframes emailFloat {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-3px); 
+  }
+}
+
+@keyframes emailPulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: scale(1.1);
+    opacity: 0.1;
+  }
+}
+
+@keyframes checkDraw {
+  0% { 
+    stroke-dashoffset: 20; 
+    opacity: 0;
+  }
+  100% { 
+    stroke-dashoffset: 0; 
+    opacity: 1;
+  }
+}
+
+@keyframes textGlow {
+  0% { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+/* }
   position: absolute;
   top: 0;
   left: 0;
@@ -65,8 +256,8 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
-}
+  animation: fadeIn 0.3s ease-out;*/
+} 
 
 .success-animation {
   text-align: center;

@@ -16,6 +16,10 @@ export default function MailConfigModal({ config, onClose }) {
   const [testEmail, setTestEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showTestSuccess, setShowTestSuccess] = useState(false);
+  const [showTestError, setShowTestError] = useState(false);
+  const [testSuccessEmail, setTestSuccessEmail] = useState("");
+  const [testErrorMessage, setTestErrorMessage] = useState("");
   const [isValidating, setIsValidating] = useState(false);
 
   useEffect(() => {
@@ -77,22 +81,23 @@ export default function MailConfigModal({ config, onClose }) {
       
       const response = await API.post("/seguimiento/parametrizaciones-mail/test-config", testData);
       
-      // Mostrar mensaje de éxito
-      alert(`✅ ${response.data.msg}\n\nDetalles:\n• Servidor: ${response.data.details?.servidor}\n• Puerto: ${response.data.details?.puerto}\n• Usuario: ${response.data.details?.usuario}\n• Correo de prueba enviado a: ${response.data.details?.destino}`);
+      // Mostrar animación de éxito específica para el test
+      setTestSuccessEmail(testEmail);
+      setShowTestSuccess(true);
+      setTimeout(() => {
+        setShowTestSuccess(false);
+      }, 3000);
       
     } catch (error) {
       const errorMsg = error.response?.data?.detail || "Error al validar configuración";
       
-      // Mostrar mensaje de error detallado
-      let alertMessage = `❌ Error en la validación SMTP:\n\n${errorMsg}`;
+      // Mostrar animación de error
+      setTestErrorMessage(errorMsg);
+      setShowTestError(true);
+      setTimeout(() => {
+        setShowTestError(false);
+      }, 4000);
       
-      if (error.response?.status === 401) {
-        alertMessage += "\n\n💡 Sugerencias:\n• Verifica que el usuario y contraseña sean correctos\n• Para Gmail, usa una contraseña de aplicación en lugar de tu contraseña normal\n• Asegúrate de que la autenticación de dos factores esté configurada si es necesaria";
-      } else if (error.response?.status === 500) {
-        alertMessage += "\n\n💡 Sugerencias:\n• Verifica que el servidor SMTP y puerto sean correctos\n• Asegúrate de que tu firewall permita la conexión\n• Algunos proveedores requieren configuraciones específicas";
-      }
-      
-      alert(alertMessage);
     } finally {
       setIsValidating(false);
     }
@@ -129,7 +134,49 @@ export default function MailConfigModal({ config, onClose }) {
       <div className="modal-container">
         <div className="modal-content-custom">
           
-          {/* Success Animation Overlay */}
+          {/* Error Animation Overlay for Test Email */}
+          {showTestError && (
+            <div className="success-overlay">
+              <div className="success-animation">
+                <div className="error-circle">
+                  <svg className="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line className="error-line-1" x1="15" y1="9" x2="9" y2="15"/>
+                    <line className="error-line-2" x1="9" y1="9" x2="15" y2="15"/>
+                  </svg>
+                </div>
+                <h3 className="error-title">Error en la validación</h3>
+                <p className="error-message">
+                  {testErrorMessage}
+                </p>
+                <p className="error-suggestion">
+                  Verifica la configuración SMTP e intenta nuevamente
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Success Animation Overlay for Test Email */}
+          {showTestSuccess && (
+            <div className="success-overlay">
+              <div className="success-animation">
+                <div className="email-success-circle">
+                  <svg className="email-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                    <path className="check-path" d="M9 11l3 3L22 4" strokeDasharray="20" strokeDashoffset="20"/>
+                  </svg>
+                </div>
+                <h3 className="success-title">¡Correo enviado con éxito!</h3>
+                <p className="success-message">
+                  Correo de prueba enviado exitosamente a:<br/>
+                  <span className="email-highlight">{testSuccessEmail}</span>
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Success Animation Overlay for Save */}
           {showSuccess && (
             <div className="success-overlay">
               <div className="success-animation">
