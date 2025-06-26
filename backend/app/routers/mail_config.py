@@ -264,7 +264,7 @@ def test_mail_config(data: schemas.MailConfigTest):
             body="Prueba de configuración del servidor de correo", 
             es_html=False, 
             tipo_test=1,
-            titulo="Test Notify SMTP"
+            titulo="Correo Test Config. Mail Hagesa"
         )
         
         return {
