@@ -627,3 +627,28 @@
     padding: 0.5rem 0.7rem;
   }
 }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para el texto de ayuda del campo de prueba */
+.form-group p {
+  color: rgb(150, 146, 138);
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+  margin-bottom: 0;
+}
+
+/* Ajuste para el botón de validación en grid */
+.form-group[style*="flex"] {
+  display: flex !important;
+  align-items: flex-end;
+}
+
+.form-group[style*="flex"] .btn-next {
+  width: 100%;
+  margin: 0;
+}

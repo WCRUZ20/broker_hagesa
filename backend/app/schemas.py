@@ -405,6 +405,10 @@ class MailConfigBase(BaseModel):
 class MailConfigCreate(MailConfigBase):
     Estado: str | None = None
 
+class MailConfigTest(MailConfigBase):
+    """Esquema para validar configuración SMTP con email de prueba"""
+    test_email: str | None = None
+
 class MailConfigOut(MailConfigBase):
     id: int
     CreateDate: date

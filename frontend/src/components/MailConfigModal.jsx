@@ -13,6 +13,7 @@ export default function MailConfigModal({ config, onClose }) {
     Estado: "A",
   });
 
+  const [testEmail, setTestEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
@@ -26,28 +27,72 @@ export default function MailConfigModal({ config, onClose }) {
         PORT_SMTP: config.PORT_SMTP || "",
         Estado: config.Estado || "A",
       });
+      setTestEmail(config.USER_SMTP || "");
+    } else {
+      setTestEmail(form.USER_SMTP);
     }
   }, [config, isEdit]);
+
+  // Actualizar el email de prueba cuando cambie el USER_SMTP
+  useEffect(() => {
+    if (!testEmail || testEmail === form.USER_SMTP) {
+      setTestEmail(form.USER_SMTP);
+    }
+  }, [form.USER_SMTP]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleTestEmailChange = (e) => {
+    setTestEmail(e.target.value);
+  };
+
   const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget && !loading) {
+    if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
   const handleTest = async () => {
+    // Validar que todos los campos requeridos estén completos
+    if (!form.USER_SMTP || !form.PASS_SMTP || !form.HOST_SMTP || !form.PORT_SMTP) {
+      alert("Por favor completa todos los campos antes de validar.");
+      return;
+    }
+
+    if (!testEmail) {
+      alert("Por favor ingresa un correo electrónico para la prueba.");
+      return;
+    }
+
     setIsValidating(true);
+    
     try {
-      await API.post("/seguimiento/parametrizaciones-mail/test-config", form);
-      alert("✅ Configuración SMTP válida");
+      const testData = {
+        ...form,
+        test_email: testEmail
+      };
+      
+      const response = await API.post("/seguimiento/parametrizaciones-mail/test-config", testData);
+      
+      // Mostrar mensaje de éxito
+      alert(`✅ ${response.data.msg}\n\nDetalles:\n• Servidor: ${response.data.details?.servidor}\n• Puerto: ${response.data.details?.puerto}\n• Usuario: ${response.data.details?.usuario}\n• Correo de prueba enviado a: ${response.data.details?.destino}`);
+      
     } catch (error) {
-      const msg = error.response?.data?.detail || "❌ Error al validar configuración";
-      alert(msg);
+      const errorMsg = error.response?.data?.detail || "Error al validar configuración";
+      
+      // Mostrar mensaje de error detallado
+      let alertMessage = `❌ Error en la validación SMTP:\n\n${errorMsg}`;
+      
+      if (error.response?.status === 401) {
+        alertMessage += "\n\n💡 Sugerencias:\n• Verifica que el usuario y contraseña sean correctos\n• Para Gmail, usa una contraseña de aplicación en lugar de tu contraseña normal\n• Asegúrate de que la autenticación de dos factores esté configurada si es necesaria";
+      } else if (error.response?.status === 500) {
+        alertMessage += "\n\n💡 Sugerencias:\n• Verifica que el servidor SMTP y puerto sean correctos\n• Asegúrate de que tu firewall permita la conexión\n• Algunos proveedores requieren configuraciones específicas";
+      }
+      
+      alert(alertMessage);
     } finally {
       setIsValidating(false);
     }
@@ -73,7 +118,7 @@ export default function MailConfigModal({ config, onClose }) {
     } catch (err) {
       console.error("Error saving mail config:", err);
       const msg = err.response?.data?.detail || "Error al guardar configuración";
-      alert(`❌ ${msg}`);
+      alert(msg);
     } finally {
       setLoading(false);
     }
@@ -106,23 +151,25 @@ export default function MailConfigModal({ config, onClose }) {
             <div className="header-content">
               <div className="title-section">
                 <h2 className="modal-title-custom">
-                  {isEdit ? "Editar SMTP" : "Nueva Configuración SMTP"}
+                  {isEdit ? "Editar Configuración SMTP" : "Nueva Configuración SMTP"}
                 </h2>
                 <div className="subtitle-section">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                   </svg>
-                  <span>Servidor de correo</span>
+                  <span>Configuración del servidor de correo</span>
                 </div>
               </div>
               <button 
                 type="button" 
-                className="modal-close-btn" 
+                className="close-button" 
                 onClick={onClose}
                 disabled={loading}
-                title="Cerrar"
               >
-                ×
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
               </button>
             </div>
           </div>
@@ -142,14 +189,14 @@ export default function MailConfigModal({ config, onClose }) {
                   <div className="form-grid">
                     <div className="form-group">
                       <label className="form-label-modern">Usuario SMTP</label>
-                      <div className="form-input-container">
+                      <div className="input-container">
                         <input
-                          type="email"
                           name="USER_SMTP"
-                          value={form.USER_SMTP}
-                          onChange={handleChange}
+                          type="email"
                           className="form-input-modern"
                           placeholder="usuario@dominio.com"
+                          value={form.USER_SMTP}
+                          onChange={handleChange}
                           required
                           disabled={loading}
                         />
@@ -158,15 +205,15 @@ export default function MailConfigModal({ config, onClose }) {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label-modern">Contraseña</label>
-                      <div className="form-input-container">
+                      <label className="form-label-modern">Contraseña SMTP</label>
+                      <div className="input-container">
                         <input
-                          type="password"
                           name="PASS_SMTP"
+                          type="password"
+                          className="form-input-modern"
+                          placeholder="••••••••••••"
                           value={form.PASS_SMTP}
                           onChange={handleChange}
-                          className="form-input-modern"
-                          placeholder="••••••••"
                           required
                           disabled={loading}
                         />
@@ -180,20 +227,20 @@ export default function MailConfigModal({ config, onClose }) {
                 <div className="form-section">
                   <div className="section-header">
                     <h4 className="section-title">Configuración del Servidor</h4>
-                    <p className="section-subtitle">Datos de conexión al servidor SMTP</p>
+                    <p className="section-subtitle">Parámetros de conexión SMTP</p>
                   </div>
                   
                   <div className="form-grid">
                     <div className="form-group">
                       <label className="form-label-modern">Host SMTP</label>
-                      <div className="form-input-container">
+                      <div className="input-container">
                         <input
-                          type="text"
                           name="HOST_SMTP"
-                          value={form.HOST_SMTP}
-                          onChange={handleChange}
+                          type="text"
                           className="form-input-modern"
                           placeholder="smtp.gmail.com"
+                          value={form.HOST_SMTP}
+                          onChange={handleChange}
                           required
                           disabled={loading}
                         />
@@ -202,17 +249,15 @@ export default function MailConfigModal({ config, onClose }) {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label-modern">Puerto</label>
-                      <div className="form-input-container">
+                      <label className="form-label-modern">Puerto SMTP</label>
+                      <div className="input-container">
                         <input
-                          type="number"
                           name="PORT_SMTP"
-                          value={form.PORT_SMTP}
-                          onChange={handleChange}
+                          type="number"
                           className="form-input-modern"
                           placeholder="587"
-                          min="1"
-                          max="65535"
+                          value={form.PORT_SMTP}
+                          onChange={handleChange}
                           required
                           disabled={loading}
                         />
@@ -225,24 +270,90 @@ export default function MailConfigModal({ config, onClose }) {
                 {/* Sección de Estado */}
                 <div className="form-section">
                   <div className="section-header">
-                    <h4 className="section-title">Estado</h4>
-                    <p className="section-subtitle">Estado de la configuración</p>
+                    <h4 className="section-title">Estado de la Configuración</h4>
+                    <p className="section-subtitle">Define si esta configuración estará activa</p>
                   </div>
                   
                   <div className="form-group">
                     <label className="form-label-modern">Estado</label>
-                    <div className="form-input-container">
+                    <div className="input-container">
                       <select
                         name="Estado"
+                        className="form-select-modern"
                         value={form.Estado}
                         onChange={handleChange}
-                        className="form-select-modern"
+                        required
                         disabled={loading}
                       >
                         <option value="A">Activo</option>
-                        <option value="I">Inactivo</option>
+                        <option value="D">Desactivado</option>
                       </select>
                       <div className="form-highlight"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Nueva Sección de Validación - Usando el mismo estilo */}
+                <div className="form-section">
+                  <div className="section-header">
+                    <h4 className="section-title">Validación de Configuración</h4>
+                    <p className="section-subtitle">Prueba la configuración SMTP antes de guardar</p>
+                  </div>
+                  
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label className="form-label-modern">Correo de Prueba</label>
+                      <div className="input-container">
+                        <input
+                          type="email"
+                          className="form-input-modern"
+                          placeholder="destinatario@ejemplo.com"
+                          value={testEmail}
+                          onChange={handleTestEmailChange}
+                          disabled={loading || isValidating}
+                        />
+                        <div className="form-highlight"></div>
+                      </div>
+                      <p style={{ 
+                        color: 'rgb(150, 146, 138)', 
+                        fontSize: '0.75rem', 
+                        marginTop: '0.5rem',
+                        lineHeight: '1.4'
+                      }}>
+                        Ingresa el correo donde se enviará el mensaje de prueba para validar la configuración
+                      </p>
+                    </div>
+
+                    <div className="form-group" style={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <button
+                        type="button"
+                        className={`btn-next ${isValidating ? 'validating' : ''}`}
+                        onClick={handleTest}
+                        disabled={loading || isValidating}
+                        style={{ width: '100%', margin: 0 }}
+                      >
+                        {isValidating ? (
+                          <>
+                            <div className="spinner" style={{
+                              width: '16px',
+                              height: '16px',
+                              border: '2px solid rgba(20, 20, 20, 0.3)',
+                              borderRadius: '50%',
+                              borderTopColor: 'rgb(20, 20, 20)',
+                              animation: 'spin 0.8s linear infinite'
+                            }}></div>
+                            Validando...
+                          </>
+                        ) : (
+                          <>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M9 12l2 2 4-4"></path>
+                              <circle cx="12" cy="12" r="10"></circle>
+                            </svg>
+                            Validar Configuración
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -258,81 +369,36 @@ export default function MailConfigModal({ config, onClose }) {
                   onClick={onClose}
                   disabled={loading}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="m15 18-6-6 6-6"/>
-                  </svg>
                   Cancelar
                 </button>
-
-                <div style={{ display: 'flex', gap: '0.8rem' }}>
-                  <button
-                    type="button"
-                    className="btn-next"
-                    onClick={handleTest}
-                    disabled={loading || isValidating || !form.USER_SMTP || !form.PASS_SMTP || !form.HOST_SMTP || !form.PORT_SMTP}
-                  >
-                    {isValidating ? (
-                      <>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}>
-                          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                          <path d="M3 3v5h5"/>
-                          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
-                          <path d="M21 21v-5h-5"/>
-                        </svg>
-                        Validando...
-                      </>
-                    ) : (
-                      <>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                          <polyline points="22,4 12,14.01 9,11.01"/>
-                        </svg>
-                        Probar
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="btn-primary"
-                    disabled={loading || !form.USER_SMTP || !form.PASS_SMTP || !form.HOST_SMTP || !form.PORT_SMTP}
-                  >
-                    {loading ? (
-                      <>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}>
-                          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                          <path d="M3 3v5h5"/>
-                          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
-                          <path d="M21 21v-5h-5"/>
-                        </svg>
-                        Guardando...
-                      </>
-                    ) : (
-                      <>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-                        </svg>
-                        {isEdit ? 'Actualizar' : 'Guardar'}
-                      </>
-                    )}
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <div className="spinner" style={{
+                        width: '16px',
+                        height: '16px',
+                        border: '2px solid rgba(255, 255, 255, 0.3)',
+                        borderRadius: '50%',
+                        borderTopColor: 'white',
+                        animation: 'spin 0.8s linear infinite'
+                      }}></div>
+                      {isEdit ? 'Actualizando...' : 'Guardando...'}
+                    </>
+                  ) : (
+                    <>
+                      {isEdit ? 'Actualizar' : 'Guardar'} Configuración
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </form>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
     </div>
   );
 }
