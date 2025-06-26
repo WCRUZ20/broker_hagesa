@@ -154,7 +154,7 @@ export default function MailConfigModal({ config, onClose }) {
                   {isEdit ? "Editar Configuración SMTP" : "Nueva Configuración SMTP"}
                 </h2>
                 <div className="subtitle-section">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                   </svg>
                   <span>Configuración del servidor de correo</span>
@@ -162,11 +162,11 @@ export default function MailConfigModal({ config, onClose }) {
               </div>
               <button 
                 type="button" 
-                className="close-button" 
+                className="modal-close-btn" 
                 onClick={onClose}
                 disabled={loading}
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
@@ -188,69 +188,71 @@ export default function MailConfigModal({ config, onClose }) {
                   
                   <div className="form-grid">
                     <div className="form-group">
-                      <label className="form-label-modern">Usuario SMTP</label>
-                      <div className="input-container">
+                      <div className="form-input-container">
                         <input
                           name="USER_SMTP"
                           type="email"
                           className="form-input-modern"
-                          placeholder="usuario@dominio.com"
+                          placeholder="usuario@ejemplo.com"
                           value={form.USER_SMTP}
                           onChange={handleChange}
                           required
-                          disabled={loading}
                         />
+                        <label className={`form-label-floating ${form.USER_SMTP ? 'active' : ''}`}>
+                          Usuario SMTP
+                        </label>
                         <div className="form-highlight"></div>
                       </div>
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label-modern">Contraseña SMTP</label>
-                      <div className="input-container">
+                      <div className="form-input-container">
                         <input
                           name="PASS_SMTP"
                           type="password"
                           className="form-input-modern"
-                          placeholder="••••••••••••"
+                          placeholder="••••••••"
                           value={form.PASS_SMTP}
                           onChange={handleChange}
                           required
-                          disabled={loading}
                         />
+                        <label className={`form-label-floating ${form.PASS_SMTP ? 'active' : ''}`}>
+                          Contraseña SMTP
+                        </label>
                         <div className="form-highlight"></div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Sección de Configuración del Servidor */}
+                {/* Sección de Servidor */}
                 <div className="form-section">
                   <div className="section-header">
                     <h4 className="section-title">Configuración del Servidor</h4>
-                    <p className="section-subtitle">Parámetros de conexión SMTP</p>
+                    <p className="section-subtitle">Información de conexión al servidor SMTP</p>
                   </div>
                   
                   <div className="form-grid">
                     <div className="form-group">
-                      <label className="form-label-modern">Host SMTP</label>
-                      <div className="input-container">
+                      <div className="form-input-container">
                         <input
                           name="HOST_SMTP"
                           type="text"
                           className="form-input-modern"
-                          placeholder="smtp.gmail.com"
+                          placeholder="smtp.ejemplo.com"
                           value={form.HOST_SMTP}
                           onChange={handleChange}
                           required
-                          disabled={loading}
                         />
+                        <label className={`form-label-floating ${form.HOST_SMTP ? 'active' : ''}`}>
+                          Servidor SMTP
+                        </label>
                         <div className="form-highlight"></div>
                       </div>
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label-modern">Puerto SMTP</label>
-                      <div className="input-container">
+                      <div className="form-input-container">
                         <input
                           name="PORT_SMTP"
                           type="number"
@@ -259,8 +261,10 @@ export default function MailConfigModal({ config, onClose }) {
                           value={form.PORT_SMTP}
                           onChange={handleChange}
                           required
-                          disabled={loading}
                         />
+                        <label className={`form-label-floating ${form.PORT_SMTP ? 'active' : ''}`}>
+                          Puerto SMTP
+                        </label>
                         <div className="form-highlight"></div>
                       </div>
                     </div>
@@ -271,29 +275,30 @@ export default function MailConfigModal({ config, onClose }) {
                 <div className="form-section">
                   <div className="section-header">
                     <h4 className="section-title">Estado de la Configuración</h4>
-                    <p className="section-subtitle">Define si esta configuración estará activa</p>
+                    <p className="section-subtitle">Define si la configuración está activa o desactivada</p>
                   </div>
                   
-                  <div className="form-group">
-                    <label className="form-label-modern">Estado</label>
-                    <div className="input-container">
-                      <select
-                        name="Estado"
-                        className="form-select-modern"
-                        value={form.Estado}
-                        onChange={handleChange}
-                        required
-                        disabled={loading}
-                      >
-                        <option value="A">Activo</option>
-                        <option value="D">Desactivado</option>
-                      </select>
-                      <div className="form-highlight"></div>
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <div className="form-input-container">
+                        <select
+                          name="Estado"
+                          className="form-select-modern"
+                          value={form.Estado}
+                          onChange={handleChange}
+                          required
+                        >
+                          <option value="A">Activo</option>
+                          <option value="D">Desactivado</option>
+                        </select>
+                        <label className="form-label-floating active">Estado</label>
+                        <div className="form-highlight"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Nueva Sección de Validación - Usando el mismo estilo */}
+                {/* Sección de Validación */}
                 <div className="form-section">
                   <div className="section-header">
                     <h4 className="section-title">Validación de Configuración</h4>
@@ -302,8 +307,7 @@ export default function MailConfigModal({ config, onClose }) {
                   
                   <div className="form-grid">
                     <div className="form-group">
-                      <label className="form-label-modern">Correo de Prueba</label>
-                      <div className="input-container">
+                      <div className="form-input-container">
                         <input
                           type="email"
                           className="form-input-modern"
@@ -312,43 +316,32 @@ export default function MailConfigModal({ config, onClose }) {
                           onChange={handleTestEmailChange}
                           disabled={loading || isValidating}
                         />
+                        <label className={`form-label-floating ${testEmail ? 'active' : ''}`}>
+                          Correo de Prueba
+                        </label>
                         <div className="form-highlight"></div>
                       </div>
-                      <p style={{ 
-                        color: 'rgb(150, 146, 138)', 
-                        fontSize: '0.75rem', 
-                        marginTop: '0.5rem',
-                        lineHeight: '1.4'
-                      }}>
+                      <p className="form-help-text">
                         Ingresa el correo donde se enviará el mensaje de prueba para validar la configuración
                       </p>
                     </div>
 
-                    <div className="form-group" style={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <div className="form-group validate-button-group">
                       <button
                         type="button"
-                        className={`btn-next ${isValidating ? 'validating' : ''}`}
+                        className={`btn-validate ${isValidating ? 'validating' : ''}`}
                         onClick={handleTest}
                         disabled={loading || isValidating}
-                        style={{ width: '100%', margin: 0 }}
                       >
                         {isValidating ? (
                           <>
-                            <div className="spinner" style={{
-                              width: '16px',
-                              height: '16px',
-                              border: '2px solid rgba(20, 20, 20, 0.3)',
-                              borderRadius: '50%',
-                              borderTopColor: 'rgb(20, 20, 20)',
-                              animation: 'spin 0.8s linear infinite'
-                            }}></div>
+                            <div className="spinner"></div>
                             Validando...
                           </>
                         ) : (
                           <>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <path d="M9 12l2 2 4-4"></path>
-                              <circle cx="12" cy="12" r="10"></circle>
+                              <path d="M9 11l3 3L22 4" />
                             </svg>
                             Validar Configuración
                           </>
@@ -369,8 +362,12 @@ export default function MailConfigModal({ config, onClose }) {
                   onClick={onClose}
                   disabled={loading}
                 >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
                   Cancelar
                 </button>
+
                 <button
                   type="submit"
                   className="btn-primary"
@@ -378,19 +375,17 @@ export default function MailConfigModal({ config, onClose }) {
                 >
                   {loading ? (
                     <>
-                      <div className="spinner" style={{
-                        width: '16px',
-                        height: '16px',
-                        border: '2px solid rgba(255, 255, 255, 0.3)',
-                        borderRadius: '50%',
-                        borderTopColor: 'white',
-                        animation: 'spin 0.8s linear infinite'
-                      }}></div>
+                      <div className="spinner"></div>
                       {isEdit ? 'Actualizando...' : 'Guardando...'}
                     </>
                   ) : (
                     <>
-                      {isEdit ? 'Actualizar' : 'Guardar'} Configuración
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+                        <polyline points="17,21 17,13 7,13 7,21" />
+                        <polyline points="7,3 7,8 15,8" />
+                      </svg>
+                      {isEdit ? 'Actualizar' : 'Guardar'}
                     </>
                   )}
                 </button>
