@@ -2,11 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import date
-
 from .. import models, schemas
 from app.database import SessionLocal
 from .users import get_current_user
-from .mail_config import send_email
+from .mail_config import send_email, strip_tags
+
+
 
 def render_template(db: Session, text: str, policy: models.Policy, client: models.Client, vehicles: List[models.Vehicle]) -> str:
     """Reemplaza las variables predefinidas en la plantilla"""
@@ -105,7 +106,7 @@ def send_client_emails(
             if veh:
                 vehicles.append(veh)
 
-        subj = render_template(db, template.Subject, policy, client, vehicles)
+        subj = strip_tags(render_template(db, template.Subject, policy, client, vehicles))
         body = render_template(db, template.Body, policy, client, vehicles)
 
         try:

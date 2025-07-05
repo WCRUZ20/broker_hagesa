@@ -13,11 +13,17 @@ from email import encoders
 from email.header import Header
 import logging
 import os
-
+import re
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+def strip_tags(text: str) -> str:
+    """Remove HTML tags from a string."""
+    if not text:
+        return ""
+    return re.sub(r"<[^>]+>", "", text)
 
 def get_db():
     db = SessionLocal()
@@ -41,6 +47,7 @@ def send_email_enhanced(cfg: Any, to: str, subject: str, body: str, es_html: boo
         titulo: Nombre del remitente
     """
     try:
+        subject = strip_tags(subject)
         logger.info(f"Iniciando envío de correo - Tipo: {tipo_test}")
         logger.info(f"Servidor: {cfg.HOST_SMTP}, Puerto: {cfg.PORT_SMTP}")
         logger.info(f"Destinatario: {to}")
