@@ -2,6 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import API from "../services/api";
 import RichTextEditor from "./RichTextEditor";
 
+function stripHtml(html) {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+}
+
 const VARIABLES = [
   "{NOMBRE_CLIENTE}",
   "{IDENTIFICACION_CLIENTE}",
@@ -50,7 +56,7 @@ export default function MailTemplateModal({ template, onClose }) {
     el.focus();
     document.execCommand("insertText", false, value);
     if (field === "Subject") {
-      setForm({ ...form, Subject: el.innerHTML });
+      setForm({ ...form, Subject: stripHtml(el.innerHTML) });
     } else {
       setForm({ ...form, Body: el.innerHTML });
     }
@@ -58,11 +64,12 @@ export default function MailTemplateModal({ template, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = { ...form, Subject: stripHtml(form.Subject) };
     try {
       if (isEdit) {
-        await API.put(`/seguimiento/plantillas-mail/${template.id}`, form);
+        await API.put(`/seguimiento/plantillas-mail/${template.id}`, data);
       } else {
-        await API.post(`/seguimiento/plantillas-mail`, form);
+        await API.post(`/seguimiento/plantillas-mail`, data);
       }
       onClose();
     } catch (err) {
@@ -114,7 +121,7 @@ export default function MailTemplateModal({ template, onClose }) {
                 <RichTextEditor
                   ref={subjRef}
                   value={form.Subject}
-                  onChange={(val) => setForm({ ...form, Subject: val })}
+                  onChange={(val) => setForm({ ...form, Subject: stripHtml(val) })}
                   placeholder="Asunto"
                 />
               </div>
