@@ -137,7 +137,9 @@ def send_email(cfg: Any, to: str, subject: str, body: str):
     return send_email_enhanced(cfg, to, subject, body, es_html=True, tipo_test=3)
 
 
-router = APIRouter(prefix="/seguimiento/parametrizaciones-mail", tags=["Parametrizaciones Mail"])
+router = APIRouter(
+    prefix="/seguimiento/parametrizaciones-mail", tags=["Parametrizaciones Mail"]
+)
 
 
 @router.post("/", response_model=schemas.MailConfigOut)

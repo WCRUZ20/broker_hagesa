@@ -1,12 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Mapping
 from datetime import date
 
 from .. import models, schemas
 from app.database import SessionLocal
 from .users import get_current_user
 from .mail_config import send_email
+
+def fill_template(text: str, variables: Mapping[str, str]) -> str:
+    """Replace known placeholders in *text* with values from *variables*."""
+    for placeholder, value in variables.items():
+        text = text.replace(placeholder, value)
+    return text
 
 
 def get_db():
@@ -66,14 +72,62 @@ def send_client_emails(
         client = db.query(models.Client).get(policy.id_ctms)
         if not client or not client.email:
             continue
+        lines = db.query(models.PolicyLine).filter_by(id_policy=policy.id).all()
+        vehicles = [db.query(models.Vehicle).get(l.id_itm) for l in lines]
+        first_vehicle = vehicles[0] if vehicles else None
+
+        brand_desc = ""
+        model = ""
+        plate = ""
+        color = ""
+        if first_vehicle:
+            brand_desc = (
+                db.query(models.Brand.Description)
+                .filter(models.Brand.id == first_vehicle.Brand)
+                .scalar()
+                or ""
+            )
+            model = first_vehicle.Model or ""
+            plate = first_vehicle.Plate or ""
+            color = first_vehicle.Color or ""
+
+        list_html = ""
+        if vehicles:
+            items = []
+            for v in vehicles:
+                b_desc = (
+                    db.query(models.Brand.Description)
+                    .filter(models.Brand.id == v.Brand)
+                    .scalar()
+                    or ""
+                )
+                items.append(f"<li>{b_desc} {v.Model} {v.Plate} {v.Color}</li>")
+            list_html = "<ul>" + "".join(items) + "</ul>"
+
+        variables = {
+            "{NOMBRE_CLIENTE}": f"{client.nombre or ''} {client.apellidos or ''}".strip(),
+            "{IDENTIFICACION_CLIENTE}": client.identificacion or "",
+            "{VEH_MARCA}": brand_desc,
+            "{VEH_MODELO}": model,
+            "{VEH_PLACA}": plate,
+            "{VEH_COLOR}": color,
+            "{NUMERO_POLIZA}": policy.PolicyNum,
+            "{FECHA_INICIO}": policy.InitDate.isoformat(),
+            "{FECHA_VENCIMIENTO}": policy.DueDate.isoformat(),
+            "{VALOR_ASEGURADO}": str(policy.AscValue),
+            "{LISTA_DETALLES}": list_html,
+        }
+
+        subject = fill_template(template.Subject, variables)
+        body = fill_template(template.Body, variables)
         try:
-            send_email(cfg, client.email, template.Subject, template.Body)
+            send_email(cfg, client.email, subject, body)
         except Exception:
             pass
         hist = models.MailHistory(
             Name=template.Name,
-            Subject=template.Subject,
-            Body=template.Body,
+            Subject=subject,
+            Body=body,
             id_formato_mail=template.id,
             Destination="C",
             id_client=client.id,
