@@ -13,8 +13,7 @@ from email import encoders
 from email.header import Header
 import logging
 import os
-import re
-from html import unescape
+
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -26,11 +25,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-def _strip_html(text: str) -> str:
-    """Remove HTML tags and unescape entities."""
-    clean = re.compile("<.*?>")
-    return unescape(re.sub(clean, "", text or ""))
 
 
 def send_email_enhanced(cfg: Any, to: str, subject: str, body: str, es_html: bool = True, tipo_test: int = 3, titulo: str = "Sistema"):
