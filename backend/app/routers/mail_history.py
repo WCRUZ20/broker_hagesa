@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from datetime import date
 
 from .. import models, schemas
@@ -8,6 +8,37 @@ from app.database import SessionLocal
 from .users import get_current_user
 from .mail_config import send_email
 
+def render_template(db: Session, text: str, policy: models.Policy, client: models.Client, vehicles: List[models.Vehicle]) -> str:
+    """Reemplaza las variables predefinidas en la plantilla"""
+    veh = vehicles[0] if vehicles else None
+    brand_name = ""
+    if veh:
+        brand = db.query(models.Brand).get(veh.Brand)
+        brand_name = brand.Description if brand else ""
+
+    list_items = []
+    for v in vehicles:
+        b = db.query(models.Brand).get(v.Brand)
+        bname = b.Description if b else ""
+        list_items.append(f"{bname} {v.Model} - {v.Plate}")
+    list_html = "<ul>" + "".join(f"<li>{i}</li>" for i in list_items) + "</ul>" if list_items else ""
+
+    replacements = {
+        "{NOMBRE_CLIENTE}": f"{client.nombre} {client.apellidos or ''}".strip(),
+        "{IDENTIFICACION_CLIENTE}": client.identificacion or "",
+        "{VEH_MARCA}": brand_name,
+        "{VEH_MODELO}": veh.Model if veh else "",
+        "{VEH_PLACA}": veh.Plate if veh else "",
+        "{VEH_COLOR}": veh.Color if veh else "",
+        "{NUMERO_POLIZA}": policy.PolicyNum,
+        "{FECHA_INICIO}": policy.InitDate.strftime("%Y-%m-%d"),
+        "{FECHA_VENCIMIENTO}": policy.DueDate.strftime("%Y-%m-%d"),
+        "{VALOR_ASEGURADO}": str(policy.AscValue),
+        "{LISTA_DETALLES}": list_html,
+    }
+    for k, v in replacements.items():
+        text = text.replace(k, v)
+    return text
 
 def get_db():
     db = SessionLocal()
@@ -66,14 +97,25 @@ def send_client_emails(
         client = db.query(models.Client).get(policy.id_ctms)
         if not client or not client.email:
             continue
+
+        lines = db.query(models.PolicyLine).filter_by(id_policy=policy.id).all()
+        vehicles = []
+        for ln in lines:
+            veh = db.query(models.Vehicle).get(ln.id_itm)
+            if veh:
+                vehicles.append(veh)
+
+        subj = render_template(db, template.Subject, policy, client, vehicles)
+        body = render_template(db, template.Body, policy, client, vehicles)
+
         try:
-            send_email(cfg, client.email, template.Subject, template.Body)
+            send_email(cfg, client.email, subj, body)
         except Exception:
             pass
         hist = models.MailHistory(
             Name=template.Name,
-            Subject=template.Subject,
-            Body=template.Body,
+            Subject=subj,
+            Body=body,
             id_formato_mail=template.id,
             Destination="C",
             id_client=client.id,
