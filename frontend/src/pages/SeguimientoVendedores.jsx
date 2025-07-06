@@ -49,7 +49,8 @@ export default function SeguimientoVendedores() {
     today.setHours(0, 0, 0, 0);
     const diff = Math.floor((due - today) / 86400000);
     const before = diff >= 0 && diff <= parseInt(params.daystodueSeller || 0, 10);
-    return before;
+    const after = diff < 0 && Math.abs(diff) <= parseInt(params.maxdaysallow || 0, 10);
+    return before || after;
   };
 
   const filteredPol = polizas
