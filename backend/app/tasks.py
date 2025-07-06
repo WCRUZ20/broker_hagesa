@@ -65,26 +65,36 @@ def send_due_emails() -> None:
         for policy in policies:
             if getattr(policy, "activo", "Y") != "Y":
                 continue
-            if getattr(policy, "aut_noti", "N") != "Y":
-                continue
+            
             diff = (policy.DueDate - today).days
             before_due = diff >= 0 and diff <= (params.daystodue or 0)
             after_due = diff < 0 and abs(diff) <= (params.maxdaysallow or 0)
-            if not (before_due or after_due):
+            send_client = (
+                getattr(policy, "aut_noti", "N") == "Y" and (before_due or after_due)
+            )
+            send_seller = diff >= 0 and diff <= (params.daystodueSeller or 0)
+            if not send_client and not send_seller:
                 continue
             client = db.query(models.Client).get(policy.id_ctms)
-            if not client or not client.email:
+            if not client:
                 continue
-            existing = (
-                db.query(models.MailHistory)
-                .filter(
-                    models.MailHistory.Destination == "C",
-                    models.MailHistory.id_policy == policy.id,
-                    models.MailHistory.CreateDate == today,
-                )
-                .first()
+            if send_client and not client.email:
+                send_client = False
+                if not send_seller:
+                    continue
+            if send_client:
+                existing = (
+                    db.query(models.MailHistory)
+                    .filter(
+                        models.MailHistory.Destination == "C",
+                        models.MailHistory.id_policy == policy.id,
+                        models.MailHistory.CreateDate == today,
+                    )
+                    .first()
             )
             if existing:
+                    send_client = False
+            if not send_client and not send_seller:
                 continue
             lines = db.query(models.PolicyLine).filter_by(id_policy=policy.id).all()
             vehicles = []
@@ -92,34 +102,38 @@ def send_due_emails() -> None:
                 veh = db.query(models.Vehicle).get(ln.id_itm)
                 if veh:
                     vehicles.append(veh)
-            subj = strip_tags(
-                render_template(db, template_client.Subject, policy, client, vehicles)
-            )
-            body = render_template(db, template_client.Body, policy, client, vehicles)
-            try:
-                logger.info(f"Sending email to {client.email} for policy {policy.PolicyNum}")
-                send_email(cfg, client.email, subj, body)
-            except Exception:
-                pass
-            hist = models.MailHistory(
-                Name=template_client.Name,
-                Subject=subj,
-                Body=body,
-                id_formato_mail=template_client.id,
-                Destination="C",
-                id_client=client.id,
-                id_policy=policy.id,
-                CreateDate=today,
-                LastDateMod=today,
-                id_usrs_create=1,
-                id_usrs_update=1,
-            )
-            db.add(hist)
+            
+            if send_client:
+                subj = strip_tags(
+                    render_template(db, template_client.Subject, policy, client, vehicles)
+                )
+                body = render_template(db, template_client.Body, policy, client, vehicles)
+                try:
+                    logger.info(
+                        f"Sending email to {client.email} for policy {policy.PolicyNum}"
+                    )
+                    send_email(cfg, client.email, subj, body)
+                except Exception:
+                    pass
+                hist = models.MailHistory(
+                    Name=template_client.Name,
+                    Subject=subj,
+                    Body=body,
+                    id_formato_mail=template_client.id,
+                    Destination="C",
+                    id_client=client.id,
+                    id_policy=policy.id,
+                    CreateDate=today,
+                    LastDateMod=today,
+                    id_usrs_create=1,
+                    id_usrs_update=1,
+                )
+                db.add(hist)
+            
             # Send email to seller if applicable
             if template_seller:
                 seller = db.query(models.Seller).get(policy.id_slrs)
                 if seller and seller.email:
-                    send_seller = diff >= 0 and diff <= (params.daystodueSeller or 0)
                     if send_seller:
                         existing_s = (
                             db.query(models.MailHistory)
