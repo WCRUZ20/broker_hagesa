@@ -121,9 +121,9 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
       totalSellers: dashboardData.sellers.length,
       totalInsuredValue: activePolicies.reduce((sum, p) => sum + (parseFloat(p.AscValue) || 0), 0),
       totalCommission: activePolicies.reduce((sum, p) => {
-        const comi = parseFloat(p.ComiPrcnt) || 0;
+        const percentage = parseFloat(p.percentage ?? p.ComiPrcnt) || 0;
         const val = parseFloat(p.AscValue) || 0;
-        return sum + val * (comi / 100);
+        return sum + val * (percentage / 100);
       }, 0)
     };
   };
