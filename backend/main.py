@@ -21,7 +21,7 @@ from app.routers import mail_config
 from app.routers import mail_templates
 from app.routers import mail_params
 from app.routers import mail_history
-from app.tasks import start_scheduler, stop_scheduler
+
 
 
 
@@ -67,15 +67,6 @@ app.include_router(mail_params.router)
 app.include_router(mail_history.router)
 
 
-@app.on_event("startup")
-def _startup():
-    start_scheduler()
-
-
-@app.on_event("shutdown")
-def _shutdown():
-    stop_scheduler()
-    
 @app.get("/")
 def read_root():
     return {"msg": "API real funcionando correctamente"}
