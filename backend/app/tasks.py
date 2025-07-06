@@ -125,6 +125,7 @@ def send_due_emails() -> None:
                                 models.MailHistory.Destination == "S",
                                 models.MailHistory.id_policy == policy.id,
                                 models.MailHistory.id_seller == seller.id,
+                                # models.MailHistory.CreateDate == today,
                             )
                             .first()
                         )
