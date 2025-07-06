@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import ListStyles from "../components/ListStyles";
+import ToastNotification from "../components/ToastNotification";
 
 export default function SeguimientoVendedores() {
   const [polizas, setPolizas] = useState([]);
@@ -15,6 +16,7 @@ export default function SeguimientoVendedores() {
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
   );
+  const [toast, setToast] = useState({ show: false, message: "" });
 
   useEffect(() => {
     API.get("/polizas").then((res) => setPolizas(res.data));
@@ -94,7 +96,7 @@ export default function SeguimientoVendedores() {
   const sendMails = async () => {
     if (selected.length === 0) return;
     if (!params || params.manualsending !== "Y") {
-      alert("El envío manual está desactivado");
+      setToast({ show: true, message: "El envío manual está desactivado" });
       return;
     }
     try {
@@ -106,12 +108,17 @@ export default function SeguimientoVendedores() {
       setHistorial(res.data.filter((h) => h.Destination === "S"));
     } catch (err) {
       const detail = err?.response?.data?.detail;
-      alert(detail || "Error al enviar correos");
+      setToast({ show: true, message: detail || "Error al enviar correos" });
     }
   };
 
   return (
     <div className="container-fluid py-4">
+      <ToastNotification
+        show={toast.show}
+        message={toast.message}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
       <div className="row">
         <div className="col-md-6 mb-4">
           <div

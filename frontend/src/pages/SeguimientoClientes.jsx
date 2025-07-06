@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import ListStyles from "../components/ListStyles";
+import ToastNotification from "../components/ToastNotification";
 
 export default function SeguimientoClientes() {
   const [polizas, setPolizas] = useState([]);
@@ -13,6 +14,7 @@ export default function SeguimientoClientes() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
+  const [toast, setToast] = useState({ show: false, message: "" });
 
   useEffect(() => { API.get("/polizas").then(res => setPolizas(res.data)); }, []);
   useEffect(() => { API.get("/clientes").then(res => setClientes(res.data)); }, []);
@@ -71,7 +73,7 @@ export default function SeguimientoClientes() {
   const sendMails = async () => {
     if(selected.length === 0) return;
     if (!params || params.manualsending !== "Y") {
-      alert("El envío manual está desactivado");
+      setToast({ show: true, message: "El envío manual está desactivado" });
       return;
     }
     try {
@@ -81,12 +83,17 @@ export default function SeguimientoClientes() {
       setHistorial(res.data.filter((h) => h.Destination === "C"));
     } catch (err) {
       const detail = err?.response?.data?.detail;
-      alert(detail || "Error al enviar correos");
+      setToast({ show: true, message: detail || "Error al enviar correos" });
     }
   };
 
   return (
     <div className="container-fluid py-4">
+      <ToastNotification
+        show={toast.show}
+        message={toast.message}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
       <div className="row">
         <div className="col-md-6 mb-4">
           <div className={`card border-0 shadow-sm ${darkMode ? 'bg-dark' : 'bg-white'}`}>
