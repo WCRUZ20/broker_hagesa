@@ -31,7 +31,8 @@ def send_due_emails():
         if days_map.get(now.weekday()) != 'Y':
             return
         if params.hoursending:
-            if now.hour != params.hoursending.hour or now.minute != params.hoursending.minute:
+            send_time = datetime.combine(today, params.hoursending)
+            if now < send_time:
                 return
         if _last_sent == today:
             return
@@ -53,6 +54,18 @@ def send_due_emails():
             client = db.query(models.Client).get(policy.id_ctms)
             if not client or not client.email:
                 continue
+            existing = (
+                db.query(models.MailHistory)
+                .filter(
+                    models.MailHistory.Destination == 'C',
+                    models.MailHistory.id_client == client.id,
+                    models.MailHistory.CreateDate == today,
+                )
+                .first()
+            )
+            if existing:
+                continue
+            
             lines = db.query(models.PolicyLine).filter_by(id_policy=policy.id).all()
             vehicles = []
             for ln in lines:
