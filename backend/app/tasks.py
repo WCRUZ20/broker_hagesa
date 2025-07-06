@@ -91,8 +91,8 @@ def send_due_emails() -> None:
                         models.MailHistory.CreateDate == today,
                     )
                     .first()
-            )
-            if existing:
+                )
+                if existing:
                     send_client = False
             if not send_client and not send_seller:
                 continue
