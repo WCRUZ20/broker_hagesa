@@ -505,3 +505,8 @@ class SendClientEmails(BaseModel):
 
 class SendSellerEmails(BaseModel):
     policy_ids: list[int]
+
+
+class BulkAutNotiUpdate(BaseModel):
+    policy_ids: list[int]
+    aut_noti: str

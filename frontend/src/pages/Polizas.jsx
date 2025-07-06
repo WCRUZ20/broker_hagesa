@@ -51,6 +51,18 @@ export default function Polizas() {
     });
   };
 
+  const handleBulkAutNoti = (value) => {
+    if (selected.length === 0)
+      return alert("Seleccione al menos una póliza");
+    API.put("/polizas/aut-noti", { policy_ids: selected, aut_noti: value }).then(
+      () => {
+        setSelected([]);
+        loadItems();
+      }
+    );
+  };
+
+  
   useEffect(() => {
     loadItems();
   }, []);
@@ -106,6 +118,18 @@ export default function Polizas() {
                           <button className="dropdown-item py-2 px-3 d-flex align-items-center gap-2" onClick={handleBulkDelete}>
                             <i className="bi bi-trash text-danger"></i>
                             Eliminar pólizas
+                          </button>
+                        </li>
+                        <li>
+                          <button className="dropdown-item py-2 px-3 d-flex align-items-center gap-2" onClick={() => handleBulkAutNoti('Y')}>
+                            <i className="bi bi-bell"></i>
+                            Activar notificación
+                          </button>
+                        </li>
+                        <li>
+                          <button className="dropdown-item py-2 px-3 d-flex align-items-center gap-2" onClick={() => handleBulkAutNoti('N')}>
+                            <i className="bi bi-bell-slash"></i>
+                            Desactivar notificación
                           </button>
                         </li>
                       </ul>
@@ -165,6 +189,7 @@ export default function Polizas() {
                       <th className="py-3 border-0">Vencimiento</th>
                       <th className="py-3 border-0">Valor Asegurado</th>
                       <th className="py-3 border-0">Activo</th>
+                      <th className="py-3 border-0">Aut. Noti</th>
                       <th className="py-3 border-0">Días vencidos</th>
                       <th className="py-3 border-0 text-center"><i className="bi bi-gear"></i></th>
                     </tr>
@@ -190,6 +215,7 @@ export default function Polizas() {
                         <td className="py-3 border-0">{p.DueDate}</td>
                         <td className="py-3 border-0">{p.AscValue}</td>
                         <td className="py-3 border-0">{p.activo}</td>
+                        <td className="py-3 border-0">{p.aut_noti}</td>
                         <td className="py-3 border-0">{p.DaysOverdue}</td>
                         <td className="py-3 border-0 text-center">
                           <div className="d-flex justify-content-center gap-2">
@@ -205,7 +231,7 @@ export default function Polizas() {
                     ))}
                     {filtered.length === 0 && (
                       <tr>
-                        <td colSpan="12" className="text-center py-5">
+                        <td colSpan="13" className="text-center py-5">
                           <div className={`text-muted ${darkMode ? 'text-secondary' : ''}`}>
                             <i className="bi bi-search mb-3" style={{ fontSize: '2rem' }}></i>
                             <p className="mb-0">No se encontraron pólizas</p>
