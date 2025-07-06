@@ -478,6 +478,7 @@ class MailHistoryBase(BaseModel):
     Destination: str
     id_seller: Optional[int] = None
     id_client: Optional[int] = None
+    id_policy: Optional[int] = None
 
 
 class MailHistoryCreate(MailHistoryBase):

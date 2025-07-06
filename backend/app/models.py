@@ -282,3 +282,4 @@ class MailHistory(Base):
     Destination = Column(String(1), nullable=False)
     id_seller = Column(Integer, ForeignKey("SLRS.id"), nullable=True)
     id_client = Column(Integer, ForeignKey("CTMS.id"), nullable=True)
+    id_policy = Column(Integer, ForeignKey("PLCY.id"), nullable=True)

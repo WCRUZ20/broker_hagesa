@@ -12,12 +12,10 @@ logger = logging.getLogger(__name__)
 # Use an AsyncIO-based scheduler so jobs run properly under FastAPI/uvicorn
 scheduler = AsyncIOScheduler()
 
-_last_sent: t.Optional[date] = None
 
 
 def send_due_emails() -> None:
     """Send automatic emails to clients based on configured parameters."""
-    global _last_sent
     logger.info("Running scheduled email check")
     now = datetime.now()
     today = now.date()
@@ -47,9 +45,6 @@ def send_due_emails() -> None:
             if now < send_time:
                 logger.info("Waiting until configured send time")
                 return
-        if _last_sent == today:
-            logger.info("Emails already sent today")
-            return
 
         cfg = db.query(models.MailConfig).first()
         template = (
@@ -76,7 +71,7 @@ def send_due_emails() -> None:
                 db.query(models.MailHistory)
                 .filter(
                     models.MailHistory.Destination == "C",
-                    models.MailHistory.id_client == client.id,
+                    models.MailHistory.id_policy == policy.id,
                     models.MailHistory.CreateDate == today,
                 )
                 .first()
@@ -105,6 +100,7 @@ def send_due_emails() -> None:
                 id_formato_mail=template.id,
                 Destination="C",
                 id_client=client.id,
+                id_policy=policy.id,
                 CreateDate=today,
                 LastDateMod=today,
                 id_usrs_create=1,
@@ -113,7 +109,6 @@ def send_due_emails() -> None:
             db.add(hist)
         db.commit()
         logger.info("Automatic email task completed")
-        _last_sent = today
     finally:
         db.close()
 
