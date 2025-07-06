@@ -15,7 +15,11 @@ export default function SeguimientoClientes() {
   useEffect(() => { API.get("/polizas").then(res => setPolizas(res.data)); }, []);
   useEffect(() => { API.get("/clientes").then(res => setClientes(res.data)); }, []);
   useEffect(() => { API.get("/seguimiento/parametros-envio").then(res => { if(res.data && res.data.length>0) setParams(res.data[0]); }); }, []);
-  useEffect(() => { API.get("/seguimiento/historial-correos").then(res => setHistorial(res.data)); }, []);
+  useEffect(() => {
+    API.get("/seguimiento/historial-correos").then((res) =>
+      setHistorial(res.data.filter((h) => h.Destination === "C"))
+    );
+  }, []);
   useEffect(() => { const h=()=>setDarkMode(localStorage.getItem("darkMode") === "true"); window.addEventListener("darkModeChange", h); return () => window.removeEventListener("darkModeChange", h); }, []);
 
   const clientesMap = clientes.reduce((a,c)=>{a[c.id]=c; return a;}, {});
@@ -60,7 +64,7 @@ export default function SeguimientoClientes() {
     await API.post("/seguimiento/historial-correos/enviar-clientes", {policy_ids: selected});
     setSelected([]);
     const res = await API.get("/seguimiento/historial-correos");
-    setHistorial(res.data);
+    setHistorial(res.data.filter((h) => h.Destination === "C"));
   };
 
   return (

@@ -124,6 +124,7 @@ def send_due_emails() -> None:
                             .filter(
                                 models.MailHistory.Destination == "S",
                                 models.MailHistory.id_policy == policy.id,
+                                models.MailHistory.id_seller == seller.id,
                             )
                             .first()
                         )
