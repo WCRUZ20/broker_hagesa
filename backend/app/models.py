@@ -213,6 +213,7 @@ class Policy(Base):
     id_poliza_rel = Column(Integer, ForeignKey("PLCY.id"), nullable=True)
     comentario = Column(String, nullable=True)
     activo = Column(String(1), default="Y", nullable=True)
+    aut_noti = Column(String(2), nullable=False, default="N")
 
 
 class PolicyLine(Base):

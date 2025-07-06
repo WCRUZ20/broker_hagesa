@@ -41,6 +41,7 @@ def create_policy(
         id_poliza_rel=data.id_poliza_rel,
         comentario=data.comentario,
         activo=data.activo or "Y",
+        aut_noti=data.aut_noti or "N",
     )
     db.add(policy)
     if data.DocType == "R" and data.id_poliza_rel:
@@ -116,6 +117,7 @@ def update_policy(
     policy.id_poliza_rel = data.id_poliza_rel
     policy.comentario = data.comentario
     policy.activo = data.activo or policy.activo
+    policy.aut_noti = data.aut_noti or policy.aut_noti
 
     if data.DocType == "R" and data.id_poliza_rel:
         prev_policy = db.query(models.Policy).get(data.id_poliza_rel)

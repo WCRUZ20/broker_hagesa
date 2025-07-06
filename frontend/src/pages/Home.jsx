@@ -664,7 +664,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
             <div className="card-body">
               {policiesByInsurer.length > 0 ? (
                 <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={policiesByInsurer.slice(0, 8)} layout="horizontal">
+                  <BarChart data={policiesByInsurer.slice(0, 8)} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
                     <XAxis type="number" stroke={darkMode ? '#888' : '#666'} />
                     <YAxis 

@@ -65,6 +65,8 @@ def send_due_emails() -> None:
         for policy in policies:
             if getattr(policy, "activo", "Y") != "Y":
                 continue
+            if getattr(policy, "aut_noti", "N") != "Y":
+                continue
             diff = (policy.DueDate - today).days
             before_due = diff >= 0 and diff <= (params.daystodue or 0)
             after_due = diff < 0 and abs(diff) <= (params.maxdaysallow or 0)

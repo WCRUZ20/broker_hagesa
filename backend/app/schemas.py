@@ -363,11 +363,13 @@ class PolicyBase(BaseModel):
     id_poliza_rel: Optional[int] = None
     comentario: Optional[str] = None
     activo: str = "Y"
+    aut_noti: str = "N"
 
 
 class PolicyCreate(PolicyBase):
     lines: list[PolicyLineCreate]
     activo: str | None = None
+    aut_noti: str | None = None
 
 
 class PolicyOut(PolicyBase):

@@ -24,6 +24,7 @@ export default function CrearPoliza() {
     id_poliza_rel: "",
     comentario: "",
     activo: "Y",
+    aut_noti: "N",
   });
   const [lines, setLines] = useState([
     { id_itm: "", LineNum: 1, LineTotal: "", plate: "" },
@@ -57,23 +58,24 @@ export default function CrearPoliza() {
       setInsurances(a.data);
       setVehicles(v.data);
       setPolicies(p0.data);
-      if (isEdit) {
-        const res = await API.get(`/polizas/${id}`);
-        const p = res.data;
-        setForm({
-          DocType: p.DocType,
-          PolicyNum: p.PolicyNum,
-          InitDate: p.InitDate,
-          DueDate: p.DueDate,
-          ComiPrcnt: p.ComiPrcnt,
-          AscValue: p.AscValue,
-          id_slrs: p.id_slrs,
-          id_ctms: p.id_ctms,
-          id_insurance: p.id_insurance,
-          id_poliza_rel: p.id_poliza_rel || "",
-          comentario: p.comentario || "",
-          activo: p.activo,
-        });
+        if (isEdit) {
+          const res = await API.get(`/polizas/${id}`);
+          const p = res.data;
+          setForm({
+            DocType: p.DocType,
+            PolicyNum: p.PolicyNum,
+            InitDate: p.InitDate,
+            DueDate: p.DueDate,
+            ComiPrcnt: p.ComiPrcnt,
+            AscValue: p.AscValue,
+            id_slrs: p.id_slrs,
+            id_ctms: p.id_ctms,
+            id_insurance: p.id_insurance,
+            id_poliza_rel: p.id_poliza_rel || "",
+            comentario: p.comentario || "",
+            activo: p.activo,
+            aut_noti: p.aut_noti,
+          });
         const sell = s.data.find((s0) => s0.id === p.id_slrs);
         if (sell) setSellerName(sell.nombre);
         const cli = c.data.find((cl) => cl.id === p.id_ctms);
@@ -150,19 +152,20 @@ export default function CrearPoliza() {
       }
       navigate("/polizas");
       setForm({
-        DocType: "N",
-        PolicyNum: "",
-        InitDate: "",
-        DueDate: "",
-        ComiPrcnt: "",
-        AscValue: "",
-        id_slrs: "",
-        id_ctms: "",
-        id_insurance: "",
-        id_poliza_rel: "",
-        comentario: "",
-        activo: "Y",
-      });
+          DocType: "N",
+          PolicyNum: "",
+          InitDate: "",
+          DueDate: "",
+          ComiPrcnt: "",
+          AscValue: "",
+          id_slrs: "",
+          id_ctms: "",
+          id_insurance: "",
+          id_poliza_rel: "",
+          comentario: "",
+          activo: "Y",
+          aut_noti: "N",
+        });
       setSellerName("");
       setClientName("");
       setInsuranceName("");
@@ -303,6 +306,22 @@ export default function CrearPoliza() {
               />
               <label className="form-check-label ms-2" htmlFor="activo-switch">
                 Activo
+              </label>
+            </div>
+          </div>
+          <div className="col-md-6 mb-3 d-flex align-items-center">
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="aut-noti-switch"
+                checked={form.aut_noti === "Y"}
+                onChange={() =>
+                  setForm({ ...form, aut_noti: form.aut_noti === "Y" ? "N" : "Y" })
+                }
+              />
+              <label className="form-check-label ms-2" htmlFor="aut-noti-switch">
+                Notificación automática
               </label>
             </div>
           </div>
