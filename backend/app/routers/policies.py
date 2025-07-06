@@ -81,7 +81,20 @@ def list_policies(db: Session = Depends(get_db)):
         )
         result.append(schemas.PolicyListOut(**base))
     return result
-
+@router.put("/aut-noti")
+def update_aut_noti(
+    payload: schemas.BulkAutNotiUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    for pid in payload.policy_ids:
+        policy = db.query(models.Policy).get(pid)
+        if policy:
+            policy.aut_noti = payload.aut_noti
+            policy.LastDateMod = date.today()
+            policy.id_usrs_update = current_user.id
+    db.commit()
+    return {"msg": "Polizas actualizadas"}
 
 @router.get("/{id}", response_model=schemas.PolicyDetailOut)
 def get_policy(id: int, db: Session = Depends(get_db)):
@@ -149,17 +162,3 @@ def delete_policy(id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"msg": "Póliza eliminada"}
 
-@router.put("/aut-noti")
-def update_aut_noti(
-    payload: schemas.BulkAutNotiUpdate,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user),
-):
-    for pid in payload.policy_ids:
-        policy = db.query(models.Policy).get(pid)
-        if policy:
-            policy.aut_noti = payload.aut_noti
-            policy.LastDateMod = date.today()
-            policy.id_usrs_update = current_user.id
-    db.commit()
-    return {"msg": "Pólizas actualizadas"}
