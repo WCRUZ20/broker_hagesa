@@ -96,6 +96,10 @@ def send_client_emails(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
+    params = db.query(models.MailSendingParam).first()
+    if not params or params.manualsending != "Y":
+        raise HTTPException(status_code=400, detail="El envío manual está desactivado")
+    
     cfg = db.query(models.MailConfig).first()
     template = db.query(models.MailTemplate).filter(models.MailTemplate.Destination == "C").first()
     if not cfg or not template:
@@ -149,6 +153,10 @@ def send_seller_emails(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
+    params = db.query(models.MailSendingParam).first()
+    if not params or params.manualsending != "Y":
+        raise HTTPException(status_code=400, detail="El envío manual está desactivado")
+    
     cfg = db.query(models.MailConfig).first()
     template = (
         db.query(models.MailTemplate)
