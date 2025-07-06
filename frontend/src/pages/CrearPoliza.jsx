@@ -16,6 +16,7 @@ export default function CrearPoliza() {
     PolicyNum: "",
     InitDate: "",
     DueDate: "",
+    ComiPrcnt: "",
     AscValue: "",
     id_slrs: "",
     id_ctms: "",
@@ -64,6 +65,7 @@ export default function CrearPoliza() {
           PolicyNum: p.PolicyNum,
           InitDate: p.InitDate,
           DueDate: p.DueDate,
+          ComiPrcnt: p.ComiPrcnt,
           AscValue: p.AscValue,
           id_slrs: p.id_slrs,
           id_ctms: p.id_ctms,
@@ -124,6 +126,7 @@ export default function CrearPoliza() {
     e.preventDefault();
     const payload = {
       ...form,
+      ComiPrcnt: Number(form.ComiPrcnt),
       AscValue: Number(form.AscValue),
       id_slrs: Number(form.id_slrs),
       id_ctms: Number(form.id_ctms),
@@ -151,6 +154,7 @@ export default function CrearPoliza() {
         PolicyNum: "",
         InitDate: "",
         DueDate: "",
+        ComiPrcnt: "",
         AscValue: "",
         id_slrs: "",
         id_ctms: "",
@@ -215,6 +219,17 @@ export default function CrearPoliza() {
               name="DueDate"
               className="form-control"
               value={form.DueDate}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="col-md-6 mb-3">
+            <input
+              name="ComiPrcnt"
+              type="number"
+              className="form-control"
+              placeholder="% Comisión"
+              value={form.ComiPrcnt}
               onChange={handleChange}
               required
             />

@@ -29,6 +29,7 @@ def create_policy(
         PolicyNum=data.PolicyNum,
         InitDate=data.InitDate,
         DueDate=data.DueDate,
+        ComiPrcnt=data.ComiPrcnt,
         AscValue=data.AscValue,
         CreateDate=date.today(),
         LastDateMod=date.today(),
@@ -72,7 +73,7 @@ def list_policies(db: Session = Depends(get_db)):
         base.update(
             {
                 "InsuranceName": ins.CompanyName if ins else None,
-                "ComiPrcnt": ins.ComiPrcnt if ins else None,
+                "ComiPrcnt": p.ComiPrcnt,
                 "DaysOverdue": days_overdue,
                 "RelatedPolicyNum": db.query(models.Policy.PolicyNum).filter(models.Policy.id == p.id_poliza_rel).scalar() if p.id_poliza_rel else None,
             }
@@ -105,6 +106,7 @@ def update_policy(
     policy.PolicyNum = data.PolicyNum
     policy.InitDate = data.InitDate
     policy.DueDate = data.DueDate
+    policy.ComiPrcnt = data.ComiPrcnt
     policy.AscValue = data.AscValue
     policy.LastDateMod = date.today()
     policy.id_slrs = data.id_slrs

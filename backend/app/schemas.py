@@ -355,6 +355,7 @@ class PolicyBase(BaseModel):
     PolicyNum: str
     InitDate: date
     DueDate: date
+    ComiPrcnt: float
     AscValue: float
     id_slrs: int
     id_ctms: int
@@ -375,6 +376,7 @@ class PolicyOut(PolicyBase):
     LastDateMod: date
     id_usrs_create: int
     id_usrs_update: int
+    ComiPrcnt: float
     activo: str
 
     class Config:
@@ -388,7 +390,7 @@ class PolicyDetailOut(PolicyOut):
 
 class PolicyListOut(PolicyOut):
     InsuranceName: Optional[str] = None
-    ComiPrcnt: Optional[int] = None
+    ComiPrcnt: Optional[float] = None
     DaysOverdue: Optional[int] = None
     RelatedPolicyNum: Optional[str] = None
 

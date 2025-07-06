@@ -20,13 +20,13 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
 
   const [trendStart, setTrendStart] = useState(() => {
     const d = new Date();
-    d.setMonth(d.getMonth() - 5);
-    return d.toISOString().slice(0, 7);
+     d.setFullYear(d.getFullYear() - 5);
+    return d.getFullYear().toString();
   });
 
   const [trendEnd, setTrendEnd] = useState(() => {
     const d = new Date();
-    return d.toISOString().slice(0, 7);
+    return d.getFullYear().toString();
   });
 
   useEffect(() => {
@@ -194,32 +194,26 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
       .sort((a, b) => b.value - a.value);
   };
 
-  // Datos para gráfico de tendencia mensual
-  const getMonthlyTrend = () => {
-    const start = new Date(`${trendStart}-01`);
-    const end = new Date(`${trendEnd}-01`);
-    const monthlyData = [];
-    
-    const cur = new Date(start.getTime());
-    while (cur <= end) {
-      const monthName = cur.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
-      
-      const monthPolicies = dashboardData.policies.filter(p => {
-        const policyDate = new Date(p.InitDate);
-        return policyDate.getMonth() === cur.getMonth() &&
-               policyDate.getFullYear() === cur.getFullYear() &&
-               isPolicyActive(p);
+  // Datos para gráfico de tendencia anual
+  const getYearlyTrend = () => {
+    const startYear = parseInt(trendStart, 10);
+    const endYear = parseInt(trendEnd, 10);
+    const yearlyData = [];
+
+    for (let year = startYear; year <= endYear; year++) {
+      const yearPolicies = dashboardData.policies.filter(p => {
+        const policyYear = new Date(p.InitDate).getFullYear();
+        return policyYear === year && isPolicyActive(p);
       });
       
-      monthlyData.push({
-        month: monthName,
-        valor: monthPolicies.reduce((sum, p) => sum + (parseFloat(p.AscValue) || 0), 0),
-        polizas: monthPolicies.length
+      yearlyData.push({
+        year: year.toString(),
+        valor: yearPolicies.reduce((sum, p) => sum + (parseFloat(p.AscValue) || 0), 0),
+        polizas: yearPolicies.length
       });
-      cur.setMonth(cur.getMonth() + 1);
     }
     
-    return monthlyData;
+    return yearlyData;
   };
 
   // Calcular días hasta vencimiento
@@ -234,7 +228,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
   const expiredPolicies = getExpiredPolicies();
   const vehiclesByBrand = getVehiclesByBrand();
   const policiesByInsurer = getPoliciesByInsurer();
-  const monthlyTrend = getMonthlyTrend();
+  const yearlyTrend = getYearlyTrend();
   const valueBySeller = getValueBySeller();
 
   if (loading) {
@@ -458,21 +452,35 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                     Tendencia de Pólizas y Valor Asegurado
                   </h5>
                   <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>{
-                    `${new Date(trendStart + '-01').toLocaleDateString('es-ES', { month: 'short', year: 'numeric' })} - ${new Date(trendEnd + '-01').toLocaleDateString('es-ES', { month: 'short', year: 'numeric' })}`
+                    `${trendStart} - ${trendEnd}`
                   }</small>
                 </div>
                 <div className="d-flex gap-2">
-                  <input type="month" className="form-control form-control-sm" value={trendStart} onChange={e => setTrendStart(e.target.value)} />
-                  <input type="month" className="form-control form-control-sm" value={trendEnd} onChange={e => setTrendEnd(e.target.value)} />
+                   <input
+                    type="number"
+                    min="1900"
+                    step="1"
+                    className="form-control form-control-sm"
+                    value={trendStart}
+                    onChange={e => setTrendStart(e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    min="1900"
+                    step="1"
+                    className="form-control form-control-sm"
+                    value={trendEnd}
+                    onChange={e => setTrendEnd(e.target.value)}
+                  />
                 </div>
               </div>
             </div>
             <div className="card-body">
-              {monthlyTrend.length > 0 ? (
+              {yearlyTrend.length > 0 ? (
                 <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={monthlyTrend}>
+                  <LineChart data={yearlyTrend}>
                     <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
-                    <XAxis dataKey="month" stroke={darkMode ? '#888' : '#666'} />
+                    <XAxis dataKey="year" stroke={darkMode ? '#888' : '#666'} />
                     <YAxis stroke={darkMode ? '#888' : '#666'} />
                     <Tooltip 
                       contentStyle={{

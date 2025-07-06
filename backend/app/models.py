@@ -201,6 +201,7 @@ class Policy(Base):
     PolicyNum = Column(String, nullable=False)
     InitDate = Column(Date, nullable=False)
     DueDate = Column(Date, nullable=False)
+    ComiPrcnt = Column("comi_prcnt", Float, nullable=False)
     AscValue = Column(Float, nullable=False)
     CreateDate = Column(Date, nullable=False)
     LastDateMod = Column(Date, nullable=False)
