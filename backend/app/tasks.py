@@ -113,6 +113,7 @@ def send_due_emails() -> None:
                 id_usrs_update=1,
             )
             db.add(hist)
+            # Send email to seller if applicable
             if template_seller:
                 seller = db.query(models.Seller).get(policy.id_slrs)
                 if seller and seller.email:
