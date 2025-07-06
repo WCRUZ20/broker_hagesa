@@ -424,6 +424,28 @@ class MailConfigOut(MailConfigBase):
     class Config:
         from_attributes = True
 
+class WhatsAppConfigBase(BaseModel):
+    ACCOUNT_SID: str
+    AUTH_TOKEN: str
+    FROM_NUMBER: str
+    Estado: str = "D"
+
+
+class WhatsAppConfigCreate(WhatsAppConfigBase):
+    Estado: str | None = None
+
+
+class WhatsAppConfigOut(WhatsAppConfigBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+    Estado: str
+
+    class Config:
+        from_attributes = True
+
 class MailTemplateBase(BaseModel):
     Name: str
     Subject: str

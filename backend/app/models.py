@@ -285,3 +285,16 @@ class MailHistory(Base):
     id_seller = Column(Integer, ForeignKey("SLRS.id"), nullable=True)
     id_client = Column(Integer, ForeignKey("CTMS.id"), nullable=True)
     id_policy = Column(Integer, ForeignKey("PLCY.id"), nullable=True)
+
+class WhatsAppConfig(Base):
+    __tablename__ = "ENVW"
+
+    id = Column(Integer, primary_key=True, index=True)
+    ACCOUNT_SID = Column(String)
+    AUTH_TOKEN = Column(String)
+    FROM_NUMBER = Column(String)
+    Estado = Column(String(1), default="D", nullable=False)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)
+    id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)

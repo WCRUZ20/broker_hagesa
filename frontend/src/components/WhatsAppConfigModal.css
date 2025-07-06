@@ -1,0 +1,1013 @@
+:root {
+  --modal-primary: rgb(200, 150, 82);
+  --modal-primary-hover: rgb(220, 170, 102);
+  --modal-secondary: rgb(212, 176, 131);
+  --modal-success: rgb(34, 197, 94);
+  --modal-bg-dark: rgb(20, 20, 20);
+  --modal-bg-light: rgb(25, 25, 25);
+  --modal-border: rgb(60, 50, 35);
+  --modal-text-muted: rgb(150, 146, 138);
+}
+
+/* Modal Backdrop */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1050;
+  animation: fadeIn 0.4s ease-out;
+  overflow-y: auto;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.modal-container {
+  width: min(90vw, 500px);
+  max-width: 500px;
+  max-height: calc(100vh - 30px);
+  animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.modal-content-custom {
+  background: var(--modal-bg-dark);
+  border: 1px solid var(--modal-border);
+  border-radius: 10px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  min-height: 0;
+}
+
+/* Error Animation for Email Test */
+.error-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  margin: 0 auto 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: errorShake 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.error-icon {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.error-icon .error-line-1,
+.error-icon .error-line-2 {
+  animation: errorLineDraw 0.3s ease-out forwards;
+}
+
+.error-icon .error-line-2 {
+  animation-delay: 0.1s;
+}
+
+.error-title {
+  color: #EF4444;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: 0.3px;
+}
+
+.error-message {
+  color: var(--modal-secondary);
+  font-size: 0.8rem;
+  margin: 0 0 0.4rem 0;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.error-suggestion {
+  color: var(--modal-text-muted);
+  font-size: 0.7rem;
+  margin: 0;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Error Animation Keyframes */
+@keyframes errorShake {
+  0% { 
+    transform: scale(0) rotate(0deg); 
+    opacity: 0; 
+  }
+  25% { 
+    transform: scale(1.1) rotate(-5deg); 
+  }
+  50% { 
+    transform: scale(0.9) rotate(5deg); 
+  }
+  75% { 
+    transform: scale(1.05) rotate(-2deg); 
+  }
+  100% { 
+    transform: scale(1) rotate(0deg); 
+    opacity: 1; 
+  }
+}
+
+@keyframes errorLineDraw {
+  0% { 
+    opacity: 0;
+    stroke-dasharray: 10;
+    stroke-dashoffset: 10;
+  }
+  100% { 
+    opacity: 1;
+    stroke-dasharray: 10;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Success Animation for Email Test */
+.email-success-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  margin: 0 auto 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: emailBounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+}
+
+.email-success-circle::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  animation: emailPulse 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+.email-icon {
+  width: 32px;
+  height: 32px;
+  color: white;
+  animation: emailFloat 2s ease-in-out infinite;
+}
+
+.email-icon .check-path {
+  animation: checkDraw 0.8s ease-out 0.5s forwards;
+}
+
+.email-highlight {
+  color: var(--modal-primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  display: inline-block;
+  margin-top: 0.2rem;
+  animation: textGlow 0.5s ease-out 0.3s forwards;
+  opacity: 0;
+}
+
+/* Email Animation Keyframes */
+@keyframes emailBounce {
+  0% { 
+    transform: scale(0) rotate(-180deg); 
+    opacity: 0; 
+  }
+  50% { 
+    transform: scale(1.2) rotate(-90deg); 
+  }
+  70% { 
+    transform: scale(0.9) rotate(-45deg); 
+  }
+  100% { 
+    transform: scale(1) rotate(0deg); 
+    opacity: 1; 
+  }
+}
+
+@keyframes emailFloat {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-3px); 
+  }
+}
+
+@keyframes emailPulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: scale(1.1);
+    opacity: 0.1;
+  }
+}
+
+@keyframes checkDraw {
+  0% { 
+    stroke-dashoffset: 20; 
+    opacity: 0;
+  }
+  100% { 
+    stroke-dashoffset: 0; 
+    opacity: 1;
+  }
+}
+
+@keyframes textGlow {
+  0% { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+/* }
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(20, 20, 20, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;*/
+} 
+
+.success-animation {
+  text-align: center;
+  animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.checkmark-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--modal-success) 0%, rgb(22, 163, 74) 100%);
+  margin: 0 auto 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s infinite;
+}
+
+.checkmark {
+  width: 26px;
+  height: 26px;
+}
+
+.checkmark path {
+  stroke: white;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: checkmarkDraw 0.6s ease-out 0.3s forwards;
+}
+
+.success-title {
+  color: var(--modal-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: 0.3px;
+}
+
+.success-message {
+  color: var(--modal-secondary);
+  font-size: 0.8rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Header */
+.modal-header-custom {
+  background: linear-gradient(135deg, rgb(25, 25, 25) 0%, rgb(30, 30, 30) 100%);
+  border-bottom: 2px solid var(--modal-primary);
+  padding: 0.8rem 1rem;
+  flex-shrink: 0;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.title-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.modal-title-custom {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.subtitle-section {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--modal-secondary);
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: var(--modal-secondary);
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.modal-close-btn:hover:not(:disabled) {
+  background: rgba(200, 150, 82, 0.15);
+  color: white;
+  transform: rotate(90deg);
+}
+
+.modal-close-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Body */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.modal-body-custom {
+  padding: 0.8rem;
+  flex: 1;
+  overflow-y: auto;
+  background: var(--modal-bg-dark);
+  min-height: 0;
+}
+
+.form-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+/* Form Sections */
+.form-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgb(40, 35, 25);
+  border-radius: 8px;
+  padding: 0.7rem;
+  transition: all 0.3s ease;
+}
+
+.form-section:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--modal-primary);
+}
+
+.section-header {
+  margin-bottom: 0.7rem;
+}
+
+.section-title {
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0 0 0.2rem 0;
+  letter-spacing: 0.3px;
+}
+
+.section-subtitle {
+  color: var(--modal-text-muted);
+  font-size: 0.7rem;
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.7rem;
+}
+
+/* Form Groups */
+.form-group {
+  position: relative;
+  margin-bottom: 0;
+}
+
+/* Floating Labels */
+.form-input-container {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.form-label-floating {
+  position: absolute;
+  left: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--modal-text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  background: var(--modal-bg-dark);
+  padding: 0 0.3rem;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.form-label-floating.active,
+.form-input-modern:focus + .form-label-floating,
+.form-input-modern:not(:placeholder-shown) + .form-label-floating {
+  top: 0;
+  left: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--modal-primary);
+  transform: translateY(-50%);
+  font-weight: 600;
+}
+
+.form-input-modern,
+.form-select-modern {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  background: rgb(35, 35, 35);
+  border: 1px solid rgb(55, 55, 55);
+  border-radius: 6px;
+  color: white;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.form-input-modern:focus,
+.form-select-modern:focus {
+  border-color: var(--modal-primary);
+  background: rgb(40, 40, 40);
+  box-shadow: 0 0 0 2px rgba(200, 150, 82, 0.1);
+}
+
+.form-input-modern::placeholder {
+  color: transparent;
+  opacity: 0;
+}
+
+.form-input-modern:focus::placeholder {
+  color: var(--modal-text-muted);
+  opacity: 0.6;
+}
+
+.form-highlight {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--modal-primary), var(--modal-primary-hover));
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.form-input-modern:focus ~ .form-highlight,
+.form-select-modern:focus ~ .form-highlight {
+  width: 100%;
+}
+
+.form-select-modern option {
+  background: rgb(25, 25, 25);
+  color: white;
+  padding: 0.4rem;
+}
+
+/* Form Help Text */
+.form-help-text {
+  color: var(--modal-text-muted);
+  font-size: 0.65rem;
+  margin-top: 0.3rem;
+  line-height: 1.3;
+  margin-bottom: 0;
+  opacity: 0.8;
+}
+
+/* Validate Button Group */
+.validate-button-group {
+  display: flex;
+  align-items: flex-end;
+}
+
+.btn-validate {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: linear-gradient(135deg, var(--modal-primary) 0%, rgb(180, 130, 62) 100%);
+  color: rgb(20, 20, 20);
+  border: 2px solid var(--modal-primary);
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-height: 42px;
+}
+
+.btn-validate:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--modal-primary-hover) 0%, var(--modal-primary) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(200, 150, 82, 0.4);
+}
+
+.btn-validate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Footer */
+.modal-footer-custom {
+  background: linear-gradient(135deg, rgb(15, 15, 15) 0%, rgb(20, 20, 20) 100%);
+  border-top: 1px solid var(--modal-border);
+  padding: 0.7rem 0.8rem;
+  flex-shrink: 0;
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.btn-secondary,
+.btn-primary {
+  padding: 0.55rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 90px;
+  justify-content: center;
+  border: 2px solid transparent;
+  min-height: 38px;
+}
+
+.btn-secondary {
+  background: rgb(45, 45, 45);
+  border-color: rgb(60, 60, 60);
+  color: var(--modal-secondary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgb(55, 55, 55);
+  border-color: var(--modal-secondary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--modal-success) 0%, rgb(22, 163, 74) 100%);
+  color: white;
+  border-color: var(--modal-success);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgb(54, 217, 114) 0%, var(--modal-success) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+}
+
+.btn-secondary:disabled,
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Spinner Animation */
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideIn {
+  0% { 
+    transform: translateY(-20px) scale(0.95); 
+    opacity: 0; 
+  }
+  100% { 
+    transform: translateY(0) scale(1); 
+    opacity: 1; 
+  }
+}
+
+@keyframes bounceIn {
+  0% { 
+    transform: scale(0.3); 
+    opacity: 0; 
+  }
+  50% { 
+    transform: scale(1.05); 
+  }
+  70% { 
+    transform: scale(0.9); 
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1); 
+  }
+  50% { 
+    transform: scale(1.05); 
+  }
+}
+
+@keyframes checkmarkDraw {
+  0% { 
+    stroke-dashoffset: 50; 
+  }
+  100% { 
+    stroke-dashoffset: 0; 
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design Mejorado */
+@media (max-width: 768px) {
+  .modal-backdrop {
+    padding: 8px;
+  }
+  
+  .modal-container {
+    width: 95vw;
+    max-width: none;
+    max-height: calc(100vh - 16px);
+  }
+  
+  .modal-header-custom {
+    padding: 0.7rem 0.8rem;
+  }
+  
+  .modal-body-custom {
+    padding: 0.7rem;
+  }
+  
+  .modal-footer-custom {
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .modal-title-custom {
+    font-size: 1rem;
+  }
+  
+  .subtitle-section {
+    font-size: 0.65rem;
+  }
+  
+  .header-content {
+    gap: 0.6rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+  
+  .form-sections {
+    gap: 0.7rem;
+  }
+  
+  .form-section {
+    padding: 0.6rem;
+  }
+  
+  .section-title {
+    font-size: 0.8rem;
+  }
+  
+  .section-subtitle {
+    font-size: 0.65rem;
+  }
+  
+  .footer-actions {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  
+  .btn-secondary,
+  .btn-primary,
+  .btn-validate {
+    width: 100%;
+    min-width: auto;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.75rem;
+  }
+  
+  .success-title {
+    font-size: 1rem;
+  }
+  
+  .success-message {
+    font-size: 0.75rem;
+  }
+  
+  .form-input-modern,
+  .form-select-modern {
+    padding: 0.55rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  
+  .form-label-floating {
+    font-size: 0.75rem;
+  }
+  
+  .form-label-floating.active,
+  .form-input-modern:focus + .form-label-floating,
+  .form-input-modern:not(:placeholder-shown) + .form-label-floating {
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-backdrop {
+    padding: 4px;
+  }
+  
+  .modal-container {
+    width: 98vw;
+    max-height: calc(100vh - 8px);
+  }
+  
+  .modal-header-custom {
+    padding: 0.6rem 0.7rem;
+  }
+  
+  .modal-body-custom {
+    padding: 0.6rem;
+  }
+  
+  .modal-footer-custom {
+    padding: 0.55rem 0.7rem;
+  }
+  
+  .modal-title-custom {
+    font-size: 0.9rem;
+  }
+  
+  .subtitle-section {
+    font-size: 0.6rem;
+  }
+  
+  .modal-close-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 1.1rem;
+  }
+  
+  .form-section {
+    padding: 0.55rem;
+  }
+  
+  .form-sections {
+    gap: 0.6rem;
+  }
+  
+  .section-title {
+    font-size: 0.75rem;
+  }
+  
+  .section-subtitle {
+    font-size: 0.6rem;
+  }
+  
+  .form-input-modern,
+  .form-select-modern {
+    padding: 0.5rem 0.55rem;
+    font-size: 0.7rem;
+  }
+  
+  .form-label-floating {
+    font-size: 0.7rem;
+    left: 0.55rem;
+  }
+  
+  .form-label-floating.active,
+  .form-input-modern:focus + .form-label-floating,
+  .form-input-modern:not(:placeholder-shown) + .form-label-floating {
+    font-size: 0.6rem;
+    left: 0.4rem;
+  }
+  
+  .btn-secondary,
+  .btn-primary,
+  .btn-validate {
+    font-size: 0.7rem;
+    padding: 0.55rem 0.7rem;
+    min-height: 36px;
+  }
+  
+  .checkmark-circle {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .checkmark {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .success-title {
+    font-size: 0.9rem;
+  }
+  
+  .success-message {
+    font-size: 0.7rem;
+  }
+  
+  .form-help-text {
+    font-size: 0.6rem;
+  }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .modal-title-custom {
+    font-size: 0.85rem;
+  }
+  
+  .subtitle-section {
+    display: none; /* Ocultar en pantallas muy pequeñas para ahorrar espacio */
+  }
+  
+  .form-input-modern,
+  .form-select-modern {
+    padding: 0.45rem 0.5rem;
+    font-size: 0.65rem;
+  }
+  
+  .form-label-floating {
+    font-size: 0.65rem;
+    left: 0.5rem;
+  }
+  
+  .form-label-floating.active,
+  .form-input-modern:focus + .form-label-floating,
+  .form-input-modern:not(:placeholder-shown) + .form-label-floating {
+    font-size: 0.55rem;
+    left: 0.35rem;
+  }
+  
+  .btn-secondary,
+  .btn-primary,
+  .btn-validate {
+    font-size: 0.65rem;
+    padding: 0.5rem 0.6rem;
+    min-height: 34px;
+  }
+  
+  .section-title {
+    font-size: 0.7rem;
+  }
+  
+  .section-subtitle {
+    font-size: 0.55rem;
+  }
+  
+  .form-help-text {
+    font-size: 0.55rem;
+  }
+}
+
+/* Mejoras de usabilidad para el modal */
+.modal-container {
+  position: relative;
+}
+
+/* Asegurar que el modal siempre sea scrolleable */
+.modal-backdrop {
+  align-items: flex-start;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+@media (max-height: 600px) {
+  .modal-backdrop {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  
+  .modal-container {
+    max-height: calc(100vh - 16px);
+  }
+}
+
+/* Ajustes para pantallas de altura muy pequeña */
+@media (max-height: 500px) {
+  .modal-backdrop {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  
+  .modal-container {
+    max-height: calc(100vh - 8px);
+  }
+  
+  .modal-header-custom {
+    padding: 0.5rem 0.8rem;
+  }
+  
+  .modal-body-custom {
+    padding: 0.5rem;
+  }
+  
+  .modal-footer-custom {
+    padding: 0.5rem 0.8rem;
+  }
+  
+  .form-sections {
+    gap: 0.5rem;
+  }
+  
+  .form-section {
+    padding: 0.5rem;
+  }
+  
+  .section-header {
+    margin-bottom: 0.5rem;
+  }
+}

@@ -295,10 +295,10 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                   </div>
                 </div>
                 <div>
-                  <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+                  <h5 className="mb-0 fw-bold text-white">
                     {stats.totalPolicies}
                   </h5>
-                  <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>
+                  <small className="text-white">
                     Total Pólizas
                   </small>
                 </div>
@@ -317,10 +317,10 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                   </div>
                 </div>
                 <div>
-                  <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+                  <h5 className="mb-0 fw-bold text-white">
                     {stats.activePolicies}
                   </h5>
-                  <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>
+                  <small className="text-white">
                     Pólizas Activas
                   </small>
                 </div>
@@ -339,10 +339,10 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                   </div>
                 </div>
                 <div>
-                  <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+                  <h5 className="mb-0 fw-bold text-white">
                     {stats.totalVehicles}
                   </h5>
-                  <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>
+                  <small className="text-white">
                     Total Vehículos
                   </small>
                 </div>
@@ -361,10 +361,10 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                   </div>
                 </div>
                 <div>
-                  <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+                  <h5 className="mb-0 fw-bold text-white">
                     {stats.totalClients}
                   </h5>
-                  <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>
+                  <small className="text-white">
                     Total Clientes
                   </small>
                 </div>
@@ -383,10 +383,10 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                   </div>
                 </div>
                 <div>
-                  <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+                  <h5 className="mb-0 fw-bold text-white">
                     {expiringSoon.length}
                   </h5>
-                  <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>
+                  <small className="text-white">
                     Por Vencer (30d)
                   </small>
                 </div>
@@ -405,10 +405,10 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                   </div>
                 </div>
                 <div>
-                  <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+                  <h5 className="mb-0 fw-bold text-white">
                     ${stats.totalInsuredValue.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                   </h5>
-                  <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>
+                  <small className="text-white">
                     Valor Total Asegurado
                   </small>
                 </div>
@@ -429,10 +429,10 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                   </div>
                 </div>
                 <div>
-                  <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+                  <h5 className="mb-0 fw-bold text-white">
                     ${stats.totalCommission.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                   </h5>
-                  <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Comisión Esperada</small>
+                  <small className="text-white">Comisión Esperada</small>
                 </div>
               </div>
             </div>

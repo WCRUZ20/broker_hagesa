@@ -13,6 +13,7 @@ export default function Sidebar({ user, onLogout }) {
   const [vehiculosOpen, setVehiculosOpen] = useState(false);
   const [polizasOpen, setPolizasOpen] = useState(false);
   const [seguimientoOpen, setSeguimientoOpen] = useState(false);
+  const [whatsappOpen, setWhatsappOpen] = useState(false);
   const [company, setCompany] = useState(null);
   const [cargos, setCargos] = useState([]);
 
@@ -110,6 +111,20 @@ export default function Sidebar({ user, onLogout }) {
         setComplementosOpen(false);
         setVehiculosOpen(false);
         setPolizasOpen(false);
+        setWhatsappOpen(false);
+      }
+      return newState;
+    });
+  };
+
+  const toggleWhatsapp = () => {
+    setWhatsappOpen(prev => {
+      const newState = !prev;
+      if (newState) {
+        setComplementosOpen(false);
+        setVehiculosOpen(false);
+        setPolizasOpen(false);
+        setSeguimientoOpen(false);
       }
       return newState;
     });
@@ -120,6 +135,7 @@ export default function Sidebar({ user, onLogout }) {
     setVehiculosOpen(false);
     setPolizasOpen(false);
     setSeguimientoOpen(false);
+    setWhatsappOpen(false);
   };
   
   const sidebarClass = "sidebar sidebar-dark"; // Siempre oscuro
@@ -279,6 +295,26 @@ export default function Sidebar({ user, onLogout }) {
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/seguimiento/plantillas-mail">
                       <i className="bi bi-file-text me-2"></i>Plantilla Correo
+                    </NavLink>
+                  </li>
+                </ul>
+              )}
+            </li>
+            <li className="nav-item">
+              <div
+                onClick={toggleWhatsapp}
+                className="nav-link d-flex justify-content-between align-items-center"
+                style={{ cursor: "pointer" }}
+              >
+                <span>
+                  <i className="bi bi-whatsapp me-2"></i>Seguimiento por WhatsApp
+                </span>
+              </div>
+              {whatsappOpen && (
+                <ul className="nav flex-column ms-3 submenu">
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/seguimiento/parametrizaciones-whatsapp">
+                      <i className="bi bi-gear me-2"></i>Config. WhatsApp
                     </NavLink>
                   </li>
                 </ul>
