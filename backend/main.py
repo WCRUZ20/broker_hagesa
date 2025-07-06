@@ -1,26 +1,11 @@
 from fastapi import FastAPI
-from app.routers import users
-from app.routers import clients
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import sellers
-from app.routers import company
-from app.routers import countries
-from app.routers import cargos
-from app.routers import states
-from app.routers import cities
-from app.routers import parishes
-from app.routers import brands
-from app.routers import vehicle_types
-from app.routers import vehicle_uses
-from app.routers import vehicle_classifications
-from app.routers import vehicles
-from app.routers import identification_types
-from app.routers import insurance_companies
-from app.routers import policies
-from app.routers import mail_config
-from app.routers import mail_templates
-from app.routers import mail_params
-from app.routers import mail_history
+from app.routers import users, clients, sellers, company, countries, cargos
+from app.routers import states, cities, parishes, brands, vehicle_types
+from app.routers import vehicle_uses, vehicle_classifications, vehicles
+from app.routers import identification_types, insurance_companies, policies
+from app.routers import mail_config, mail_templates, mail_params, mail_history
+from app.tasks import start_scheduler, stop_scheduler
 
 
 
@@ -66,6 +51,15 @@ app.include_router(mail_templates.router)
 app.include_router(mail_params.router)
 app.include_router(mail_history.router)
 
+
+@app.on_event("startup")
+def _startup() -> None:
+    start_scheduler()
+
+
+@app.on_event("shutdown")
+def _shutdown() -> None:
+    stop_scheduler()
 
 @app.get("/")
 def read_root():
