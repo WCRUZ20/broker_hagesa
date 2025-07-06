@@ -70,10 +70,19 @@ export default function SeguimientoClientes() {
 
   const sendMails = async () => {
     if(selected.length === 0) return;
-    await API.post("/seguimiento/historial-correos/enviar-clientes", {policy_ids: selected});
-    setSelected([]);
-    const res = await API.get("/seguimiento/historial-correos");
-    setHistorial(res.data.filter((h) => h.Destination === "C"));
+    if (!params || params.manualsending !== "Y") {
+      alert("El envío manual está desactivado");
+      return;
+    }
+    try {
+      await API.post("/seguimiento/historial-correos/enviar-clientes", {policy_ids: selected});
+      setSelected([]);
+      const res = await API.get("/seguimiento/historial-correos");
+      setHistorial(res.data.filter((h) => h.Destination === "C"));
+    } catch (err) {
+      const detail = err?.response?.data?.detail;
+      alert(detail || "Error al enviar correos");
+    }
   };
 
   return (
