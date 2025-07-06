@@ -38,8 +38,9 @@ def send_due_emails():
             return
 
         cfg = db.query(models.MailConfig).first()
-        template = db.query(models.MailTemplate).filter(models.MailTemplate.Destination == 'C').first()
-        if not cfg or not template:
+        client_template = db.query(models.MailTemplate).filter(models.MailTemplate.Destination == 'C').first()
+        seller_template = db.query(models.MailTemplate).filter(models.MailTemplate.Destination == 'S').first()
+        if not cfg or not client_template:
             return
 
         policies = db.query(models.Policy).all()
@@ -74,18 +75,18 @@ def send_due_emails():
                     vehicles.append(veh)
             seller = db.query(models.Seller).get(policy.id_slrs)
             subj = strip_tags(
-                render_template(db, template.Subject, policy, client, vehicles, seller)
+                render_template(db, client_template.Subject, policy, client, vehicles, seller)
             )
-            body = render_template(db, template.Body, policy, client, vehicles, seller)
+            body = render_template(db, client_template.Body, policy, client, vehicles, seller)
             try:
                 send_email(cfg, client.email, subj, body)
             except Exception:
                 pass
             hist = models.MailHistory(
-                Name=template.Name,
+                Name=client_template.Name,
                 Subject=subj,
                 Body=body,
-                id_formato_mail=template.id,
+                id_formato_mail=client_template.id,
                 Destination='C',
                 id_client=client.id,
                 CreateDate=today,
@@ -94,6 +95,41 @@ def send_due_emails():
                 id_usrs_update=1,
             )
             db.add(hist)
+            # Correos automáticos a vendedores
+            if seller_template and seller and seller.email:
+                before_due_s = diff >= 0 and diff <= (params.daystodueSeller or 0)
+                if before_due_s or after_due:
+                    existing_s = (
+                        db.query(models.MailHistory)
+                        .filter(
+                            models.MailHistory.Destination == 'S',
+                            models.MailHistory.id_seller == seller.id,
+                            models.MailHistory.CreateDate == today,
+                        )
+                        .first()
+                    )
+                    if not existing_s:
+                        subj_s = strip_tags(
+                            render_template(db, seller_template.Subject, policy, client, vehicles, seller)
+                        )
+                        body_s = render_template(db, seller_template.Body, policy, client, vehicles, seller)
+                        try:
+                            send_email(cfg, seller.email, subj_s, body_s)
+                        except Exception:
+                            pass
+                        hist_s = models.MailHistory(
+                            Name=seller_template.Name,
+                            Subject=subj_s,
+                            Body=body_s,
+                            id_formato_mail=seller_template.id,
+                            Destination='S',
+                            id_seller=seller.id,
+                            CreateDate=today,
+                            LastDateMod=today,
+                            id_usrs_create=1,
+                            id_usrs_update=1,
+                        )
+                        db.add(hist_s)
         db.commit()
         _last_sent = today
     finally:
