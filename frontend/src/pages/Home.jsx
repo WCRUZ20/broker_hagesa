@@ -14,7 +14,19 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
     clients: [],
     sellers: [],
     brands: [],
-    insurers: []
+    insurers: [],
+    activeVehicleIds: []
+  });
+
+  const [trendStart, setTrendStart] = useState(() => {
+    const d = new Date();
+    d.setMonth(d.getMonth() - 5);
+    return d.toISOString().slice(0, 7);
+  });
+
+  const [trendEnd, setTrendEnd] = useState(() => {
+    const d = new Date();
+    return d.toISOString().slice(0, 7);
   });
 
   useEffect(() => {
@@ -70,13 +82,23 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
         };
       });
 
+      const activePolicies = enrichedPolicies.filter(isPolicyActive);
+      const detailResponses = await Promise.all(
+        activePolicies.map(p => API.get(`/polizas/${p.id}`))
+      );
+      const activeVehicleIds = new Set();
+      detailResponses.forEach(res => {
+        (res.data.lines || []).forEach(l => activeVehicleIds.add(l.id_itm));
+      });
+
       setDashboardData({
         policies: enrichedPolicies,
         vehicles: enrichedVehicles,
         clients,
         sellers,
         brands,
-        insurers
+        insurers,
+        activeVehicleIds: Array.from(activeVehicleIds)
       });
 
     } catch (error) {
@@ -134,6 +156,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
   // Datos para gráfico de vehículos por marca
   const getVehiclesByBrand = () => {
     const brandCounts = dashboardData.vehicles.reduce((acc, vehicle) => {
+      if (!dashboardData.activeVehicleIds.includes(vehicle.id)) return acc;
       const brand = vehicle.BrandName || 'Sin marca';
       acc[brand] = (acc[brand] || 0) + 1;
       return acc;
@@ -173,17 +196,18 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
 
   // Datos para gráfico de tendencia mensual
   const getMonthlyTrend = () => {
+    const start = new Date(`${trendStart}-01`);
+    const end = new Date(`${trendEnd}-01`);
     const monthlyData = [];
     
-    for (let i = 5; i >= 0; i--) {
-      const date = new Date();
-      date.setMonth(date.getMonth() - i);
-      const monthName = date.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
+    const cur = new Date(start.getTime());
+    while (cur <= end) {
+      const monthName = cur.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
       
       const monthPolicies = dashboardData.policies.filter(p => {
         const policyDate = new Date(p.InitDate);
-        return policyDate.getMonth() === date.getMonth() && 
-               policyDate.getFullYear() === date.getFullYear() &&
+        return policyDate.getMonth() === cur.getMonth() &&
+               policyDate.getFullYear() === cur.getFullYear() &&
                isPolicyActive(p);
       });
       
@@ -192,6 +216,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
         valor: monthPolicies.reduce((sum, p) => sum + (parseFloat(p.AscValue) || 0), 0),
         polizas: monthPolicies.length
       });
+      cur.setMonth(cur.getMonth() + 1);
     }
     
     return monthlyData;
@@ -427,12 +452,20 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
         <div className="col-lg-8 mb-4">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-header border-0 pb-0">
-              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
-                Tendencia de Pólizas y Valor Asegurado
-              </h5>
-              <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>
-                Últimos 6 meses
-              </small>
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+                    Tendencia de Pólizas y Valor Asegurado
+                  </h5>
+                  <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>{
+                    `${new Date(trendStart + '-01').toLocaleDateString('es-ES', { month: 'short', year: 'numeric' })} - ${new Date(trendEnd + '-01').toLocaleDateString('es-ES', { month: 'short', year: 'numeric' })}`
+                  }</small>
+                </div>
+                <div className="d-flex gap-2">
+                  <input type="month" className="form-control form-control-sm" value={trendStart} onChange={e => setTrendStart(e.target.value)} />
+                  <input type="month" className="form-control form-control-sm" value={trendEnd} onChange={e => setTrendEnd(e.target.value)} />
+                </div>
+              </div>
             </div>
             <div className="card-body">
               {monthlyTrend.length > 0 ? (
