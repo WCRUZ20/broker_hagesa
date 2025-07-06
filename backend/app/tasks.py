@@ -95,7 +95,7 @@ def send_due_emails() -> None:
             )
             body = render_template(db, template_client.Body, policy, client, vehicles)
             try:
-                logger.info(f"Sending email to {client.email} for policy {policy.id}")
+                logger.info(f"Sending email to {client.email} for policy {policy.PolicyNum}")
                 send_email(cfg, client.email, subj, body)
             except Exception:
                 pass
@@ -150,7 +150,7 @@ def send_due_emails() -> None:
                             )
                             try:
                                 logger.info(
-                                    f"Sending email to {seller.email} for policy {policy.id}"
+                                    f"Sending email for sellers to {seller.email} for policy {policy.PolicyNum}"
                                 )
                                 send_email(cfg, seller.email, subj_s, body_s)
                             except Exception:
