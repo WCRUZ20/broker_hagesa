@@ -150,7 +150,7 @@ def send_due_emails() -> None:
                             )
                             try:
                                 logger.info(
-                                    f"Sending email for sellers to {seller.email} for policy {policy.PolicyNum}"
+                                    f"Sending email for sellers to {seller.email} for policy {policy.PolicyNum} to due date {policy.DueDate} - today {today}"
                                 )
                                 send_email(cfg, seller.email, subj_s, body_s)
                             except Exception:
