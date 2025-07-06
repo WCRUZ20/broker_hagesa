@@ -10,6 +10,8 @@ export default function SeguimientoVendedores() {
   const [selected, setSelected] = useState([]);
   const [searchPol, setSearchPol] = useState("");
   const [searchHist, setSearchHist] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
   );
@@ -41,6 +43,8 @@ export default function SeguimientoVendedores() {
     return a;
   }, {});
 
+  const polizasMap = polizas.reduce((a,p)=>{a[p.id]=p; return a;}, {});
+
   const shouldSend = (p) => {
     if (!params) return false;
     if (p.activo !== "Y") return false;
@@ -66,9 +70,15 @@ export default function SeguimientoVendedores() {
       );
     });
 
-  const filteredHist = historial.filter((h) =>
-    h.Subject.toLowerCase().includes(searchHist.toLowerCase())
-  );
+  const filteredHist = historial.filter((h) => {
+    const term = searchHist.toLowerCase();
+    const polNum = polizasMap[h.id_policy]?.PolicyNum?.toLowerCase() || "";
+    const matchesText = h.Subject.toLowerCase().includes(term) || polNum.includes(term);
+    const date = new Date(h.CreateDate);
+    if (startDate && date < new Date(startDate)) return false;
+    if (endDate && date > new Date(endDate)) return false;
+    return matchesText;
+  });
 
   const toggleSelect = (id) => {
     setSelected((prev) =>
@@ -178,12 +188,26 @@ export default function SeguimientoVendedores() {
               <div className="mb-3">
                 <input
                   type="text"
-                  className="form-control"
-                  placeholder="Buscar"
+                  className="form-control mb-2"
+                  placeholder="Buscar por asunto o póliza"
                   value={searchHist}
                   onChange={(e) => setSearchHist(e.target.value)}
                 />
               </div>
+              <div className="d-flex">
+                  <input
+                    type="date"
+                    className="form-control me-2"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </div>
               <div className="table-responsive" style={{ maxHeight: "40vh", overflowY: "auto" }}>
                 <table className={`table table-hover ${darkMode ? "table-dark" : ""}`}>
                   <thead>

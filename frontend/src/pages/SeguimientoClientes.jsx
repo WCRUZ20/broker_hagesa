@@ -10,6 +10,8 @@ export default function SeguimientoClientes() {
   const [selected, setSelected] = useState([]);
   const [searchPol, setSearchPol] = useState("");
   const [searchHist, setSearchHist] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
 
   useEffect(() => { API.get("/polizas").then(res => setPolizas(res.data)); }, []);
@@ -23,6 +25,7 @@ export default function SeguimientoClientes() {
   useEffect(() => { const h=()=>setDarkMode(localStorage.getItem("darkMode") === "true"); window.addEventListener("darkModeChange", h); return () => window.removeEventListener("darkModeChange", h); }, []);
 
   const clientesMap = clientes.reduce((a,c)=>{a[c.id]=c; return a;}, {});
+  const polizasMap = polizas.reduce((a,p)=>{a[p.id]=p; return a;}, {});
 
   const shouldSend = (p) => {
     if (!params) return false;
@@ -46,9 +49,15 @@ export default function SeguimientoClientes() {
       (c.email||"").toLowerCase().includes(term);
   });
 
-  const filteredHist = historial.filter(h =>
-    h.Subject.toLowerCase().includes(searchHist.toLowerCase())
-  );
+  const filteredHist = historial.filter(h => {
+    const term = searchHist.toLowerCase();
+    const polNum = polizasMap[h.id_policy]?.PolicyNum?.toLowerCase() || "";
+    const matchesText = h.Subject.toLowerCase().includes(term) || polNum.includes(term);
+    const date = new Date(h.CreateDate);
+    if(startDate && date < new Date(startDate)) return false;
+    if(endDate && date > new Date(endDate)) return false;
+    return matchesText;
+  });
 
   const toggleSelect = (id) => {
     setSelected(prev => prev.includes(id) ? prev.filter(i=>i!==id) : [...prev,id]);
@@ -116,7 +125,27 @@ export default function SeguimientoClientes() {
             <div className="card-body">
               <h5>Correos enviados</h5>
               <div className="mb-3">
-                <input type="text" className="form-control" placeholder="Buscar" value={searchHist} onChange={e=>setSearchHist(e.target.value)} />
+                <input
+                  type="text"
+                  className="form-control mb-2"
+                  placeholder="Buscar por asunto o póliza"
+                  value={searchHist}
+                  onChange={(e) => setSearchHist(e.target.value)}
+                />
+                <div className="d-flex">
+                  <input
+                    type="date"
+                    className="form-control me-2"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </div>
               </div>
               <div className="table-responsive" style={{maxHeight:'40vh', overflowY:'auto'}}>
                 <table className={`table table-hover ${darkMode ? 'table-dark' : ''}`}>
