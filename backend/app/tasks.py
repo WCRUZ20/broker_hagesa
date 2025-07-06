@@ -47,12 +47,18 @@ def send_due_emails() -> None:
                 return
 
         cfg = db.query(models.MailConfig).first()
-        template = (
+        template_client = (
             db.query(models.MailTemplate)
             .filter(models.MailTemplate.Destination == "C")
             .first()
         )
-        if not cfg or not template:
+
+        template_seller = (
+            db.query(models.MailTemplate)
+            .filter(models.MailTemplate.Destination == "S")
+            .first()
+        )
+        if not cfg or not template_client:
             return
 
         policies = db.query(models.Policy).all()
@@ -85,19 +91,19 @@ def send_due_emails() -> None:
                 if veh:
                     vehicles.append(veh)
             subj = strip_tags(
-                render_template(db, template.Subject, policy, client, vehicles)
+                render_template(db, template_client.Subject, policy, client, vehicles)
             )
-            body = render_template(db, template.Body, policy, client, vehicles)
+            body = render_template(db, template_client.Body, policy, client, vehicles)
             try:
                 logger.info(f"Sending email to {client.email} for policy {policy.id}")
                 send_email(cfg, client.email, subj, body)
             except Exception:
                 pass
             hist = models.MailHistory(
-                Name=template.Name,
+                Name=template_client.Name,
                 Subject=subj,
                 Body=body,
-                id_formato_mail=template.id,
+                id_formato_mail=template_client.id,
                 Destination="C",
                 id_client=client.id,
                 id_policy=policy.id,
@@ -107,6 +113,59 @@ def send_due_emails() -> None:
                 id_usrs_update=1,
             )
             db.add(hist)
+            if template_seller:
+                seller = db.query(models.Seller).get(policy.id_slrs)
+                if seller and seller.email:
+                    send_seller = diff >= 0 and diff <= (params.daystodueSeller or 0)
+                    if send_seller:
+                        existing_s = (
+                            db.query(models.MailHistory)
+                            .filter(
+                                models.MailHistory.Destination == "S",
+                                models.MailHistory.id_policy == policy.id,
+                            )
+                            .first()
+                        )
+                        if not existing_s:
+                            subj_s = strip_tags(
+                                render_template(
+                                    db,
+                                    template_seller.Subject,
+                                    policy,
+                                    client,
+                                    vehicles,
+                                    seller,
+                                )
+                            )
+                            body_s = render_template(
+                                db,
+                                template_seller.Body,
+                                policy,
+                                client,
+                                vehicles,
+                                seller,
+                            )
+                            try:
+                                logger.info(
+                                    f"Sending email to {seller.email} for policy {policy.id}"
+                                )
+                                send_email(cfg, seller.email, subj_s, body_s)
+                            except Exception:
+                                pass
+                            hist_s = models.MailHistory(
+                                Name=template_seller.Name,
+                                Subject=subj_s,
+                                Body=body_s,
+                                id_formato_mail=template_seller.id,
+                                Destination="S",
+                                id_seller=seller.id,
+                                id_policy=policy.id,
+                                CreateDate=today,
+                                LastDateMod=today,
+                                id_usrs_create=1,
+                                id_usrs_update=1,
+                            )
+                            db.add(hist_s)
         db.commit()
         logger.info("Automatic email task completed")
     finally:
