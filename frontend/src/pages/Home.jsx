@@ -3,6 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart
 import API from '../services/api';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82ca9d', '#ffc658'];
+const isPolicyActive = (p) => p.activo === true || p.activo === 1 || p.activo === 'Y' || p.activo === 'y';
 
 export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
@@ -88,7 +89,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
 
   // Calcular estadísticas principales
   const getStats = () => {
-    const activePolicies = dashboardData.policies.filter(p => p.activo === true || p.activo === 1);
+    const activePolicies = dashboardData.policies.filter(isPolicyActive);
     
     return {
       totalPolicies: dashboardData.policies.length,
@@ -96,7 +97,12 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
       totalVehicles: dashboardData.vehicles.length,
       totalClients: dashboardData.clients.length,
       totalSellers: dashboardData.sellers.length,
-      totalInsuredValue: activePolicies.reduce((sum, p) => sum + (parseFloat(p.AscValue) || 0), 0)
+      totalInsuredValue: activePolicies.reduce((sum, p) => sum + (parseFloat(p.AscValue) || 0), 0),
+      totalCommission: activePolicies.reduce((sum, p) => {
+        const comi = parseFloat(p.ComiPrcnt) || 0;
+        const val = parseFloat(p.AscValue) || 0;
+        return sum + val * (comi / 100);
+      }, 0)
     };
   };
 
@@ -110,7 +116,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
         const dueDate = new Date(p.DueDate);
         return dueDate >= today && 
                dueDate <= thirtyDaysFromNow && 
-               (p.activo === true || p.activo === 1);
+               isPolicyActive(p);
       })
       .sort((a, b) => new Date(a.DueDate) - new Date(b.DueDate));
   };
@@ -121,7 +127,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
     
     return dashboardData.policies.filter(p => {
       const dueDate = new Date(p.DueDate);
-      return dueDate < today && (p.activo === true || p.activo === 1);
+      return dueDate < today && isPolicyActive(p);
     });
   };
 
@@ -151,6 +157,20 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
       .sort((a, b) => b.value - a.value);
   };
 
+  const getValueBySeller = () => {
+    const sellerTotals = dashboardData.policies.reduce((acc, policy) => {
+      if (!isPolicyActive(policy)) return acc;
+      const seller = policy.SellerName || 'Sin vendedor';
+      const value = parseFloat(policy.AscValue) || 0;
+      acc[seller] = (acc[seller] || 0) + value;
+      return acc;
+    }, {});
+
+    return Object.entries(sellerTotals)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
+  };
+
   // Datos para gráfico de tendencia mensual
   const getMonthlyTrend = () => {
     const monthlyData = [];
@@ -164,7 +184,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
         const policyDate = new Date(p.InitDate);
         return policyDate.getMonth() === date.getMonth() && 
                policyDate.getFullYear() === date.getFullYear() &&
-               (p.activo === true || p.activo === 1);
+               isPolicyActive(p);
       });
       
       monthlyData.push({
@@ -190,6 +210,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
   const vehiclesByBrand = getVehiclesByBrand();
   const policiesByInsurer = getPoliciesByInsurer();
   const monthlyTrend = getMonthlyTrend();
+  const valueBySeller = getValueBySeller();
 
   if (loading) {
     return (
@@ -378,6 +399,28 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
         </div>
       </div>
 
+      <div className="row mb-4">
+        <div className="col-lg-2 col-md-4 col-sm-6 mb-3">
+          <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
+            <div className="card-body p-3">
+              <div className="d-flex align-items-center">
+                <div className="me-3">
+                  <div className="bg-primary bg-opacity-10 rounded-3 p-2">
+                    <i className="bi bi-cash-coin text-primary fs-4"></i>
+                  </div>
+                </div>
+                <div>
+                  <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+                    ${stats.totalCommission.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                  </h5>
+                  <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Comisión Esperada</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Gráficos */}
       <div className="row mb-4">
         {/* Tendencia Mensual */}
@@ -496,7 +539,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
       {/* Fila inferior */}
       <div className="row">
         {/* Pólizas por Vencer */}
-        <div className="col-lg-6 mb-4">
+        <div className="col-lg-4 mb-4">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-header border-0 d-flex justify-content-between align-items-center">
               <div>
@@ -567,7 +610,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
         </div>
 
         {/* Pólizas por Aseguradora */}
-        <div className="col-lg-6 mb-4">
+        <div className="col-lg-4 mb-4">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-header border-0">
               <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
@@ -607,6 +650,35 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                   <p className={`mt-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}>
                     No hay datos de aseguradoras disponibles
                   </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        {/* Valor por Vendedor */}
+        <div className="col-lg-4 mb-4">
+          <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
+            <div className="card-header border-0">
+              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+                Valor por Vendedor
+              </h5>
+              <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Top vendedores</small>
+            </div>
+            <div className="card-body">
+              {valueBySeller.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={valueBySeller.slice(0, 8)} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
+                    <XAxis type="number" stroke={darkMode ? '#888' : '#666'} />
+                    <YAxis type="category" dataKey="name" stroke={darkMode ? '#888' : '#666'} width={120} fontSize={12} />
+                    <Tooltip contentStyle={{ backgroundColor: darkMode ? '#333' : '#fff', border: 'none', borderRadius: '8px', color: darkMode ? '#fff' : '#000' }} />
+                    <Bar dataKey="value" fill="#00C49F" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="text-center py-5">
+                  <i className="bi bi-person-badge text-muted fs-1"></i>
+                  <p className={`mt-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}>No hay datos de vendedores</p>
                 </div>
               )}
             </div>
