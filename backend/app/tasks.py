@@ -1,25 +1,34 @@
 from datetime import datetime, date
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import logging
+import typing as t
 from .database import SessionLocal
 from . import models
 from .routers.mail_config import send_email, strip_tags
 from .routers.mail_history import render_template
 
-scheduler = BackgroundScheduler()
-_last_sent: date | None = None
+logger = logging.getLogger(__name__)
+
+# Use an AsyncIO-based scheduler so jobs run properly under FastAPI/uvicorn
+scheduler = AsyncIOScheduler()
+
+_last_sent: t.Optional[date] = None
 
 
 def send_due_emails() -> None:
     """Send automatic emails to clients based on configured parameters."""
     global _last_sent
+    logger.info("Running scheduled email check")
     now = datetime.now()
     today = now.date()
     db = SessionLocal()
     try:
         params = db.query(models.MailSendingParam).first()
         if not params:
+            logger.info("No mail sending parameters configured")
             return
         if params.manualsending == "Y":
+            logger.info("Automatic sending disabled")
             return
         days_map = {
             0: params.monday,
@@ -31,12 +40,15 @@ def send_due_emails() -> None:
             6: params.sunday,
         }
         if days_map.get(now.weekday()) != "Y":
+            logger.info("Sending not allowed today")
             return
         if params.hoursending:
             send_time = datetime.combine(today, params.hoursending)
             if now < send_time:
+                logger.info("Waiting until configured send time")
                 return
         if _last_sent == today:
+            logger.info("Emails already sent today")
             return
 
         cfg = db.query(models.MailConfig).first()
@@ -82,6 +94,7 @@ def send_due_emails() -> None:
             )
             body = render_template(db, template.Body, policy, client, vehicles)
             try:
+                logger.info(f"Sending email to {client.email} for policy {policy.id}")
                 send_email(cfg, client.email, subj, body)
             except Exception:
                 pass
@@ -99,6 +112,7 @@ def send_due_emails() -> None:
             )
             db.add(hist)
         db.commit()
+        logger.info("Automatic email task completed")
         _last_sent = today
     finally:
         db.close()
@@ -106,11 +120,18 @@ def send_due_emails() -> None:
 
 def start_scheduler() -> None:
     """Start background scheduler for automatic emails."""
-    scheduler.add_job(send_due_emails, "interval", minutes=1)
-    scheduler.start()
+    if not scheduler.running:
+        scheduler.add_job(
+            send_due_emails,
+            "interval",
+            minutes=1,
+            id="send_due_emails",
+            replace_existing=True,
+        )
+        scheduler.start()
 
 
 def stop_scheduler() -> None:
     """Stop the background scheduler if running."""
     if scheduler.running:
-        scheduler.shutdown()
+        scheduler.shutdown(wait=False)
