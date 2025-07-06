@@ -75,10 +75,10 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
 
       // Enriquecer vehículos con marca
       const enrichedVehicles = vehicles.map(vehicle => {
-        const brand = brands.find(br => br.id === vehicle.id_brand);
+        const brand = brands.find(br => br.id === vehicle.Brand);
         return {
           ...vehicle,
-          BrandName: brand?.Name || 'Sin marca'
+          BrandName: brand?.Description || 'Sin marca'
         };
       });
 
