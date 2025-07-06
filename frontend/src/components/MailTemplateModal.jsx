@@ -11,6 +11,7 @@ function stripHtml(html) {
 const VARIABLES = [
   "{NOMBRE_CLIENTE}",
   "{IDENTIFICACION_CLIENTE}",
+  "{NOMBRE_VENDEDOR}",
   "{VEH_MARCA}",
   "{VEH_MODELO}",
   "{VEH_PLACA}",

@@ -65,15 +65,18 @@ def send_due_emails():
             )
             if existing:
                 continue
-            
+
             lines = db.query(models.PolicyLine).filter_by(id_policy=policy.id).all()
             vehicles = []
             for ln in lines:
                 veh = db.query(models.Vehicle).get(ln.id_itm)
                 if veh:
                     vehicles.append(veh)
-            subj = strip_tags(render_template(db, template.Subject, policy, client, vehicles))
-            body = render_template(db, template.Body, policy, client, vehicles)
+            seller = db.query(models.Seller).get(policy.id_slrs)
+            subj = strip_tags(
+                render_template(db, template.Subject, policy, client, vehicles, seller)
+            )
+            body = render_template(db, template.Body, policy, client, vehicles, seller)
             try:
                 send_email(cfg, client.email, subj, body)
             except Exception:

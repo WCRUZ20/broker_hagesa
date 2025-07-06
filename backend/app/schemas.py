@@ -497,3 +497,6 @@ class MailHistoryOut(MailHistoryBase):
 
 class SendClientEmails(BaseModel):
     policy_ids: list[int]
+
+class SendSellerEmails(BaseModel):
+    policy_ids: list[int]
