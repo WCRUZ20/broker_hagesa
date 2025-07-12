@@ -267,7 +267,7 @@ export default function Sidebar({ user, onLogout }) {
                 style={{ cursor: "pointer" }}
               >
                 <span>
-                  <i className="bi bi-eye me-2"></i>Seguimiento por Correo
+                  <i className="bi bi-send me-2"></i>Seguimiento por Correo
                 </span>
               </div>
               {seguimientoOpen && (
