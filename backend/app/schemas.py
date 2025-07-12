@@ -428,6 +428,8 @@ class WhatsAppConfigBase(BaseModel):
     ACCOUNT_SID: str
     AUTH_TOKEN: str
     FROM_NUMBER: str
+    API_WS: str = "N"
+    LIB_PY: str = "Y"
     Estado: str = "D"
 
 

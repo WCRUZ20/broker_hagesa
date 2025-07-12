@@ -28,6 +28,8 @@ def create_whatsapp_config(
         ACCOUNT_SID=data.ACCOUNT_SID,
         AUTH_TOKEN=data.AUTH_TOKEN,
         FROM_NUMBER=data.FROM_NUMBER,
+        API_WS=data.API_WS,
+        LIB_PY=data.LIB_PY,
         Estado=data.Estado or "D",
         CreateDate=date.today(),
         LastDateMod=date.today(),
@@ -66,6 +68,8 @@ def update_whatsapp_config(
     item.ACCOUNT_SID = data.ACCOUNT_SID
     item.AUTH_TOKEN = data.AUTH_TOKEN
     item.FROM_NUMBER = data.FROM_NUMBER
+    item.API_WS = data.API_WS
+    item.LIB_PY = data.LIB_PY
     if data.Estado is not None:
         item.Estado = data.Estado
     item.LastDateMod = date.today()

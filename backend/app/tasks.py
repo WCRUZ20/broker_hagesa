@@ -135,13 +135,15 @@ def send_due_emails() -> None:
                 seller = db.query(models.Seller).get(policy.id_slrs)
                 if seller and seller.email:
                     if send_seller:
+                        # For sellers we notify only once, so check any
+                        # previous history entry regardless of date
                         existing_s = (
                             db.query(models.MailHistory)
                             .filter(
                                 models.MailHistory.Destination == "S",
                                 models.MailHistory.id_policy == policy.id,
                                 models.MailHistory.id_seller == seller.id,
-                                models.MailHistory.CreateDate == today,
+                                #models.MailHistory.CreateDate == today,
                             )
                             .first()
                         )

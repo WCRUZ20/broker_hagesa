@@ -293,6 +293,8 @@ class WhatsAppConfig(Base):
     ACCOUNT_SID = Column(String)
     AUTH_TOKEN = Column(String)
     FROM_NUMBER = Column(String)
+    API_WS = Column(String(2), default="N", nullable=False)
+    LIB_PY = Column(String(2), default="Y", nullable=False)
     Estado = Column(String(1), default="D", nullable=False)
     CreateDate = Column(Date, nullable=False)
     LastDateMod = Column(Date, nullable=False)
