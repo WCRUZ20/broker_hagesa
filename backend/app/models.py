@@ -298,3 +298,20 @@ class WhatsAppConfig(Base):
     LastDateMod = Column(Date, nullable=False)
     id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)
     id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)
+
+class WhatsAppSendingParam(Base):
+    __tablename__ = "PENW"
+
+    id = Column(Integer, primary_key=True, index=True)
+    manualsending = Column(String(1))
+    daystodue = Column(Integer, nullable=True)
+    daystodueSeller = Column(Integer, nullable=True)
+    monday = Column(String(1))
+    tuesday = Column(String(1))
+    wednesday = Column(String(1))
+    thursday = Column(String(1))
+    friday = Column(String(1))
+    saturday = Column(String(1))
+    sunday = Column(String(1))
+    hoursending = Column(Time, nullable=True)
+    maxdaysallow = Column(Integer, nullable=True)

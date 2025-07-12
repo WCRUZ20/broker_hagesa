@@ -495,6 +495,31 @@ class MailParamOut(MailParamBase):
 
     class Config:
         from_attributes = True
+
+class WhatsAppParamBase(BaseModel):
+    manualsending: str
+    daystodue: Optional[int] = None
+    daystodueSeller: Optional[int] = None
+    monday: str
+    tuesday: str
+    wednesday: str
+    thursday: str
+    friday: str
+    saturday: str
+    sunday: str
+    hoursending: Optional[time] = None
+    maxdaysallow: Optional[int] = None
+
+
+class WhatsAppParamCreate(WhatsAppParamBase):
+    pass
+
+
+class WhatsAppParamOut(WhatsAppParamBase):
+    id: int
+
+    class Config:
+        from_attributes = True
     
 class MailHistoryBase(BaseModel):
     Name: str
