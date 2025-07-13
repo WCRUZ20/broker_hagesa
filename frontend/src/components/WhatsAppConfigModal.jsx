@@ -9,6 +9,8 @@ export default function WhatsAppConfigModal({ config, onClose }) {
     ACCOUNT_SID: "",
     AUTH_TOKEN: "",
     FROM_NUMBER: "",
+    API_WS: "N",
+    LIB_PY: "Y",
     Estado: "A",
   });
   const [loading, setLoading] = useState(false);
@@ -20,6 +22,8 @@ export default function WhatsAppConfigModal({ config, onClose }) {
         ACCOUNT_SID: config.ACCOUNT_SID || "",
         AUTH_TOKEN: config.AUTH_TOKEN || "",
         FROM_NUMBER: config.FROM_NUMBER || "",
+        API_WS: config.API_WS || "N",
+        LIB_PY: config.LIB_PY || "Y",
         Estado: config.Estado || "A",
       });
     }
@@ -28,6 +32,16 @@ export default function WhatsAppConfigModal({ config, onClose }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const toggleSwitch = (field) => {
+    setForm((prev) => {
+      const newVal = prev[field] === "Y" ? "N" : "Y";
+      const other = field === "API_WS" ? "LIB_PY" : "API_WS";
+      const updated = { ...prev, [field]: newVal };
+      if (newVal === "Y") updated[other] = "N";
+      return updated;
+    });
   };
 
   const handleBackdropClick = (e) => {
@@ -102,6 +116,32 @@ export default function WhatsAppConfigModal({ config, onClose }) {
           <form onSubmit={handleSubmit} className="modal-form">
             <div className="modal-body-custom">
               <div className="form-sections">
+                <div className="form-grid mb-2">
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="lib-py-switch"
+                        checked={form.LIB_PY === "Y"}
+                        onChange={() => toggleSwitch("LIB_PY")}
+                      />
+                      <label className="form-check-label ms-2" htmlFor="lib-py-switch">
+                        Librería Python
+                      </label>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="api-ws-switch"
+                        checked={form.API_WS === "Y"}
+                        onChange={() => toggleSwitch("API_WS")}
+                      />
+                      <label className="form-check-label ms-2" htmlFor="api-ws-switch">
+                        API WS
+                      </label>
+                    </div>
+                  </div>
                 <div className="form-section">
                   <div className="section-header">
                     <h4 className="section-title">Credenciales</h4>
@@ -117,7 +157,8 @@ export default function WhatsAppConfigModal({ config, onClose }) {
                           placeholder="SID"
                           value={form.ACCOUNT_SID}
                           onChange={handleChange}
-                          required
+                          disabled={form.LIB_PY === "Y"}
+                          required={form.LIB_PY !== "Y"}
                         />
                         <label className={`form-label-floating ${form.ACCOUNT_SID ? 'active' : ''}`}>SID</label>
                         <div className="form-highlight"></div>
@@ -132,7 +173,8 @@ export default function WhatsAppConfigModal({ config, onClose }) {
                           placeholder="Token"
                           value={form.AUTH_TOKEN}
                           onChange={handleChange}
-                          required
+                          disabled={form.LIB_PY === "Y"}
+                          required={form.LIB_PY !== "Y"}
                         />
                         <label className={`form-label-floating ${form.AUTH_TOKEN ? 'active' : ''}`}>Token</label>
                         <div className="form-highlight"></div>
