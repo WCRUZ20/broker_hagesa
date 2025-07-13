@@ -289,7 +289,9 @@ def send_due_whatsapp() -> None:
                 subj = strip_tags(
                     render_template(db, template_client.Subject, policy, client, vehicles)
                 )
-                body = render_template(db, template_client.Body, policy, client, vehicles)
+                body = strip_tags(
+                    render_template(db, template_client.Body, policy, client, vehicles)
+                )
                 try:
                     logger.info(
                         f"Sending WhatsApp to {client.telefono} for policy {policy.PolicyNum}"
