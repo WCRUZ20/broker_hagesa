@@ -108,7 +108,9 @@ def send_due_emails() -> None:
                 subj = strip_tags(
                     render_template(db, template_client.Subject, policy, client, vehicles)
                 )
-                body = render_template(db, template_client.Body, policy, client, vehicles)
+                body = strip_tags(
+                    render_template(db, template_client.Body, policy, client, vehicles)
+                )
                 try:
                     logger.info(
                         f"Sending email to {client.email} for policy {policy.PolicyNum}"
@@ -159,13 +161,15 @@ def send_due_emails() -> None:
                                     seller,
                                 )
                             )
-                            body_s = render_template(
-                                db,
-                                template_seller.Body,
-                                policy,
-                                client,
-                                vehicles,
-                                seller,
+                            body_s = strip_tags(
+                                render_template(
+                                    db,
+                                    template_seller.Body,
+                                    policy,
+                                    client,
+                                    vehicles,
+                                    seller,
+                                )
                             )
                             try:
                                 logger.info(
@@ -332,13 +336,15 @@ def send_due_whatsapp() -> None:
                                     seller,
                                 )
                             )
-                            body_s = render_template(
-                                db,
-                                template_seller.Body,
-                                policy,
-                                client,
-                                vehicles,
-                                seller,
+                            body_s = strip_tags(
+                                render_template(
+                                    db,
+                                    template_seller.Body,
+                                    policy,
+                                    client,
+                                    vehicles,
+                                    seller,
+                                )
                             )
                             try:
                                 logger.info(

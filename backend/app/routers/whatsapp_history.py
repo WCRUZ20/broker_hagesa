@@ -8,6 +8,7 @@ from app.database import SessionLocal
 from .users import get_current_user
 from .whatsapp_config import send_whatsapp
 from .mail_history import render_template
+from .mail_config import strip_tags
 
 
 def get_db():
@@ -83,8 +84,12 @@ def send_client_whatsapp(
             if veh:
                 vehicles.append(veh)
 
-        subj = render_template(db, template.Subject, policy, client, vehicles, seller)
-        body = render_template(db, template.Body, policy, client, vehicles, seller)
+        subj = strip_tags(
+            render_template(db, template.Subject, policy, client, vehicles, seller)
+        )
+        body = strip_tags(
+            render_template(db, template.Body, policy, client, vehicles, seller)
+        )
 
         try:
             send_whatsapp(cfg, client.telefono, f"{subj}\n{body}")
@@ -140,8 +145,12 @@ def send_seller_whatsapp(
             if veh:
                 vehicles.append(veh)
 
-        subj = render_template(db, template.Subject, policy, client, vehicles, seller)
-        body = render_template(db, template.Body, policy, client, vehicles, seller)
+        subj = strip_tags(
+            render_template(db, template.Subject, policy, client, vehicles, seller)
+        )
+        body = strip_tags(
+            render_template(db, template.Body, policy, client, vehicles, seller)
+        )
 
         try:
             send_whatsapp(cfg, seller.telefono, f"{subj}\n{body}")
