@@ -107,7 +107,7 @@ def send_test_whatsapp(
         raise HTTPException(status_code=400, detail="Configuración no usa Pywhatkit")
 
     try:
-        pywhatkit.sendwhatmsg_instantly(to, "Mensaje de prueba de HAGESA", wait_time=10, tab_close=True)
+        pywhatkit.sendwhatmsg_instantly(to, "Mensaje de prueba de HAGESA", wait_time=30, tab_close=True)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
