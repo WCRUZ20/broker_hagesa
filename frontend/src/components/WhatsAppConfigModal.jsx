@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
+import ToastNotification from "./ToastNotification";
 import "./WhatsAppConfigModal.css";
 
 export default function WhatsAppConfigModal({ config, onClose }) {
@@ -15,6 +16,13 @@ export default function WhatsAppConfigModal({ config, onClose }) {
   });
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [testNumber, setTestNumber] = useState("");
+  const [showTestSuccess, setShowTestSuccess] = useState(false);
+  const [showTestError, setShowTestError] = useState(false);
+  const [testSuccessNumber, setTestSuccessNumber] = useState("");
+  const [testErrorMessage, setTestErrorMessage] = useState("");
+  const [isValidating, setIsValidating] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: "" });
 
   useEffect(() => {
     if (isEdit) {
@@ -50,6 +58,39 @@ export default function WhatsAppConfigModal({ config, onClose }) {
     }
   };
 
+  const handleTestNumberChange = (e) => {
+    setTestNumber(e.target.value);
+  };
+
+  const handleTest = async () => {
+    if (form.API_WS === "Y") {
+      setToast({ show: true, message: "Aún no se ha implementado los envíos de WhatsApp mediante la API" });
+      return;
+    }
+    if (!testNumber) {
+      alert("Ingresa un número de destino para la prueba");
+      return;
+    }
+    if (!config?.id) {
+      alert("Guarda la configuración antes de validar");
+      return;
+    }
+    setIsValidating(true);
+    try {
+      await API.post(`/seguimiento/parametrizaciones-whatsapp/${config.id}/test`, null, { params: { to: testNumber } });
+      setTestSuccessNumber(testNumber);
+      setShowTestSuccess(true);
+      setTimeout(() => setShowTestSuccess(false), 3000);
+    } catch (err) {
+      const msg = err.response?.data?.detail || "Error al enviar mensaje";
+      setTestErrorMessage(msg);
+      setShowTestError(true);
+      setTimeout(() => setShowTestError(false), 4000);
+    } finally {
+      setIsValidating(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -73,6 +114,11 @@ export default function WhatsAppConfigModal({ config, onClose }) {
 
   return (
     <div className="modal-backdrop" onClick={handleBackdropClick}>
+        <ToastNotification
+        show={toast.show}
+        message={toast.message}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
       <div className="modal-container">
         <div className="modal-content-custom">
           {showSuccess && (
@@ -86,6 +132,39 @@ export default function WhatsAppConfigModal({ config, onClose }) {
                 <h3 className="success-title">¡Configuración guardada!</h3>
                 <p className="success-message">
                   La configuración de WhatsApp se ha {isEdit ? "actualizado" : "creado"} correctamente
+                </p>
+              </div>
+            </div>
+          )}
+          {showTestError && (
+            <div className="success-overlay">
+              <div className="success-animation">
+                <div className="error-circle">
+                  <svg className="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line className="error-line-1" x1="15" y1="9" x2="9" y2="15"/>
+                    <line className="error-line-2" x1="9" y1="9" x2="15" y2="15"/>
+                  </svg>
+                </div>
+                <h3 className="error-title">Error en la validación</h3>
+                <p className="error-message">{testErrorMessage}</p>
+                <p className="error-suggestion">Verifica la configuración e intenta nuevamente</p>
+              </div>
+            </div>
+          )}
+          {showTestSuccess && (
+            <div className="success-overlay">
+              <div className="success-animation">
+                <div className="email-success-circle">
+                  <svg className="email-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                    <path className="check-path" d="M9 11l3 3L22 4" strokeDasharray="20" strokeDashoffset="20"/>
+                  </svg>
+                </div>
+                <h3 className="success-title">¡Mensaje enviado con éxito!</h3>
+                <p className="success-message">Se envió un mensaje de prueba a:<br/>
+                  <span className="email-highlight">{testSuccessNumber}</span>
                 </p>
               </div>
             </div>
@@ -228,6 +307,50 @@ export default function WhatsAppConfigModal({ config, onClose }) {
                         <label className="form-label-floating active">Estado</label>
                         <div className="form-highlight"></div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="form-section">
+                  <div className="section-header">
+                    <h4 className="section-title">Validar Número</h4>
+                    <p className="section-subtitle">Envía un mensaje de prueba al número indicado</p>
+                  </div>
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <div className="form-input-container">
+                        <input
+                          type="text"
+                          className="form-input-modern"
+                          placeholder="whatsapp:+123456789"
+                          value={testNumber}
+                          onChange={handleTestNumberChange}
+                          disabled={loading || isValidating}
+                        />
+                        <label className={`form-label-floating ${testNumber ? 'active' : ''}`}>Número Destino</label>
+                        <div className="form-highlight"></div>
+                      </div>
+                    </div>
+                    <div className="form-group validate-button-group">
+                      <button
+                        type="button"
+                        className={`btn-validate ${isValidating ? 'validating' : ''}`}
+                        onClick={handleTest}
+                        disabled={loading || isValidating}
+                      >
+                        {isValidating ? (
+                          <>
+                            <div className="spinner"></div>
+                            Validando...
+                          </>
+                        ) : (
+                          <>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M9 11l3 3L22 4" />
+                            </svg>
+                            Validar Número
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
                 </div>

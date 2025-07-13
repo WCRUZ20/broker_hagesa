@@ -5,6 +5,7 @@ from datetime import date
 from .. import models, schemas
 from app.database import SessionLocal
 from .users import get_current_user
+import pywhatkit
 
 
 def get_db():
@@ -87,3 +88,27 @@ def delete_whatsapp_config(id: int, db: Session = Depends(get_db)):
     db.delete(item)
     db.commit()
     return {"msg": "Configuración eliminada"}
+
+@router.post("/{id}/test")
+def send_test_whatsapp(
+    id: int,
+    to: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    cfg = db.query(models.WhatsAppConfig).get(id)
+    if not cfg:
+        raise HTTPException(status_code=404, detail="Configuración no encontrada")
+
+    if cfg.API_WS == "Y":
+        raise HTTPException(status_code=400, detail="Envíos vía API aún no implementados")
+
+    if cfg.LIB_PY != "Y":
+        raise HTTPException(status_code=400, detail="Configuración no usa Pywhatkit")
+
+    try:
+        pywhatkit.sendwhatmsg_instantly(to, "Mensaje de prueba de HAGESA", wait_time=10, tab_close=True)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return {"msg": "Mensaje enviado"}
