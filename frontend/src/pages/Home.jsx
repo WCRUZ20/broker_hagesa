@@ -216,27 +216,46 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
     return yearlyData;
   };
 
-  const getAvgCommissionTrend = () => {
+  const getAvgCommissionByInsurer = () => {
     const startYear = parseInt(trendStart, 10);
     const endYear = parseInt(trendEnd, 10);
-    const yearlyData = [];
 
-    for (let year = startYear; year <= endYear; year++) {
-      const yearPolicies = dashboardData.policies.filter(p => {
-        const policyYear = new Date(p.InitDate).getFullYear();
-        return policyYear === year && isPolicyActive(p);
-      });
+    const insurerMap = {};
+    dashboardData.policies.forEach(p => {
 
-      const avg =
-        yearPolicies.reduce(
-          (sum, p) => sum + (parseFloat(p.percentage ?? p.ComiPrcnt) || 0),
-          0
-        ) / (yearPolicies.length || 1);
+      const year = new Date(p.InitDate).getFullYear();
+      if (year < startYear || year > endYear) return;
+      if (!isPolicyActive(p)) return;
+      const insurer = p.InsuranceName || 'Sin aseguradora';
+      const value = parseFloat(p.percentage ?? p.ComiPrcnt) || 0;
+      if (!insurerMap[insurer]) {
+        insurerMap[insurer] = { total: 0, count: 0 };
+      }
+      insurerMap[insurer].total += value;
+      insurerMap[insurer].count += 1;
+    });
 
-      yearlyData.push({ year: year.toString(), promedio: Number(avg.toFixed(2)) });
-    }
+      return Object.entries(insurerMap)
+      .map(([name, { total, count }]) => ({
+        name,
+        promedio: Number((total / count).toFixed(2)),
+      }))
+      .sort((a, b) => b.promedio - a.promedio);
+  };
 
-    return yearlyData;
+    const getExpiredPoliciesByInsurer = () => {
+    const today = new Date();
+    const insurerCounts = dashboardData.policies.reduce((acc, p) => {
+      const due = new Date(p.DueDate);
+      if (due >= today || !isPolicyActive(p)) return acc;
+      const insurer = p.InsuranceName || 'Sin aseguradora';
+      acc[insurer] = (acc[insurer] || 0) + 1;
+      return acc;
+    }, {});
+
+    return Object.entries(insurerCounts)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
   };
 
   // Calcular días hasta vencimiento
@@ -252,7 +271,8 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
   const vehiclesByBrand = getVehiclesByBrand();
   const policiesByInsurer = getPoliciesByInsurer();
   const yearlyTrend = getYearlyTrend();
-  const avgCommissionTrend = getAvgCommissionTrend();
+  const avgCommissionByInsurer = getAvgCommissionByInsurer();
+  const expiredPoliciesByInsurer = getExpiredPoliciesByInsurer();
   const valueBySeller = getValueBySeller();
 
   if (loading) {
@@ -268,7 +288,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
   return (
     <div className="container-fluid py-4 px-4">
       {/* Header */}
-      <div className="row mb-4">
+      <div className="row g-4 mb-4">
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center">
             <div>
@@ -295,7 +315,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
 
       {/* Alertas de pólizas vencidas */}
       {expiredPolicies.length > 0 && (
-        <div className="row mb-4">
+        <div className="row g-4 mb-4">
           <div className="col-12">
             <div className="alert alert-danger d-flex align-items-center" role="alert">
               <i className="bi bi-exclamation-triangle-fill me-2"></i>
@@ -308,7 +328,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
       )}
 
       {/* KPI Cards */}
-      <div className="row mb-4">
+      <div className="row g-4 mb-4">
         <div className="col-lg-2 col-md-4 col-sm-6 mb-3">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-body p-3">
@@ -442,7 +462,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
         </div>
       </div>
 
-      <div className="row mb-4">
+      <div className="row g-4 mb-4">
         <div className="col-lg-2 col-md-4 col-sm-6 mb-3">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-body p-3">
@@ -465,7 +485,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
       </div>
 
       {/* Gráficos */}
-      <div className="row mb-4">
+      <div className="row g-4 mb-4">
         {/* Tendencia Mensual */}
         <div className="col-lg-8 mb-4">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
@@ -601,22 +621,22 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
         </div>
       </div>
 
-      <div className="row mb-4">
+      <div className="row g-4 mb-4">
         <div className="col-lg-6 mx-auto mb-4">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-header border-0">
-              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Promedio de Comisión % por Año</h5>
+              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Promedio de Comisión % por Aseguradora</h5>
               <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>{`${trendStart} - ${trendEnd}`}</small>
             </div>
             <div className="card-body">
-              {avgCommissionTrend.length > 0 ? (
+              {avgCommissionByInsurer.length > 0 ? (
                 <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={avgCommissionTrend}>
+                  <BarChart data={avgCommissionByInsurer.slice(0, 8)} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
-                    <XAxis dataKey="year" stroke={darkMode ? '#888' : '#666'} />
-                    <YAxis stroke={darkMode ? '#888' : '#666'} />
+                    <XAxis type="number" stroke={darkMode ? '#888' : '#666'} />
+                    <YAxis type="category" dataKey="name" stroke={darkMode ? '#888' : '#666'} width={120} fontSize={12} />
                     <Tooltip contentStyle={{ backgroundColor: darkMode ? '#333' : '#fff', border: 'none', borderRadius: '8px', color: darkMode ? '#fff' : '#000' }} />
-                    <Bar dataKey="promedio" fill="#FFBB28" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="promedio" fill="#FFBB28" radius={[0, 4, 4, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
@@ -631,9 +651,9 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
       </div>
 
       {/* Fila inferior */}
-      <div className="row">
+      <div className="row g-4">
         {/* Pólizas por Vencer */}
-        <div className="col-lg-4 mb-4">
+        <div className="col-lg-3 col-md-6 mb-4">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-header border-0 d-flex justify-content-between align-items-center">
               <div>
@@ -704,7 +724,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
         </div>
 
         {/* Pólizas por Aseguradora */}
-        <div className="col-lg-4 mb-4">
+        <div className="col-lg-3 col-md-6 mb-4">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-header border-0">
               <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
@@ -749,8 +769,35 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
             </div>
           </div>
         </div>
+        {/* Pólizas Vencidas Activas */}
+        <div className="col-lg-3 col-md-6 mb-4">
+          <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
+            <div className="card-header border-0">
+              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Pólizas Vencidas Activas</h5>
+              <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Por Aseguradora</small>
+            </div>
+            <div className="card-body">
+              {expiredPoliciesByInsurer.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={expiredPoliciesByInsurer.slice(0, 8)} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
+                    <XAxis type="number" stroke={darkMode ? '#888' : '#666'} />
+                    <YAxis type="category" dataKey="name" stroke={darkMode ? '#888' : '#666'} width={120} fontSize={12} />
+                    <Tooltip contentStyle={{ backgroundColor: darkMode ? '#333' : '#fff', border: 'none', borderRadius: '8px', color: darkMode ? '#fff' : '#000' }} />
+                    <Bar dataKey="value" fill="#FF8042" radius={[0,4,4,0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="text-center py-5">
+                  <i className="bi bi-exclamation-triangle text-muted fs-1"></i>
+                  <p className={`mt-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}>No hay pólizas vencidas</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>  
         {/* Valor por Vendedor */}
-        <div className="col-lg-4 mb-4">
+        <div className="col-lg-3 col-md-6 mb-4">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-header border-0">
               <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
