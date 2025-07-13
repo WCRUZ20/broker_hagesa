@@ -322,6 +322,11 @@ export default function Sidebar({ user, onLogout }) {
                       <i className="bi bi-sliders me-2"></i>Parámetros envío
                     </NavLink>
                   </li>
+                   <li className="nav-item">
+                    <NavLink className="nav-link" to="/seguimiento/plantillas-whatsapp">
+                      <i className="bi bi-file-text me-2"></i>Plantilla WhatsApp
+                    </NavLink>
+                  </li>
                 </ul>
               )}
             </li>

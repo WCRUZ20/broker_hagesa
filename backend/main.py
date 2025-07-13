@@ -4,7 +4,7 @@ from app.routers import users, clients, sellers, company, countries, cargos
 from app.routers import states, cities, parishes, brands, vehicle_types
 from app.routers import vehicle_uses, vehicle_classifications, vehicles
 from app.routers import identification_types, insurance_companies, policies
-from app.routers import mail_config, mail_templates, mail_params, mail_history, whatsapp_config, whatsapp_params
+from app.routers import mail_config, mail_templates, mail_params, mail_history, whatsapp_config, whatsapp_params, whatsapp_templates
 from app.tasks import start_scheduler, stop_scheduler
 
 
@@ -52,6 +52,7 @@ app.include_router(mail_params.router)
 app.include_router(mail_history.router)
 app.include_router(whatsapp_config.router)
 app.include_router(whatsapp_params.router)
+app.include_router(whatsapp_templates.router)
 
 
 @app.on_event("startup")

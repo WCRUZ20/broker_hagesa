@@ -317,3 +317,17 @@ class WhatsAppSendingParam(Base):
     sunday = Column(String(1))
     hoursending = Column(Time, nullable=True)
     maxdaysallow = Column(Integer, nullable=True)
+
+class  WhatsAppTemplate(Base):
+    __tablename__ = "ENTW"
+
+    id = Column(Integer, primary_key=True, index=True)
+    Name = Column(String, nullable=False)
+    Subject = Column(String, nullable=False)
+    Body = Column(String, nullable=False)
+    Destination = Column(String(1), nullable=False, default="C")
+    Estado = Column(String(1), default="A", nullable=False)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)
+    id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)

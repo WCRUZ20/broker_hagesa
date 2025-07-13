@@ -473,6 +473,31 @@ class MailTemplateOut(MailTemplateBase):
     class Config:
         from_attributes = True
     
+class WhatsAppTemplateBase(BaseModel):
+    Name: str
+    Subject: str
+    Body: str
+    Destination: str = "C"
+    Estado: str = "A"
+
+
+class WhatsAppTemplateCreate(WhatsAppTemplateBase):
+    Estado: str | None = None
+    Destination: str | None = None
+
+
+class WhatsAppTemplateOut(WhatsAppTemplateBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+    Estado: str
+    Destination: str
+
+    class Config:
+        from_attributes = True
+
 class MailParamBase(BaseModel):
     manualsending: str
     daystodue: Optional[int] = None
