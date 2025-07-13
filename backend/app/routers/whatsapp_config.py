@@ -7,6 +7,14 @@ from app.database import SessionLocal
 from .users import get_current_user
 import pywhatkit
 
+def send_whatsapp(cfg: models.WhatsAppConfig, to: str, body: str) -> None:
+    """Send a WhatsApp message using the configured method."""
+    if cfg.API_WS == "Y":
+        raise Exception("WhatsApp API sending not implemented")
+    if cfg.LIB_PY == "Y":
+        pywhatkit.sendwhatmsg_instantly(to, body, wait_time=30, tab_close=True)
+        return
+    raise Exception("No sending method enabled")
 
 def get_db():
     db = SessionLocal()

@@ -573,6 +573,28 @@ class MailHistoryOut(MailHistoryBase):
     class Config:
         from_attributes = True
 
+class WhatsAppHistoryBase(BaseModel):
+    Name: str
+    Subject: str
+    Body: str
+    id_formato_wa: int
+    Destination: str
+    id_seller: Optional[int] = None
+    id_client: Optional[int] = None
+    id_policy: Optional[int] = None
+
+class WhatsAppHistoryCreate(WhatsAppHistoryBase):
+    pass
+
+class WhatsAppHistoryOut(WhatsAppHistoryBase):
+    id: int
+    CreateDate: date
+    LastDateMod: date
+    id_usrs_create: int
+    id_usrs_update: int
+
+    class Config:
+        from_attributes = True
 
 class SendClientEmails(BaseModel):
     policy_ids: list[int]

@@ -331,3 +331,20 @@ class  WhatsAppTemplate(Base):
     LastDateMod = Column(Date, nullable=False)
     id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)
     id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False, autoincrement=False)
+
+class WhatsAppHistory(Base):
+    __tablename__ = "HCWA"
+
+    id = Column(Integer, primary_key=True, index=True)
+    Name = Column(String, nullable=False)
+    Subject = Column(String, nullable=False)
+    Body = Column(String, nullable=False)
+    id_formato_wa = Column(Integer, ForeignKey("ENTW.id"), nullable=False)
+    CreateDate = Column(Date, nullable=False)
+    LastDateMod = Column(Date, nullable=False)
+    id_usrs_create = Column(Integer, ForeignKey("USRS.id"), nullable=False)
+    id_usrs_update = Column(Integer, ForeignKey("USRS.id"), nullable=False)
+    Destination = Column(String(1), nullable=False)
+    id_seller = Column(Integer, ForeignKey("SLRS.id"), nullable=True)
+    id_client = Column(Integer, ForeignKey("CTMS.id"), nullable=True)
+    id_policy = Column(Integer, ForeignKey("PLCY.id"), nullable=True)

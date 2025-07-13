@@ -33,3 +33,18 @@ Time: 13:48
 Phone Number: +593968251297
 Message: Mensaje de prueba de HAGESA
 --------------------
+Date: 13/7/2025
+Time: 14:53
+Phone Number: +593998990136
+Message: Recordatorio PólizaEstimado Gustavo López, esperando se encuentre bien. El motivo de nuestro mensajes es para que se ponga en contacto con el cliente 0951934348 con poliza PL00000006 y fecha de vencimiento 2025-08-05.
+--------------------
+Date: 13/7/2025
+Time: 14:53
+Phone Number: +593998990136
+Message: Recordatorio PólizaEstimado Gustavo López, esperando se encuentre bien. El motivo de nuestro mensajes es para que se ponga en contacto con el cliente 0952147257 con poliza PL00000007 y fecha de vencimiento 2025-08-05.
+--------------------
+Date: 13/7/2025
+Time: 14:57
+Phone Number: +593998990136
+Message: Recordatorio Póliza<div>Es de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000005 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-05. Puede comunicarse con nosotros mediante .......</div><div>No es necesario responde este mensaje de recordatorio.</div>
+--------------------
