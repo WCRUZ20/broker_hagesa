@@ -216,6 +216,29 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
     return yearlyData;
   };
 
+  const getAvgCommissionTrend = () => {
+    const startYear = parseInt(trendStart, 10);
+    const endYear = parseInt(trendEnd, 10);
+    const yearlyData = [];
+
+    for (let year = startYear; year <= endYear; year++) {
+      const yearPolicies = dashboardData.policies.filter(p => {
+        const policyYear = new Date(p.InitDate).getFullYear();
+        return policyYear === year && isPolicyActive(p);
+      });
+
+      const avg =
+        yearPolicies.reduce(
+          (sum, p) => sum + (parseFloat(p.percentage ?? p.ComiPrcnt) || 0),
+          0
+        ) / (yearPolicies.length || 1);
+
+      yearlyData.push({ year: year.toString(), promedio: Number(avg.toFixed(2)) });
+    }
+
+    return yearlyData;
+  };
+
   // Calcular días hasta vencimiento
   const getDaysUntilExpiry = (dueDate) => {
     const today = new Date();
@@ -229,6 +252,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
   const vehiclesByBrand = getVehiclesByBrand();
   const policiesByInsurer = getPoliciesByInsurer();
   const yearlyTrend = getYearlyTrend();
+  const avgCommissionTrend = getAvgCommissionTrend();
   const valueBySeller = getValueBySeller();
 
   if (loading) {
@@ -570,6 +594,35 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                   <p className={`mt-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}>
                     No hay vehículos registrados
                   </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="row mb-4">
+        <div className="col-lg-6 mx-auto mb-4">
+          <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
+            <div className="card-header border-0">
+              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Promedio de Comisión % por Año</h5>
+              <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>{`${trendStart} - ${trendEnd}`}</small>
+            </div>
+            <div className="card-body">
+              {avgCommissionTrend.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={avgCommissionTrend}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
+                    <XAxis dataKey="year" stroke={darkMode ? '#888' : '#666'} />
+                    <YAxis stroke={darkMode ? '#888' : '#666'} />
+                    <Tooltip contentStyle={{ backgroundColor: darkMode ? '#333' : '#fff', border: 'none', borderRadius: '8px', color: darkMode ? '#fff' : '#000' }} />
+                    <Bar dataKey="promedio" fill="#FFBB28" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="text-center py-5">
+                  <i className="bi bi-bar-chart-steps text-muted fs-1"></i>
+                  <p className={`mt-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}>No hay datos disponibles</p>
                 </div>
               )}
             </div>
