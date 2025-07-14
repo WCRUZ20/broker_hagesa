@@ -1,0 +1,117 @@
+:root {
+  --poliza-primary: rgb(200, 150, 82);
+  --poliza-primary-hover: rgb(220, 170, 102);
+  --poliza-bg-dark: rgb(20, 20, 20);
+  --poliza-bg-light: rgb(25, 25, 25);
+  --poliza-border: rgb(60, 50, 35);
+  --poliza-text: rgb(212, 176, 131);
+}
+
+.poliza-card {
+  background: var(--poliza-bg-dark);
+  border: 1px solid var(--poliza-border);
+  border-radius: 16px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  color: var(--poliza-text);
+}
+
+.poliza-card h2,
+.poliza-card h5 {
+  color: var(--poliza-primary);
+  font-weight: 600;
+}
+
+.form-group-modern {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.form-group-modern.full-width {
+  width: 100%;
+}
+
+.form-input-modern,
+.form-select-modern,
+.poliza-card textarea {
+  width: 100%;
+  background: var(--poliza-bg-light);
+  border: 2px solid rgb(45, 45, 45);
+  border-radius: 12px;
+  color: white;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  outline: none;
+}
+
+.form-input-modern:focus,
+.form-select-modern:focus,
+.poliza-card textarea:focus {
+  border-color: var(--poliza-primary);
+  background: rgb(30, 30, 30);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(200, 150, 82, 0.15);
+}
+
+.form-input-modern:focus + .form-label-modern,
+.form-input-modern:not(:placeholder-shown) + .form-label-modern,
+.form-select-modern:focus + .form-label-modern,
+.form-select-modern:not([value=""]) + .form-label-modern,
+.poliza-card textarea:focus + .form-label-modern,
+.poliza-card textarea:not(:placeholder-shown) + .form-label-modern {
+  transform: translateY(-2.5rem) scale(0.85);
+  color: var(--poliza-primary);
+  background: var(--poliza-bg-dark);
+  padding: 0 0.5rem;
+}
+
+.form-label-modern {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  color: rgb(150, 146, 138);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+  transform-origin: left center;
+}
+
+.form-highlight {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--poliza-primary), var(--poliza-primary-hover));
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.form-input-modern:focus ~ .form-highlight,
+.form-select-modern:focus ~ .form-highlight,
+.poliza-card textarea:focus ~ .form-highlight {
+  width: 100%;
+}
+
+.poliza-card .btn-primary {
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgb(34, 197, 94) 0%, rgb(22, 163, 74) 100%);
+  color: white;
+  border-color: rgb(34, 197, 94);
+}
+
+.poliza-card .btn-primary:hover {
+  background: linear-gradient(135deg, rgb(54, 217, 114) 0%, rgb(34, 197, 94) 100%);
+}
+
+.poliza-card .btn-outline-primary {
+  border-radius: 12px;
+  color: var(--poliza-primary);
+  border-color: var(--poliza-primary);
+}
+
+.poliza-card .btn-outline-primary:hover {
+  background: var(--poliza-primary);
+  color: var(--poliza-bg-dark);
+}

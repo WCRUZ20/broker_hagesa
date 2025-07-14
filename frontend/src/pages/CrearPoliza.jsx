@@ -6,6 +6,7 @@ import SellerSelectModal from "../components/SellerSelectModal";
 import InsuranceSelectModal from "../components/InsuranceSelectModal";
 import VehicleSelectModal from "../components/VehicleSelectModal";
 import PolicySelectModal from "../components/PolicySelectModal";
+import "./CrearPoliza.css";
 
 export default function CrearPoliza() {
   const { id } = useParams();
@@ -179,119 +180,156 @@ export default function CrearPoliza() {
   return (
     <div className="container py-4">
       <h2 className="mb-4">{isEdit ? "Editar Póliza" : "Crear Póliza"}</h2>
-      <form onSubmit={handleSubmit} className="card p-3 shadow-sm">
+      <form onSubmit={handleSubmit} className="poliza-card p-4 shadow-sm">
         <div className="row">
           <div className="col-md-6 mb-3">
-            {/* <h6>Tipo póliza</h6> */}
-            <select
-              name="DocType"
-              className="form-select"
-              value={form.DocType}
-              onChange={handleChange}
-              required
-            >
-              <option value="N">Nueva</option>
-              <option value="R">Renovación</option>
-            </select>
+            <div className="form-group-modern">
+              <select
+                name="DocType"
+                className="form-select-modern"
+                value={form.DocType}
+                onChange={handleChange}
+                required
+              >
+                <option value="N">Nueva</option>
+                <option value="R">Renovación</option>
+              </select>
+              <label className="form-label-modern">Tipo póliza</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
           <div className="col-md-6 mb-3">
-            <input
-              name="PolicyNum"
-              className="form-control"
-              placeholder="Número de póliza"
-              value={form.PolicyNum}
-              onChange={handleChange}
-              required
-            />
+           <div className="form-group-modern">
+              <input
+                name="PolicyNum"
+                className="form-input-modern"
+                placeholder=" "
+                value={form.PolicyNum}
+                onChange={handleChange}
+                required
+              />
+              <label className="form-label-modern">Número de póliza</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
           <div className="col-md-6 mb-3">
-            <h6>Fecha Inicio</h6>
-            <input
-              type="date"
-              name="InitDate"
-              className="form-control"
-              value={form.InitDate}
-              onChange={handleChange}
-              required
-            />
+            <div className="form-group-modern">
+              <input
+                type="date"
+                name="InitDate"
+                className="form-input-modern"
+                value={form.InitDate}
+                onChange={handleChange}
+                required
+              />
+              <label className="form-label-modern">Fecha Inicio</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
           <div className="col-md-6 mb-3">
-            <h6>Fecha Vencimiento</h6>
-            <input
-              type="date"
-              name="DueDate"
-              className="form-control"
-              value={form.DueDate}
-              onChange={handleChange}
-              required
-            />
+            <div className="form-group-modern">
+              <input
+                type="date"
+                name="DueDate"
+                className="form-input-modern"
+                value={form.DueDate}
+                onChange={handleChange}
+                required
+              />
+              <label className="form-label-modern">Fecha Vencimiento</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
           <div className="col-md-6 mb-3">
-            <input
-              name="ComiPrcnt"
-              type="number"
-              className="form-control"
-              placeholder="% Comisión"
-              value={form.ComiPrcnt}
-              onChange={handleChange}
-              required
-            />
+            <div className="form-group-modern">
+              <input
+                name="ComiPrcnt"
+                type="number"
+                className="form-input-modern"
+                placeholder=" "
+                value={form.ComiPrcnt}
+                onChange={handleChange}
+                required
+              />
+              <label className="form-label-modern">% Comisión</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
           <div className="col-md-6 mb-3">
-            <input
-              name="AscValue"
-              type="number"
-              step="0.01"
-              className="form-control"
-              placeholder="Valor asegurado"
-              value={form.AscValue}
-              onChange={handleChange}
-              required
-            />
+            <div className="form-group-modern">
+              <input
+                name="AscValue"
+                type="number"
+                step="0.01"
+                className="form-input-modern"
+                placeholder=" "
+                value={form.AscValue}
+                onChange={handleChange}
+                required
+              />
+              <label className="form-label-modern">Valor asegurado</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
           <div className="col-md-6 mb-3">
-            <input
-              name="id_slrs"
-              className="form-control"
-              placeholder="Vendedor"
-              value={sellerName}
-              onFocus={() => setShowSellerSelect(true)}
-              readOnly
-              required
-            />
+            <div className="form-group-modern">
+              <input
+                name="id_slrs"
+                className="form-input-modern"
+                placeholder=" "
+                value={sellerName}
+                onFocus={() => setShowSellerSelect(true)}
+                readOnly
+                required
+              />
+              <label className="form-label-modern">Vendedor</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
           <div className="col-md-6 mb-3">
-            <input
-              name="id_ctms"
-              className="form-control"
-              placeholder="Cliente"
-              value={clientName}
-              onFocus={() => setShowClientSelect(true)}
-              readOnly
-              required
-            />
+            <div className="form-group-modern">
+              <input
+                name="id_ctms"
+                className="form-input-modern"
+                placeholder=" "
+                value={clientName}
+                onFocus={() => setShowClientSelect(true)}
+                readOnly
+                required
+              />
+              <label className="form-label-modern">Cliente</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
           <div className="col-md-6 mb-3">
-            <input
-              name="id_insurance"
-              className="form-control"
-              placeholder="Aseguradora"
-              value={insuranceName}
-              onFocus={() => setShowInsuranceSelect(true)}
-              readOnly
-              required
-            />
+            <div className="form-group-modern">
+              <input
+                name="id_insurance"
+                className="form-input-modern"
+                placeholder=" "
+                value={insuranceName}
+                onFocus={() => setShowInsuranceSelect(true)}
+                readOnly
+                required
+              />
+              <label className="form-label-modern">Aseguradora</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
           <div className="col-md-6 mb-3">
-            <input
-              name="id_poliza_rel"
-              className="form-control"
-              placeholder="Póliza relacionada"
-              value={policyRelName}
-              onFocus={() => setShowPolicySelect(true)}
-              readOnly
-              disabled={form.DocType !== "R"}
-            />
+            <div className="form-group-modern">
+              <input
+                name="id_poliza_rel"
+                className="form-input-modern"
+                placeholder=" "
+                value={policyRelName}
+                onFocus={() => setShowPolicySelect(true)}
+                readOnly
+                disabled={form.DocType !== "R"}
+              />
+              <label className="form-label-modern">Póliza relacionada</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
           <div className="col-md-6 mb-3 d-flex align-items-center">
             <div className="form-check form-switch">
@@ -326,13 +364,17 @@ export default function CrearPoliza() {
             </div>
           </div>
           <div className="col-md-12 mb-3">
-            <textarea
-              name="comentario"
-              className="form-control"
-              placeholder="Comentario"
-              value={form.comentario}
-              onChange={handleChange}
-            />
+            <div className="form-group-modern full-width">
+              <textarea
+                name="comentario"
+                className="form-input-modern"
+                placeholder=" "
+                value={form.comentario}
+                onChange={handleChange}
+              />
+              <label className="form-label-modern">Comentario</label>
+              <div className="form-highlight"></div>
+            </div>
           </div>
         </div>
         <hr />
@@ -340,35 +382,47 @@ export default function CrearPoliza() {
         {lines.map((line, idx) => (
           <div className="row align-items-end" key={idx}>
             <div className="col-md-3 mb-3">
-              <input
-                name="LineNum"
-                type="number"
-                className="form-control"
-                value={line.LineNum}
-                disabled
-              />
+              <div className="form-group-modern">
+                <input
+                  name="LineNum"
+                  type="number"
+                  className="form-input-modern"
+                  value={line.LineNum}
+                  disabled
+                />
+                <label className="form-label-modern"></label>
+                <div className="form-highlight"></div>
+              </div>
             </div>
             <div className="col-md-5 mb-3">
-              <input
-                name="id_itm"
-                className="form-control"
-                placeholder="Vehículo"
-                value={line.plate}
-                onFocus={() => setVehicleIndex(idx)}
-                readOnly
-                required
-              />
+              <div className="form-group-modern">
+                <input
+                  name="id_itm"
+                  className="form-input-modern"
+                  placeholder=" "
+                  value={line.plate}
+                  onFocus={() => setVehicleIndex(idx)}
+                  readOnly
+                  required
+                />
+                <label className="form-label-modern">Vehículo</label>
+                <div className="form-highlight"></div>
+              </div>
             </div>
             <div className="col-md-3 mb-3">
-              <input
-                name="LineTotal"
-                type="number"
-                className="form-control"
-                placeholder="Valor"
-                value={line.LineTotal}
-                onChange={(e) => handleLineChange(idx, e)}
-                required
-              />
+              <div className="form-group-modern">
+                <input
+                  name="LineTotal"
+                  type="number"
+                  className="form-input-modern"
+                  placeholder=" "
+                  value={line.LineTotal}
+                  onChange={(e) => handleLineChange(idx, e)}
+                  required
+                />
+                <label className="form-label-modern">Valor</label>
+                <div className="form-highlight"></div>
+              </div>
             </div>
             <div className="col-md-1 mb-3">
               {lines.length > 1 && (
