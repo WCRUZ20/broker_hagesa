@@ -1,0 +1,250 @@
+import { useEffect, useState } from "react";
+import API from "../services/api";
+import ListStyles from "../components/ListStyles";
+import ToastNotification from "../components/ToastNotification";
+
+export default function WhatsAppSeguimientoClientes() {
+  const [polizas, setPolizas] = useState([]);
+  const [clientes, setClientes] = useState([]);
+  const [params, setParams] = useState(null);
+  const [historial, setHistorial] = useState([]);
+  const [selected, setSelected] = useState([]);
+  const [searchPol, setSearchPol] = useState("");
+  const [searchHist, setSearchHist] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("darkMode") === "true"
+  );
+  const [toast, setToast] = useState({ show: false, message: "" });
+
+  useEffect(() => {
+    API.get("/polizas").then((res) => setPolizas(res.data));
+  }, []);
+  useEffect(() => {
+    API.get("/clientes").then((res) => setClientes(res.data));
+  }, []);
+  useEffect(() => {
+    API.get("/seguimiento/parametros-whatsapp").then((res) => {
+      if (res.data && res.data.length > 0) setParams(res.data[0]);
+    });
+  }, []);
+  useEffect(() => {
+    API.get("/seguimiento/historial-whatsapp").then((res) =>
+      setHistorial(res.data.filter((h) => h.Destination === "C"))
+    );
+  }, []);
+  useEffect(() => {
+    const h = () => setDarkMode(localStorage.getItem("darkMode") === "true");
+    window.addEventListener("darkModeChange", h);
+    return () => window.removeEventListener("darkModeChange", h);
+  }, []);
+
+  const clientesMap = clientes.reduce((a, c) => {
+    a[c.id] = c;
+    return a;
+  }, {});
+  const polizasMap = polizas.reduce((a, p) => {
+    a[p.id] = p;
+    return a;
+  }, {});
+
+  const shouldSend = (p) => {
+    if (!params) return false;
+    if (p.activo !== "Y") return false;
+    const due = new Date(p.DueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diff = Math.floor((due - today) / 86400000);
+    const before = diff >= 0 && diff <= parseInt(params.daystodue || 0, 10);
+    const after = diff < 0 && Math.abs(diff) <= parseInt(params.maxdaysallow || 0, 10);
+    return before || after;
+  };
+
+  const filteredPol = polizas
+    .filter(shouldSend)
+    .filter((p) => {
+      const c = clientesMap[p.id_ctms] || {};
+      const term = searchPol.toLowerCase();
+      return (
+        p.PolicyNum.toLowerCase().includes(term) ||
+        (c.identificacion || "").toLowerCase().includes(term) ||
+        (c.nombre || "").toLowerCase().includes(term) ||
+        (c.apellidos || "").toLowerCase().includes(term) ||
+        (c.telefono || "").toLowerCase().includes(term)
+      );
+    });
+
+  const filteredHist = historial.filter((h) => {
+    const term = searchHist.toLowerCase();
+    const polNum = polizasMap[h.id_policy]?.PolicyNum?.toLowerCase() || "";
+    const matchesText = h.Subject.toLowerCase().includes(term) || polNum.includes(term);
+    const date = new Date(h.CreateDate);
+    if (startDate && date < new Date(startDate)) return false;
+    if (endDate && date > new Date(endDate)) return false;
+    return matchesText;
+  });
+
+  const toggleSelect = (id) => {
+    setSelected((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
+  };
+
+  const toggleSelectAll = () => {
+    if (selected.length === filteredPol.length) setSelected([]);
+    else setSelected(filteredPol.map((p) => p.id));
+  };
+
+  const sendMessages = async () => {
+    if (selected.length === 0) return;
+    if (!params || params.manualsending !== "Y") {
+      setToast({ show: true, message: "El envío manual está desactivado" });
+      return;
+    }
+    try {
+      await API.post("/seguimiento/historial-whatsapp/enviar-clientes", {
+        policy_ids: selected,
+      });
+      setSelected([]);
+      const res = await API.get("/seguimiento/historial-whatsapp");
+      setHistorial(res.data.filter((h) => h.Destination === "C"));
+    } catch (err) {
+      const detail = err?.response?.data?.detail;
+      setToast({ show: true, message: detail || "Error al enviar mensajes" });
+    }
+  };
+
+  return (
+    <div className="container-fluid py-4">
+      <ToastNotification
+        show={toast.show}
+        message={toast.message}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
+      <div className="row">
+        <div className="col-md-6 mb-4">
+          <div className={`card border-0 shadow-sm ${darkMode ? "bg-dark" : "bg-white"}`}>
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h5 className="mb-0">Pólizas por vencer</h5>
+                <button className="btn btn-primary" disabled={selected.length === 0} onClick={sendMessages}>
+                  Enviar WhatsApp
+                </button>
+              </div>
+              <div className="mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Buscar"
+                  value={searchPol}
+                  onChange={(e) => setSearchPol(e.target.value)}
+                />
+              </div>
+              <div className="table-responsive" style={{ maxHeight: "40vh", overflowY: "auto" }}>
+                <table className={`table table-hover ${darkMode ? "table-dark" : ""}`}>
+                  <thead>
+                    <tr>
+                      <th>
+                        <input
+                          type="checkbox"
+                          className="form-check-input"
+                          checked={filteredPol.length > 0 && selected.length === filteredPol.length}
+                          onChange={toggleSelectAll}
+                        />
+                      </th>
+                      <th>Nro. Póliza</th>
+                      <th>Cliente</th>
+                      <th>Teléfono</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredPol.map((p) => {
+                      const c = clientesMap[p.id_ctms] || {};
+                      return (
+                        <tr key={p.id}>
+                          <td>
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              checked={selected.includes(p.id)}
+                              onChange={() => toggleSelect(p.id)}
+                            />
+                          </td>
+                          <td>{p.PolicyNum}</td>
+                          <td>{`${c.nombre || ""} ${c.apellidos || ""}`}</td>
+                          <td>{c.telefono}</td>
+                        </tr>
+                      );
+                    })}
+                    {filteredPol.length === 0 && (
+                      <tr>
+                        <td colSpan="4" className="text-center">
+                          Sin pólizas
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 mb-4">
+          <div className={`card border-0 shadow-sm ${darkMode ? "bg-dark" : "bg-white"}`}>
+            <div className="card-body">
+              <h5>Mensajes enviados</h5>
+              <div className="mb-3">
+                <input
+                  type="text"
+                  className="form-control mb-2"
+                  placeholder="Buscar por asunto o póliza"
+                  value={searchHist}
+                  onChange={(e) => setSearchHist(e.target.value)}
+                />
+                <div className="d-flex">
+                  <input
+                    type="date"
+                    className="form-control me-2"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="table-responsive" style={{ maxHeight: "40vh", overflowY: "auto" }}>
+                <table className={`table table-hover ${darkMode ? "table-dark" : ""}`}>
+                  <thead>
+                    <tr>
+                      <th>Asunto</th>
+                      <th>Fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredHist.map((h) => (
+                      <tr key={h.id}>
+                        <td>{h.Subject}</td>
+                        <td>{h.CreateDate}</td>
+                      </tr>
+                    ))}
+                    {filteredHist.length === 0 && (
+                      <tr>
+                        <td colSpan="2" className="text-center">
+                          Sin mensajes
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ListStyles darkMode={darkMode} />
+    </div>
+  );
+}

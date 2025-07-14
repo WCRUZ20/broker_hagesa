@@ -27,6 +27,8 @@ import SeguimientoVendedores from "./pages/SeguimientoVendedores";
 import WhatsAppConfig from "./pages/WhatsAppConfig";
 import WhatsAppParams from "./pages/WhatsAppParams";
 import WhatsAppTemplates from "./pages/WhatsAppTemplates";
+import WhatsAppSeguimientoClientes from "./pages/WhatsAppSeguimientoClientes";
+import WhatsAppSeguimientoVendedores from "./pages/WhatsAppSeguimientoVendedores";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -87,6 +89,8 @@ function App() {
           <Route path="/seguimiento/parametrizaciones-mail" element={<MailConfig />} />
           <Route path="/seguimiento/parametrizaciones-whatsapp" element={<WhatsAppConfig />} />
           <Route path="/seguimiento/parametros-whatsapp" element={<WhatsAppParams />} />
+          <Route path="/seguimiento/clientes-whatsapp" element={<WhatsAppSeguimientoClientes />} />
+          <Route path="/seguimiento/vendedores-whatsapp" element={<WhatsAppSeguimientoVendedores />} />
           <Route path="/seguimiento/parametros-envio" element={<MailParams />} />
           <Route path="/seguimiento/plantillas-mail" element={<MailTemplates />} />
           <Route path="/seguimiento/plantillas-whatsapp" element={<WhatsAppTemplates />} />
