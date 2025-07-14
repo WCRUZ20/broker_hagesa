@@ -622,7 +622,8 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
       </div>
 
       <div className="row g-4 mb-4">
-        <div className="col-lg-6 mx-auto mb-4">
+        {/* Promedio de Comisión, Pólizas por Aseguradora y Valor por Vendedor */}
+        <div className="col-lg-4 col-md-6 mb-4">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-header border-0">
               <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Promedio de Comisión % por Aseguradora</h5>
@@ -648,12 +649,67 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
             </div>
           </div>
         </div>
+        {/* Pólizas por Aseguradora */}
+        <div className="col-lg-4 col-md-6 mb-4">
+          <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
+            <div className="card-header border-0">
+              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Pólizas por Aseguradora</h5>
+              <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Distribución actual</small>
+            </div>
+            <div className="card-body">
+              {policiesByInsurer.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={policiesByInsurer.slice(0, 8)} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
+                    <XAxis type="number" stroke={darkMode ? '#888' : '#666'} />
+                    <YAxis type="category" dataKey="name" stroke={darkMode ? '#888' : '#666'} width={120} fontSize={12} />
+                    <Tooltip contentStyle={{ backgroundColor: darkMode ? '#333' : '#fff', border: 'none', borderRadius: '8px', color: darkMode ? '#fff' : '#000' }} />
+                    <Bar dataKey="value" fill="#0088FE" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="text-center py-5">
+                  <i className="bi bi-building text-muted fs-1"></i>
+                  <p className={`mt-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}>No hay datos de aseguradoras disponibles</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Valor por Vendedor */}
+        <div className="col-lg-4 col-md-6 mb-4">
+          <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
+            <div className="card-header border-0">
+              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Valor por Vendedor</h5>
+              <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Top vendedores</small>
+            </div>
+            <div className="card-body">
+              {valueBySeller.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={valueBySeller.slice(0, 8)} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
+                    <XAxis type="number" stroke={darkMode ? '#888' : '#666'} />
+                    <YAxis type="category" dataKey="name" stroke={darkMode ? '#888' : '#666'} width={120} fontSize={12} />
+                    <Tooltip contentStyle={{ backgroundColor: darkMode ? '#333' : '#fff', border: 'none', borderRadius: '8px', color: darkMode ? '#fff' : '#000' }} />
+                    <Bar dataKey="value" fill="#00C49F" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="text-center py-5">
+                  <i className="bi bi-person-badge text-muted fs-1"></i>
+                  <p className={`mt-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}>No hay datos de vendedores</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Fila inferior */}
       <div className="row g-4">
         {/* Pólizas por Vencer */}
-        <div className="col-lg-3 col-md-6 mb-4">
+        <div className="col-lg-6 col-md-6 mb-4">  
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
             <div className="card-header border-0 d-flex justify-content-between align-items-center">
               <div>
@@ -723,103 +779,62 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
           </div>
         </div>
 
-        {/* Pólizas por Aseguradora */}
-        <div className="col-lg-3 col-md-6 mb-4">
-          <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
-            <div className="card-header border-0">
-              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
-                Pólizas por Aseguradora
-              </h5>
-              <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>
-                Distribución actual
-              </small>
-            </div>
-            <div className="card-body">
-              {policiesByInsurer.length > 0 ? (
-                <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={policiesByInsurer.slice(0, 8)} layout="vertical">
-                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
-                    <XAxis type="number" stroke={darkMode ? '#888' : '#666'} />
-                    <YAxis 
-                      type="category" 
-                      dataKey="name" 
-                      stroke={darkMode ? '#888' : '#666'}
-                      width={120}
-                      fontSize={12}
-                    />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: darkMode ? '#333' : '#fff',
-                        border: 'none',
-                        borderRadius: '8px',
-                        color: darkMode ? '#fff' : '#000'
-                      }}
-                    />
-                    <Bar dataKey="value" fill="#0088FE" radius={[0, 4, 4, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="text-center py-5">
-                  <i className="bi bi-building text-muted fs-1"></i>
-                  <p className={`mt-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}>
-                    No hay datos de aseguradoras disponibles
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
         {/* Pólizas Vencidas Activas */}
-        <div className="col-lg-3 col-md-6 mb-4">
+        <div className="col-lg-6 col-md-6 mb-4">
           <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
-            <div className="card-header border-0">
-              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Pólizas Vencidas Activas</h5>
-              <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Por Aseguradora</small>
+            <div className="card-header border-0 d-flex justify-content-between align-items-center">
+              <div>
+                <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Pólizas Vencidas Activas</h5>
+                <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Últimos vencimientos</small>
+              </div>
+              <span className="badge bg-danger rounded-pill">
+                {expiredPolicies.length} póliza{expiredPolicies.length !== 1 ? 's' : ''}
+              </span>
             </div>
             <div className="card-body">
-              {expiredPoliciesByInsurer.length > 0 ? (
-                <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={expiredPoliciesByInsurer.slice(0, 8)} layout="vertical">
-                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
-                    <XAxis type="number" stroke={darkMode ? '#888' : '#666'} />
-                    <YAxis type="category" dataKey="name" stroke={darkMode ? '#888' : '#666'} width={120} fontSize={12} />
-                    <Tooltip contentStyle={{ backgroundColor: darkMode ? '#333' : '#fff', border: 'none', borderRadius: '8px', color: darkMode ? '#fff' : '#000' }} />
-                    <Bar dataKey="value" fill="#FF8042" radius={[0,4,4,0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="text-center py-5">
-                  <i className="bi bi-exclamation-triangle text-muted fs-1"></i>
-                  <p className={`mt-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}>No hay pólizas vencidas</p>
+              {expiredPolicies.length > 0 ? (
+                <div className="table-responsive">
+                  <table className={`table table-sm ${darkMode ? 'table-dark' : ''}`}>
+                    <thead>
+                      <tr>
+                        <th>Número</th>
+                        <th>Cliente</th>
+                        <th>Vencimiento</th>
+                        <th>Días</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {expiredPolicies.slice(0, 8).map((policy) => {
+                        const daysExpired = -getDaysUntilExpiry(policy.DueDate);
+                        return (
+                          <tr key={policy.id}>
+                            <td className="fw-bold">{policy.PolicyNum}</td>
+                            <td>{policy.ClientName}</td>
+                            <td>{new Date(policy.DueDate).toLocaleDateString('es-ES')}</td>
+                            <td>
+                              <span className="badge bg-danger rounded-pill">
+                                {daysExpired} día{daysExpired !== 1 ? 's' : ''}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                      {expiredPolicies.length > 8 && (
+                        <tr>
+                          <td colSpan="4" className="text-center py-2">
+                            <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>
+                              ... y {expiredPolicies.length - 8} póliza{expiredPolicies.length - 8 !== 1 ? 's' : ''} más
+                            </small>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
-              )}
-            </div>
-          </div>
-        </div>  
-        {/* Valor por Vendedor */}
-        <div className="col-lg-3 col-md-6 mb-4">
-          <div className={`card border-0 shadow-sm h-100 ${darkMode ? 'bg-dark' : 'bg-white'}`}>
-            <div className="card-header border-0">
-              <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
-                Valor por Vendedor
-              </h5>
-              <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Top vendedores</small>
-            </div>
-            <div className="card-body">
-              {valueBySeller.length > 0 ? (
-                <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={valueBySeller.slice(0, 8)} layout="vertical">
-                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#404040' : '#e0e0e0'} />
-                    <XAxis type="number" stroke={darkMode ? '#888' : '#666'} />
-                    <YAxis type="category" dataKey="name" stroke={darkMode ? '#888' : '#666'} width={120} fontSize={12} />
-                    <Tooltip contentStyle={{ backgroundColor: darkMode ? '#333' : '#fff', border: 'none', borderRadius: '8px', color: darkMode ? '#fff' : '#000' }} />
-                    <Bar dataKey="value" fill="#00C49F" radius={[0, 4, 4, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
               ) : (
                 <div className="text-center py-5">
-                  <i className="bi bi-person-badge text-muted fs-1"></i>
-                  <p className={`mt-3 ${darkMode ? 'text-muted' : 'text-secondary'}`}>No hay datos de vendedores</p>
+                  <i className="bi bi-check-circle text-success fs-1"></i>
+                  <p className={`mt-3 mb-0 ${darkMode ? 'text-muted' : 'text-secondary'}`}>No hay pólizas vencidas</p>
                 </div>
               )}
             </div>
