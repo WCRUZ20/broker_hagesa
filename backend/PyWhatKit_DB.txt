@@ -78,3 +78,13 @@ Time: 15:38
 Phone Number: +593998990136
 Message: Recordatorio PólizaEstimado Gustavo López, esperando se encuentre bien. El motivo de nuestro mensajes es para que se ponga en contacto con el cliente 0952147257 con poliza PL00000007 y fecha de vencimiento 2025-08-05.
 --------------------
+Date: 13/7/2025
+Time: 22:20
+Phone Number: +593998990136
+Message: Recordatorio PólizaEstimado Gustavo López, esperando se encuentre bien. El motivo de nuestro mensajes es para que se ponga en contacto con el cliente 0951934348 con poliza PL00000006 y fecha de vencimiento 2025-08-05.
+--------------------
+Date: 13/7/2025
+Time: 22:20
+Phone Number: +593998990136
+Message: Recordatorio PólizaEstimado Gustavo López, esperando se encuentre bien. El motivo de nuestro mensajes es para que se ponga en contacto con el cliente 0952147257 con poliza PL00000007 y fecha de vencimiento 2025-08-05.
+--------------------

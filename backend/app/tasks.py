@@ -38,9 +38,12 @@ def send_due_emails() -> None:
             5: params.saturday,
             6: params.sunday,
         }
-        if days_map.get(now.weekday()) != "Y":
-            logger.info("Sending not allowed today")
-            return
+        allow_today = days_map.get(now.weekday()) == "Y"
+        if not allow_today:
+            logger.info(
+                "Sending not allowed today for clients; ignoring rule for sellers"
+            )
+        send_clients_today = allow_today
         if params.hoursending:
             send_time = datetime.combine(today, params.hoursending)
             if now < send_time:
@@ -71,7 +74,9 @@ def send_due_emails() -> None:
             before_due = diff >= 0 and diff <= (params.daystodue or 0)
             after_due = diff < 0 and abs(diff) <= (params.maxdaysallow or 0)
             send_client = (
-                getattr(policy, "aut_noti", "N") == "Y" and (before_due or after_due)
+                send_clients_today
+                and getattr(policy, "aut_noti", "N") == "Y"
+                and (before_due or after_due)
             )
             send_seller = diff >= 0 and diff <= (params.daystodueSeller or 0)
             if not send_client and not send_seller:
@@ -220,9 +225,12 @@ def send_due_whatsapp() -> None:
             5: params.saturday,
             6: params.sunday,
         }
-        if days_map.get(now.weekday()) != "Y":
-            logger.info("WhatsApp sending not allowed today")
-            return
+        allow_today = days_map.get(now.weekday()) == "Y"
+        if not allow_today:
+            logger.info(
+                "WhatsApp sending not allowed today for clients; ignoring rule for sellers"
+            )
+        send_clients_today = allow_today
         if params.hoursending:
             send_time = datetime.combine(today, params.hoursending)
             if now < send_time:
@@ -252,7 +260,9 @@ def send_due_whatsapp() -> None:
             before_due = diff >= 0 and diff <= (params.daystodue or 0)
             after_due = diff < 0 and abs(diff) <= (params.maxdaysallow or 0)
             send_client = (
-                getattr(policy, "aut_noti", "N") == "Y" and (before_due or after_due)
+                send_clients_today
+                and getattr(policy, "aut_noti", "N") == "Y"
+                and (before_due or after_due)
             )
             send_seller = diff >= 0 and diff <= (params.daystodueSeller or 0)
             if not send_client and not send_seller:
