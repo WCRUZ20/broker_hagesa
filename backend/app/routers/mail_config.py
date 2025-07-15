@@ -57,7 +57,7 @@ def send_email_enhanced(cfg: Any, to: str, subject: str, body: str, es_html: boo
         
         # Configurar según tipo de test
         if tipo_test == 1:  # Test de configuración
-            mensaje['From'] = f"Test Notify SMTP <{cfg.USER_SMTP}>"
+            mensaje['From'] = f"Test SMTP <{cfg.USER_SMTP}>"
             mensaje['Subject'] = Header("Prueba Configuracion Cuenta", 'utf-8')
             cuerpo_final = "Prueba de configuracion del servidor de correo. Si recibes este mensaje, la configuración SMTP es correcta."
             es_html = False
