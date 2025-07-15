@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import API from "../services/api";
+import "./Compania.css"; 
 
 export default function Compania() {
   const [form, setForm] = useState({
