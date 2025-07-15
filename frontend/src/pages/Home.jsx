@@ -282,6 +282,42 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
   const expiredPoliciesByInsurer = getExpiredPoliciesByInsurer();
   const valueBySeller = getValueBySeller();
 
+  const downloadCSV = (rows, filename) => {
+    if (!rows || !rows.length) return;
+    const headers = Object.keys(rows[0]).join(';');
+    const csvRows = rows.map(r =>
+      Object.values(r).map(v => `"${v}"`).join(';')
+    );
+    const csv = [headers, ...csvRows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportExpiringToExcel = () => {
+    const data = expiringSoon.map(p => ({
+      Numero: p.PolicyNum,
+      Cliente: p.ClientName,
+      Vencimiento: new Date(p.DueDate).toLocaleDateString('es-ES'),
+      Dias: getDaysUntilExpiry(p.DueDate)
+    }));
+    downloadCSV(data, 'polizas_por_vencer.csv');
+  };
+
+  const exportExpiredToExcel = () => {
+    const data = expiredPolicies.map(p => ({
+      Numero: p.PolicyNum,
+      Cliente: p.ClientName,
+      Vencimiento: new Date(p.DueDate).toLocaleDateString('es-ES'),
+      Dias: -getDaysUntilExpiry(p.DueDate)
+    }));
+    downloadCSV(data, 'polizas_vencidas_activas.csv');
+  };
+
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
@@ -739,6 +775,13 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                 <span className="badge bg-warning rounded-pill">
                   {expiringSoon.length} póliza{expiringSoon.length !== 1 ? 's' : ''}
                 </span>
+                <button
+                  className="btn btn-outline-success btn-sm"
+                  onClick={exportExpiringToExcel}
+                  title="Exportar a Excel"
+                >
+                  <i className="bi bi-download"></i>
+                </button>
               </div>
             </div>
             <div className="card-body">
@@ -816,6 +859,13 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                 <span className="badge bg-danger rounded-pill">
                   {expiredPolicies.length} póliza{expiredPolicies.length !== 1 ? 's' : ''}
                 </span>
+                <button
+                  className="btn btn-outline-success btn-sm"
+                  onClick={exportExpiredToExcel}
+                  title="Exportar a Excel"
+                >
+                  <i className="bi bi-download"></i>
+                </button>
               </div>
               {/* <span className="badge bg-danger rounded-pill">
                 {expiredPolicies.length} póliza{expiredPolicies.length !== 1 ? 's' : ''}

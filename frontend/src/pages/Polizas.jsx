@@ -78,6 +78,23 @@ export default function Polizas() {
     });
   };
 
+  const renderActivoBadge = (activo) => {
+    const active = activo === "Y" || activo === "Activo";
+    const color = active ? "success" : "secondary";
+    const icon = active ? "bi-check-circle" : "bi-x-circle";
+    const text = active ? "Activo" : "No Activo";
+    return (
+      <span
+        className={`badge bg-${color} px-3 py-2 rounded-pill fw-normal d-flex align-items-center gap-1`}
+        style={{ fontSize: "0.875rem", letterSpacing: "0.5px", width: "fit-content" }}
+      >
+        <i className={`bi ${icon}`} style={{ fontSize: "0.8rem" }}></i>
+        {text}
+      </span>
+    );
+  };
+
+
   useEffect(() => {
     loadItems();
   }, []);
@@ -267,13 +284,7 @@ export default function Polizas() {
                         <td className="py-3 border-0">{p.InitDate}</td>
                         <td className="py-3 border-0">{p.DueDate}</td>
                         <td className="py-3 border-0">{p.AscValue}</td>
-                        <td className="py-3 border-0">
-                          {p.activo === 'Y' ? (
-                            <span className="text-success">Activo</span>
-                          ) : (
-                            <span className="text-secondary">No Activo</span>
-                          )}
-                        </td>
+                        <td className="py-3 border-0">{renderActivoBadge(p.activo)}</td>
                         <td className="py-3 border-0">{p.aut_noti}</td>
                         <td className="py-3 border-0">{p.DaysOverdue}</td>
                         <td className="py-3 border-0 text-center">
