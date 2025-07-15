@@ -8,6 +8,7 @@ export default function Usuarios() {
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
   );
+  const accentColor = "rgb(200, 150, 82)";
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -166,13 +167,15 @@ export default function Usuarios() {
                 Administra y controla el acceso de usuarios al sistema
               </p> */}
             </div>
-            <button 
-              className="btn btn-primary px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2"
+            <button
+              className="btn px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2"
               onClick={() => { setEditingUser(null); setShowModal(true); }}
               style={{ 
                 fontWeight: '500',
                 transition: 'all 0.3s ease',
-                border: 'none'
+                backgroundColor: accentColor,
+                borderColor: accentColor,
+                color: '#fff'
               }}
             >
               <i className="bi bi-plus-lg"></i>
@@ -192,15 +195,16 @@ export default function Usuarios() {
                   <div className="d-flex gap-3 align-items-center">
                     {/* Bulk Actions Dropdown */}
                     <div className="dropdown">
-                      <button 
-                        className={`btn btn-outline-secondary dropdown-toggle px-3 py-2 rounded-3 ${
-                          darkMode ? 'border-secondary text-light' : ''
-                        }`}
-                        type="button" 
+                      <button
+                        className="btn dropdown-toggle px-3 py-2 rounded-3"
+                        type="button"
                         data-bs-toggle="dropdown"
                         style={{ 
                           fontWeight: '500',
-                          transition: 'all 0.3s ease'
+                          transition: 'all 0.3s ease',
+                          border: `1px solid ${accentColor}`,
+                          color: accentColor,
+                          backgroundColor: 'transparent'
                         }}
                       >
                         <i className="bi bi-three-dots me-2"></i>
@@ -240,7 +244,13 @@ export default function Usuarios() {
 
                     {/* Selected Count */}
                     {selectedUsers.length > 0 && (
-                      <div className={`badge bg-primary px-3 py-2 rounded-pill ${darkMode ? '' : ''}`}>
+                      <div
+                        className="badge px-3 py-2 rounded-pill"
+                        style={{
+                          backgroundColor: 'rgba(200,150,82,0.15)',
+                          color: accentColor
+                        }}
+                      >
                         {selectedUsers.length} seleccionado{selectedUsers.length !== 1 ? 's' : ''}
                       </div>
                     )}
@@ -482,12 +492,17 @@ export default function Usuarios() {
         }
         
         .table tbody tr:hover {
-          background-color: ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,123,255,0.05)'} !important;
+          background-color: ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(200,150,82,0.05)'} !important;
+        }
+        
+        .btn-outline-primary {
+          border-color: ${accentColor};
+          color: ${accentColor};
         }
         
         .btn-outline-primary:hover {
-          background-color: var(--bs-primary);
-          border-color: var(--bs-primary);
+          background-color: ${accentColor};
+          border-color: ${accentColor};
           color: white;
         }
         
@@ -498,12 +513,12 @@ export default function Usuarios() {
         }
         
         .form-control:focus {
-          border-color: var(--bs-primary);
-          box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+          border-color: ${accentColor};
+          box-shadow: 0 0 0 0.2rem rgba(200,150,82,0.25);
         }
         
         .dropdown-item:hover {
-          background-color: ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,123,255,0.1)'};
+          background-color: ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(200,150,82,0.1)'};
         }
       `}</style>
     </div>

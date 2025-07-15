@@ -85,8 +85,8 @@ export default function Clientes() {
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center">
             <div>
-              <h2 className={`mb-1 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Clientes</h2>
-              <p className={`mb-0 ${darkMode ? 'text-muted' : 'text-secondary'}`}>Gestiona la lista de clientes</p>
+              <h2 className={`mb-1 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Administración de Clientes</h2>
+              {/* <p className={`mb-0 ${darkMode ? 'text-muted' : 'text-secondary'}`}>Gestiona la lista de clientes</p> */}
             </div>
             <button
               className="btn btn-primary px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2"
