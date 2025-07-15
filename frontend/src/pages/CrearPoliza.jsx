@@ -6,6 +6,7 @@ import SellerSelectModal from "../components/SellerSelectModal";
 import InsuranceSelectModal from "../components/InsuranceSelectModal";
 import VehicleSelectModal from "../components/VehicleSelectModal";
 import PolicySelectModal from "../components/PolicySelectModal";
+import ListStyles from "../components/ListStyles";
 import "./CrearPoliza.css";
 
 export default function CrearPoliza() {
@@ -15,6 +16,7 @@ export default function CrearPoliza() {
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
   );
+  const accentColor = "rgb(200, 150, 82)";
   const [form, setForm] = useState({
     DocType: "N",
     PolicyNum: "",
@@ -194,7 +196,7 @@ export default function CrearPoliza() {
       <form onSubmit={handleSubmit} className={`card p-4 border-0 shadow-sm crear-poliza-card ${darkMode ? 'bg-dark text-light' : 'bg-white'}`}>
         <div className="row">
           <div className="col-md-6 mb-3">
-            {/* <h6>Tipo póliza</h6> */}
+            <label className="form-label">Tipo póliza</label>
             <select
               name="DocType"
               className="form-select"
@@ -207,17 +209,18 @@ export default function CrearPoliza() {
             </select>
           </div>
           <div className="col-md-6 mb-3">
+            <label className="form-label">Número de póliza</label>
             <input
               name="PolicyNum"
               className="form-control"
-              placeholder="Número de póliza"
+              // placeholder="Número de póliza"
               value={form.PolicyNum}
               onChange={handleChange}
               required
             />
           </div>
           <div className="col-md-6 mb-3">
-            <h6>Fecha Inicio</h6>
+            <label className="form-label">Fecha Inicio</label>
             <input
               type="date"
               name="InitDate"
@@ -228,7 +231,7 @@ export default function CrearPoliza() {
             />
           </div>
           <div className="col-md-6 mb-3">
-            <h6>Fecha Vencimiento</h6>
+            <label className="form-label">Fecha Vencimiento</label>
             <input
               type="date"
               name="DueDate"
@@ -239,33 +242,36 @@ export default function CrearPoliza() {
             />
           </div>
           <div className="col-md-6 mb-3">
+            <label className="form-label">% Comisión</label>
             <input
               name="ComiPrcnt"
               type="number"
               className="form-control"
-              placeholder="% Comisión"
+              // placeholder="% Comisión"
               value={form.ComiPrcnt}
               onChange={handleChange}
               required
             />
           </div>
           <div className="col-md-6 mb-3">
+            <label className="form-label">Valor asegurado</label>
             <input
               name="AscValue"
               type="number"
               step="0.01"
               className="form-control"
-              placeholder="Valor asegurado"
+              // placeholder="Valor asegurado"
               value={form.AscValue}
               onChange={handleChange}
               required
             />
           </div>
           <div className="col-md-6 mb-3">
+            <label className="form-label">Vendedor</label>
             <input
               name="id_slrs"
               className="form-control"
-              placeholder="Vendedor"
+              // placeholder="Vendedor"
               value={sellerName}
               onFocus={() => setShowSellerSelect(true)}
               readOnly
@@ -273,10 +279,11 @@ export default function CrearPoliza() {
             />
           </div>
           <div className="col-md-6 mb-3">
+            <label className="form-label">Cliente</label>
             <input
               name="id_ctms"
               className="form-control"
-              placeholder="Cliente"
+              // placeholder="Cliente"
               value={clientName}
               onFocus={() => setShowClientSelect(true)}
               readOnly
@@ -284,10 +291,11 @@ export default function CrearPoliza() {
             />
           </div>
           <div className="col-md-6 mb-3">
+            <label className="form-label">Aseguradora</label>
             <input
               name="id_insurance"
               className="form-control"
-              placeholder="Aseguradora"
+              // placeholder="Aseguradora"
               value={insuranceName}
               onFocus={() => setShowInsuranceSelect(true)}
               readOnly
@@ -295,10 +303,11 @@ export default function CrearPoliza() {
             />
           </div>
           <div className="col-md-6 mb-3">
+            <label className="form-label">Póliza relacionada</label>
             <input
               name="id_poliza_rel"
               className="form-control"
-              placeholder="Póliza relacionada"
+              // placeholder="Póliza relacionada"
               value={policyRelName}
               onFocus={() => setShowPolicySelect(true)}
               readOnly
@@ -338,10 +347,11 @@ export default function CrearPoliza() {
             </div>
           </div>
           <div className="col-md-12 mb-3">
+            <label className="form-label">Comentario</label>
             <textarea
               name="comentario"
               className="form-control"
-              placeholder="Comentario"
+              // placeholder="Comentario"
               value={form.comentario}
               onChange={handleChange}
             />
@@ -351,10 +361,10 @@ export default function CrearPoliza() {
         <h5>Vehículos</h5>
         {lines.map((line, idx) => (
           <div className="row align-items-end" key={idx}>
-            <div className="col-md-3 mb-3">
+            <div className="col-md-1 mb-3">
               <input
                 name="LineNum"
-                type="number"
+                // type="number"
                 className="form-control"
                 value={line.LineNum}
                 disabled
@@ -401,7 +411,19 @@ export default function CrearPoliza() {
           </button>
         </div>
         <div className="text-end">
-          <button className="btn btn-primary">Guardar</button>
+          <button
+            className="btn px-4 py-2 rounded-3"
+            style={{
+                fontWeight: '500',
+                transition: 'all 0.3s ease',
+                backgroundColor: accentColor,
+                borderColor: accentColor,
+                color: '#fff',
+                width: '200px',
+              }}
+          >
+            Guardar
+          </button>
         </div>
       </form>
       {showSellerSelect && (
@@ -461,6 +483,7 @@ export default function CrearPoliza() {
           onClose={() => setVehicleIndex(null)}
         />
       )}
+      <ListStyles darkMode={darkMode} accentColor={accentColor} />
     </div>
   );
 }

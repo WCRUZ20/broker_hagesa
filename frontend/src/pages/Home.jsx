@@ -29,6 +29,9 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
     return d.getFullYear().toString();
   });
 
+  const [expiringDays, setExpiringDays] = useState(30);
+  const [expiredDays, setExpiredDays] = useState(30);
+
   useEffect(() => {
     loadDashboardData();
     
@@ -131,13 +134,13 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
   // Calcular pólizas por vencer
   const getExpiringPolicies = () => {
     const today = new Date();
-    const thirtyDaysFromNow = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000));
+    const limit = new Date(today.getTime() + (expiringDays * 24 * 60 * 60 * 1000));
     
     return dashboardData.policies
       .filter(p => {
         const dueDate = new Date(p.DueDate);
-        return dueDate >= today && 
-               dueDate <= thirtyDaysFromNow && 
+        return dueDate >= today &&
+               dueDate <= limit &&
                isPolicyActive(p);
       })
       .sort((a, b) => new Date(a.DueDate) - new Date(b.DueDate));
@@ -147,10 +150,14 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
   const getExpiredPolicies = () => {
     const today = new Date();
     
-    return dashboardData.policies.filter(p => {
-      const dueDate = new Date(p.DueDate);
-      return dueDate < today && isPolicyActive(p);
-    });
+    const lowerLimit = new Date(today.getTime() - (expiredDays * 24 * 60 * 60 * 1000));
+
+    return dashboardData.policies
+      .filter(p => {
+        const dueDate = new Date(p.DueDate);
+        return dueDate < today && dueDate >= lowerLimit && isPolicyActive(p);
+      })
+      .sort((a, b) => new Date(b.DueDate) - new Date(a.DueDate));
   };
 
   // Datos para gráfico de vehículos por marca
@@ -431,7 +438,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                     {expiringSoon.length}
                   </h5>
                   <small className="text-white">
-                    Por Vencer (30d)
+                    Por Vencer ({expiringDays}d)
                   </small>
                 </div>
               </div>
@@ -717,12 +724,22 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                   Pólizas por Vencer
                 </h5>
                 <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>
-                  Próximos 30 días
+                  Próximos {expiringDays} días
                 </small>
               </div>
-              <span className="badge bg-warning rounded-pill">
-                {expiringSoon.length} póliza{expiringSoon.length !== 1 ? 's' : ''}
-              </span>
+              <div className="d-flex align-items-center gap-2">
+                <input
+                  type="number"
+                  min="1"
+                  className="form-control form-control-sm"
+                  style={{ width: '70px' }}
+                  value={expiringDays}
+                  onChange={e => setExpiringDays(e.target.value)}
+                />
+                <span className="badge bg-warning rounded-pill">
+                  {expiringSoon.length} póliza{expiringSoon.length !== 1 ? 's' : ''}
+                </span>
+              </div>
             </div>
             <div className="card-body">
               {expiringSoon.length > 0 ? (
@@ -771,7 +788,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
                 <div className="text-center py-5">
                   <i className="bi bi-check-circle text-success fs-1"></i>
                   <p className={`mt-3 mb-0 ${darkMode ? 'text-muted' : 'text-secondary'}`}>
-                    No hay pólizas por vencer en los próximos 30 días
+                    No hay pólizas por vencer en los próximos {expiringDays} días
                   </p>
                 </div>
               )}
@@ -785,11 +802,24 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
             <div className="card-header border-0 d-flex justify-content-between align-items-center">
               <div>
                 <h5 className={`mb-0 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>Pólizas Vencidas Activas</h5>
-                <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Últimos vencimientos</small>
+                <small className={`${darkMode ? 'text-muted' : 'text-secondary'}`}>Últimos {expiredDays} días</small>
               </div>
-              <span className="badge bg-danger rounded-pill">
+              <div className="d-flex align-items-center gap-2">
+                <input
+                  type="number"
+                  min="1"
+                  className="form-control form-control-sm"
+                  style={{ width: '70px' }}
+                  value={expiredDays}
+                  onChange={e => setExpiredDays(e.target.value)}
+                />
+                <span className="badge bg-danger rounded-pill">
+                  {expiredPolicies.length} póliza{expiredPolicies.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+              {/* <span className="badge bg-danger rounded-pill">
                 {expiredPolicies.length} póliza{expiredPolicies.length !== 1 ? 's' : ''}
-              </span>
+              </span> */}
             </div>
             <div className="card-body">
               {expiredPolicies.length > 0 ? (
@@ -834,7 +864,7 @@ export default function DashboardHome({ user = { user_name: 'Usuario' } }) {
               ) : (
                 <div className="text-center py-5">
                   <i className="bi bi-check-circle text-success fs-1"></i>
-                  <p className={`mt-3 mb-0 ${darkMode ? 'text-muted' : 'text-secondary'}`}>No hay pólizas vencidas</p>
+                  <p className={`mt-3 mb-0 ${darkMode ? 'text-muted' : 'text-secondary'}`}>No hay pólizas vencidas en los últimos {expiredDays} días</p>
                 </div>
               )}
             </div>
