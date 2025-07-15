@@ -6,12 +6,15 @@ import SellerSelectModal from "../components/SellerSelectModal";
 import InsuranceSelectModal from "../components/InsuranceSelectModal";
 import VehicleSelectModal from "../components/VehicleSelectModal";
 import PolicySelectModal from "../components/PolicySelectModal";
-
+import "./CrearPoliza.css";
 
 export default function CrearPoliza() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEdit = !!id;
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("darkMode") === "true"
+  );
   const [form, setForm] = useState({
     DocType: "N",
     PolicyNum: "",
@@ -97,6 +100,14 @@ export default function CrearPoliza() {
     });
   }, [id]);
 
+  useEffect(() => {
+    const handler = () => {
+      setDarkMode(localStorage.getItem("darkMode") === "true");
+    };
+    window.addEventListener("darkModeChange", handler);
+    return () => window.removeEventListener("darkModeChange", handler);
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     const updated = { ...form, [name]: value };
@@ -178,9 +189,9 @@ export default function CrearPoliza() {
   };
 
   return (
-    <div className="container py-4">
-      <h2 className="mb-4">{isEdit ? "Editar Póliza" : "Crear Póliza"}</h2>
-      <form onSubmit={handleSubmit} className="card p-3 shadow-sm">
+    <div className="container-fluid py-4 px-4 crear-poliza-container">
+      <h2 className={`mb-4 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>{isEdit ? "Editar Póliza" : "Crear Póliza"}</h2>
+      <form onSubmit={handleSubmit} className={`card p-4 border-0 shadow-sm crear-poliza-card ${darkMode ? 'bg-dark text-light' : 'bg-white'}`}>
         <div className="row">
           <div className="col-md-6 mb-3">
             {/* <h6>Tipo póliza</h6> */}
