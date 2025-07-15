@@ -69,7 +69,15 @@ export default function Polizas() {
     );
   };
 
-  
+  const handleBulkActivo = (value) => {
+    if (selected.length === 0)
+      return alert("Seleccione al menos una póliza");
+    API.put("/polizas/activo", { policy_ids: selected, activo: value }).then(() => {
+      setSelected([]);
+      loadItems();
+    });
+  };
+
   useEffect(() => {
     loadItems();
   }, []);
@@ -165,6 +173,12 @@ export default function Polizas() {
                             Desactivar notificación
                           </button>
                         </li>
+                        <li>
+                          <button className="dropdown-item py-2 px-3 d-flex align-items-center gap-2" onClick={() => handleBulkActivo('N')}>
+                            <i className="bi bi-x-circle"></i>
+                            Desactivar pólizas
+                          </button>
+                        </li>
                       </ul>
                     </div>
 
@@ -253,7 +267,13 @@ export default function Polizas() {
                         <td className="py-3 border-0">{p.InitDate}</td>
                         <td className="py-3 border-0">{p.DueDate}</td>
                         <td className="py-3 border-0">{p.AscValue}</td>
-                        <td className="py-3 border-0">{p.activo}</td>
+                        <td className="py-3 border-0">
+                          {p.activo === 'Y' ? (
+                            <span className="text-success">Activo</span>
+                          ) : (
+                            <span className="text-secondary">No Activo</span>
+                          )}
+                        </td>
                         <td className="py-3 border-0">{p.aut_noti}</td>
                         <td className="py-3 border-0">{p.DaysOverdue}</td>
                         <td className="py-3 border-0 text-center">

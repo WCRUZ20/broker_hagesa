@@ -606,3 +606,7 @@ class SendSellerEmails(BaseModel):
 class BulkAutNotiUpdate(BaseModel):
     policy_ids: list[int]
     aut_noti: str
+
+class BulkActivoUpdate(BaseModel):
+    policy_ids: list[int]
+    activo: str

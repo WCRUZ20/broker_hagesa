@@ -96,6 +96,22 @@ def update_aut_noti(
     db.commit()
     return {"msg": "Polizas actualizadas"}
 
+@router.put("/activo")
+def update_activo(
+    payload: schemas.BulkActivoUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    for pid in payload.policy_ids:
+        policy = db.query(models.Policy).get(pid)
+        if policy:
+            policy.activo = payload.activo
+            policy.LastDateMod = date.today()
+            policy.id_usrs_update = current_user.id
+    db.commit()
+    return {"msg": "Polizas actualizadas"}
+
+
 @router.get("/{id}", response_model=schemas.PolicyDetailOut)
 def get_policy(id: int, db: Session = Depends(get_db)):
     policy = db.query(models.Policy).get(id)
