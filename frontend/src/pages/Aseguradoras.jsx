@@ -6,10 +6,13 @@ import ListStyles from "../components/ListStyles";
 export default function Aseguradoras() {
   const [items, setItems] = useState([]);
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
+  const accentColor = "rgb(200, 150, 82)";
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
   const [selected, setSelected] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const loadItems = async () => {
     try {
@@ -23,6 +26,10 @@ export default function Aseguradoras() {
   useEffect(() => {
     loadItems();
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, items]);
 
   useEffect(() => {
     const handler = () => setDarkMode(localStorage.getItem("darkMode") === "true");
@@ -72,6 +79,12 @@ export default function Aseguradoras() {
  
  );
 
+  const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
+  const paginated = filtered.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="container-fluid py-4 px-4">
       {/* Header */}
@@ -83,9 +96,15 @@ export default function Aseguradoras() {
               <p className={`mb-0 ${darkMode ? 'text-muted' : 'text-secondary'}`}>Administra la lista de aseguradoras</p>
             </div>
             <button
-              className="btn btn-primary px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2"
+              className="btn px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2"
               onClick={() => { setEditing(null); setShowModal(true); }}
-              style={{ fontWeight: '500', transition: 'all 0.3s ease', border: 'none' }}
+              style={{
+                fontWeight: '500',
+                transition: 'all 0.3s ease',
+                backgroundColor: accentColor,
+                borderColor: accentColor,
+                color: '#fff'
+              }}
             >
               <i className="bi bi-plus-lg"></i>
               Nueva Aseguradora
@@ -104,10 +123,16 @@ export default function Aseguradoras() {
                   <div className="d-flex gap-3 align-items-center">
                     <div className="dropdown">
                       <button
-                        className={`btn btn-outline-secondary dropdown-toggle px-3 py-2 rounded-3 ${darkMode ? 'border-secondary text-light' : ''}`}
+                        className="btn dropdown-toggle px-3 py-2 rounded-3"
                         type="button"
                         data-bs-toggle="dropdown"
-                        style={{ fontWeight: '500', transition: 'all 0.3s ease' }}
+                        style={{
+                          fontWeight: '500',
+                          transition: 'all 0.3s ease',
+                          border: `1px solid ${accentColor}`,
+                          color: accentColor,
+                          backgroundColor: 'transparent'
+                        }}
                       >
                         <i className="bi bi-three-dots me-2"></i>
                         Acciones
@@ -123,7 +148,13 @@ export default function Aseguradoras() {
                     </div>
 
                     {selected.length > 0 && (
-                      <div className={`badge bg-primary px-3 py-2 rounded-pill`}>
+                      <div
+                        className="badge px-3 py-2 rounded-pill"
+                        style={{
+                          backgroundColor: 'rgba(200,150,82,0.15)',
+                          color: accentColor
+                        }}
+                      >
                         {selected.length} seleccionado{selected.length !== 1 ? 's' : ''}
                       </div>
                     )}
@@ -176,7 +207,7 @@ export default function Aseguradoras() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map((c) => (
+                    {paginated.map((c) => (
                       <tr key={c.id} className={`${darkMode ? 'border-secondary' : ''}`} style={{ transition: 'all 0.2s ease', fontSize: '0.95rem' }}>
                         <td className="ps-4 py-3 border-0">
                           <input
@@ -217,6 +248,33 @@ export default function Aseguradoras() {
                   </tbody>
                 </table>
               </div>
+              <div className="d-flex justify-content-between align-items-center p-3">
+                <div className="hint-text">
+                  Mostrando <b>{filtered.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}</b>
+                  -<b>{Math.min(currentPage * itemsPerPage, filtered.length)}</b>
+                  {" de "}
+                  <b>{filtered.length}</b> aseguradoras
+                </div>
+                <ul className="pagination mb-0">
+                  <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                    <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>
+                      Anterior
+                    </button>
+                  </li>
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
+                      <button className="page-link" onClick={() => setCurrentPage(i + 1)}>
+                        {i + 1}
+                      </button>
+                    </li>
+                  ))}
+                  <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                    <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>
+                      Siguiente
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -232,7 +290,7 @@ export default function Aseguradoras() {
         />
       )}
 
-      <ListStyles darkMode={darkMode} />
+      <ListStyles darkMode={darkMode} accentColor={accentColor} />
     </div>
   );
 }

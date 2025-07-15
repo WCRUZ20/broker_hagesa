@@ -1,4 +1,19 @@
-export default function ListStyles({ darkMode }) {
+export default function ListStyles({ darkMode, accentColor = 'rgb(0,123,255)' }) {
+  const toRgba = (color, alpha) => {
+    if (color.startsWith('rgb(')) {
+      return color.replace('rgb(', 'rgba(').replace(')', `,${alpha})`);
+    }
+    if (color.startsWith('#')) {
+      const hex = color.slice(1);
+      const bigint = parseInt(hex.length === 3 ? hex.replace(/(.)/g, '$1$1') : hex, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+    return color;
+  };
+
   return (
     <style jsx>{`
       .btn:hover {
@@ -6,11 +21,15 @@ export default function ListStyles({ darkMode }) {
         box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
       }
       .table tbody tr:hover {
-        background-color: ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,123,255,0.05)'} !important;
+        background-color: ${darkMode ? 'rgba(255,255,255,0.05)' : toRgba(accentColor, 0.05)} !important;
+      }
+      .btn-outline-primary {
+        border-color: ${accentColor};
+        color: ${accentColor};
       }
       .btn-outline-primary:hover {
-        background-color: var(--bs-primary);
-        border-color: var(--bs-primary);
+        background-color: ${accentColor};
+        border-color: ${accentColor};
         color: white;
       }
       .btn-outline-danger:hover {
@@ -19,11 +38,11 @@ export default function ListStyles({ darkMode }) {
         color: white;
       }
       .form-control:focus {
-        border-color: var(--bs-primary);
-        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        border-color: ${accentColor};
+        box-shadow: 0 0 0 0.2rem ${toRgba(accentColor, 0.25)};
       }
       .dropdown-item:hover {
-        background-color: ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,123,255,0.1)'};
+        background-color: ${darkMode ? 'rgba(255,255,255,0.1)' : toRgba(accentColor, 0.1)};
       }
       .table td, .table th {
         padding-top: 0.33rem !important;
