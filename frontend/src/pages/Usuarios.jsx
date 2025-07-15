@@ -12,6 +12,8 @@ export default function Usuarios() {
   const [editingUser, setEditingUser] = useState(null);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const fetchUsuarios = async () => {
     try {
@@ -43,6 +45,10 @@ export default function Usuarios() {
     window.addEventListener("darkModeChange", handler);
     return () => window.removeEventListener("darkModeChange", handler);
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, usuarios]);
 
   const handleEdit = (user) => {
     setEditingUser(user);
@@ -108,6 +114,12 @@ export default function Usuarios() {
     u.user_email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage) || 1;
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const renderRolBadge = (rol) => {
     const map = {
       A: { label: "Administrador", color: "primary" },
@@ -147,12 +159,12 @@ export default function Usuarios() {
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center">
             <div>
-              <h2 className={`mb-1 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
+              <h3 className={`mb-1 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>
                 Gestión de Usuarios
-              </h2>
-              <p className={`mb-0 ${darkMode ? 'text-muted' : 'text-secondary'}`}>
+              </h3>
+              {/* <p className={`mb-0 ${darkMode ? 'text-muted' : 'text-secondary'}`}>
                 Administra y controla el acceso de usuarios al sistema
-              </p>
+              </p> */}
             </div>
             <button 
               className="btn btn-primary px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2"
@@ -313,7 +325,7 @@ export default function Usuarios() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers.map((user, index) => (
+                    {paginatedUsers.map((user, index) => (
                       <tr 
                         key={user.id}
                         className={`${darkMode ? 'border-secondary' : ''}`}
@@ -421,6 +433,33 @@ export default function Usuarios() {
                     )}
                   </tbody>
                 </table>
+              </div>
+              <div className="d-flex justify-content-between align-items-center p-3">
+                <div className="hint-text">
+                  Mostrando <b>{filteredUsers.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}</b>
+                  -<b>{Math.min(currentPage * itemsPerPage, filteredUsers.length)}</b>
+                  {" de "}
+                  <b>{filteredUsers.length}</b> usuarios
+                </div>
+                <ul className="pagination mb-0">
+                  <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                    <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>
+                      Anterior
+                    </button>
+                  </li>
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
+                      <button className="page-link" onClick={() => setCurrentPage(i + 1)}>
+                        {i + 1}
+                      </button>
+                    </li>
+                  ))}
+                  <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                    <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>
+                      Siguiente
+                    </button>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
