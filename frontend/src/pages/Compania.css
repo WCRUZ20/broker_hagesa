@@ -1,7 +1,10 @@
 /* Compania.css - Estilo empresarial oscuro consistente con Sidebar */
 
 .company-page {
-  max-width: 500px;
+  max-width: 700px;
+  border: 1px solid rgb(110, 92, 59);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.16);
+  border-radius: 12px;
 }
 
 /* Header con gradiente y efectos */

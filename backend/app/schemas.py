@@ -92,6 +92,13 @@ class CompanyBase(BaseModel):
     IdCompany: str
     CompanyName: str
     CompanyLogo: Optional[str] = None
+    AdressCompany: Optional[str] = None
+    PhoneCompany: Optional[str] = None
+    FundationDate: Optional[date] = None
+    IdDocType: Optional[str] = None
+    idLegalRep: Optional[str] = None
+    FnameLegalRep: Optional[str] = None
+    LnameLegalRep: Optional[str] = None
 
 
 class CompanyOut(CompanyBase):

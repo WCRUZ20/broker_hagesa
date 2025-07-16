@@ -50,6 +50,13 @@ class Company(Base):
     IdCompany = Column(String(20), primary_key=True, index=True)
     CompanyName = Column(String)
     CompanyLogo = Column(String)
+    AdressCompany = Column(String, nullable=True)
+    PhoneCompany = Column(String, nullable=True)
+    FundationDate = Column(Date, nullable=True)
+    IdDocType = Column(String(2), ForeignKey("TIDN.id"), nullable=True)
+    idLegalRep = Column(String, nullable=True)
+    FnameLegalRep = Column(String, nullable=True)
+    LnameLegalRep = Column(String, nullable=True)
 
 class Country(Base):
     __tablename__ = "CTRY"

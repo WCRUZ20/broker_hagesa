@@ -1,23 +1,38 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import API from "../services/api";
-import "./Compania.css"; 
+import "./Compania.css";
 
 export default function Compania() {
   const [form, setForm] = useState({
     IdCompany: "",
     CompanyName: "",
     CompanyLogo: "",
+    AdressCompany: "",
+    PhoneCompany: "",
+    FundationDate: "",
+    IdDocType: "",
+    idLegalRep: "",
+    FnameLegalRep: "",
+    LnameLegalRep: "",
   });
   const [isNew, setIsNew] = useState(true);
   const [originalId, setOriginalId] = useState("");
+  const [types, setTypes] = useState([]);
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
+  const accentColor = "rgb(200, 150, 82)";
+
 
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await API.get("/company");
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          setForm(res.data[0]);
-          setOriginalId(res.data[0].IdCompany);
+        const [compRes, typeRes] = await Promise.all([
+          API.get("/company"),
+          API.get("/tipos-identificacion"),
+        ]);
+        setTypes(typeRes.data || []);
+        if (Array.isArray(compRes.data) && compRes.data.length > 0) {
+          setForm((prev) => ({ ...prev, ...compRes.data[0], FundationDate: compRes.data[0].FundationDate || "" }));
+          setOriginalId(compRes.data[0].IdCompany);
           setIsNew(false);
         } else {
           setIsNew(true);
@@ -27,6 +42,10 @@ export default function Compania() {
       }
     };
     load();
+
+    const handler = () => setDarkMode(localStorage.getItem("darkMode") === "true");
+    window.addEventListener("darkModeChange", handler);
+    return () => window.removeEventListener("darkModeChange", handler);
   }, []);
 
   const handleChange = (e) => {
@@ -56,14 +75,16 @@ export default function Compania() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const payload = { ...form };
+    if (!payload.FundationDate) delete payload.FundationDate;
     try {
       if (isNew) {
-        await API.post("/company", form);
-        setOriginalId(form.IdCompany);
+        await API.post("/company", payload);
+        setOriginalId(payload.IdCompany);
         setIsNew(false);
       } else {
-        await API.put(`/company/${originalId}`, form);
-        setOriginalId(form.IdCompany);
+        await API.put(`/company/${originalId}`, payload);
+        setOriginalId(payload.IdCompany);
       }
       alert("Datos guardados");
     } catch (err) {
@@ -72,34 +93,118 @@ export default function Compania() {
   };
 
   return (
-    <div className="container">
-      <h3>Compañía</h3>
-      <form onSubmit={handleSubmit} className="mt-3" style={{ maxWidth: 400 }}>
-        <input
-          name="IdCompany"
-          className="form-control mb-2"
-          placeholder="RUC"
-          value={form.IdCompany}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="CompanyName"
-          className="form-control mb-2"
-          placeholder="Nombre"
-          value={form.CompanyName}
-          onChange={handleChange}
-          required
-        />
-        <input type="file" className="form-control mb-2" onChange={handleLogoChange} />
+    <div
+      className={`company-page container my-4 p-4 rounded-3 ${darkMode ? 'bg-dark text-white' : 'bg-white'}`}
+    >
+      <h3 className="mb-3" style={{ color: accentColor }}>Compañía</h3>
+      <form onSubmit={handleSubmit} className="row g-3">
+        <div className="col-md-6">
+          <label className="form-label">RUC</label>
+          <input
+            name="IdCompany"
+            className="form-control"
+            placeholder="RUC"
+            value={form.IdCompany}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Tipo Documento</label>
+          <select
+            name="IdDocType"
+            className="form-select"
+            value={form.IdDocType}
+            onChange={handleChange}
+          >
+            <option value="">Seleccionar...</option>
+            {types.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.Description}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">ID Representante Legal</label>
+          <input
+            name="idLegalRep"
+            className="form-control"
+            value={form.idLegalRep}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Nombres Representante</label>
+          <input
+            name="FnameLegalRep"
+            className="form-control"
+            value={form.FnameLegalRep}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Apellidos Representante</label>
+          <input
+            name="LnameLegalRep"
+            className="form-control"
+            value={form.LnameLegalRep}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Nombre Compañía</label>
+          <input
+            name="CompanyName"
+            className="form-control"
+            placeholder="Nombre"
+            value={form.CompanyName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Dirección</label>
+          <input
+            name="AdressCompany"
+            className="form-control"
+            value={form.AdressCompany}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Teléfono</label>
+          <input
+            name="PhoneCompany"
+            className="form-control"
+            value={form.PhoneCompany}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Fecha Fundación</label>
+          <input
+            type="date"
+            name="FundationDate"
+            className="form-control"
+            value={form.FundationDate || ""}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Logo</label>
+          <input type="file" className="form-control" onChange={handleLogoChange} />
+        </div>
         {form.CompanyLogo && (
-          <div className="mb-2">
-            <img src={form.CompanyLogo} alt="logo" style={{ maxHeight: 100 }} />
+          <div className="col-12 logo-preview text-center">
+            <img src={form.CompanyLogo} alt="logo" />
           </div>
         )}
-        <button className="btn btn-primary" type="submit">
-          Guardar
-        </button>
+        <div className="col-12 text-end">
+          <button className="btn btn-primary" type="submit" style={{ backgroundColor: accentColor, borderColor: accentColor }}>
+            Guardar
+          </button>
+        </div>
       </form>
     </div>
   );
