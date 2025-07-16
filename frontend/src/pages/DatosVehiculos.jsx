@@ -4,10 +4,12 @@ import BrandModal from "../components/BrandModal";
 import VehicleTypeModal from "../components/VehicleTypeModal";
 import VehicleUseModal from "../components/VehicleUseModal";
 import VehicleClassificationModal from "../components/VehicleClassificationModal";
+import ListStyles from "../components/ListStyles";
 
 
 export default function DatosVehiculos() {
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
+  const accentColor = "rgb(200, 150, 82)";
 
   const [brands, setBrands] = useState([]);
   const [showBrandModal, setShowBrandModal] = useState(false);
@@ -69,17 +71,18 @@ export default function DatosVehiculos() {
       <div className="row">
         <div className="col-md-4 mb-4">
           <Section
-            title="Marcas"
-            items={filteredBrand}
-            darkMode={darkMode}
-            selected={selBrand}
+              title="Marcas"
+              items={filteredBrand}
+              darkMode={darkMode}
+              selected={selBrand}
             onToggleSelect={id => setSelBrand(s => s.includes(id) ? s.filter(i => i !== id) : [...s, id])}
             onToggleAll={() => setSelBrand(selBrand.length === filteredBrand.length ? [] : filteredBrand.map(p => p.id))}
             onBulkDelete={() => bulkDelete(selBrand, 'marcas', loadAll)}
             onDelete={async id => { if (confirm('¿Eliminar marca?')) { await API.delete(`/marcas/${id}`); loadAll(); } }}
             onEdit={p => { setEditBrand(p); setShowBrandModal(true); }}
-            onCreate={() => { setEditBrand(null); setShowBrandModal(true); }}
-          />
+              onCreate={() => { setEditBrand(null); setShowBrandModal(true); }}
+              accentColor={accentColor}
+            />
         </div>
         <div className="col-md-4 mb-4">
           <Section
@@ -105,9 +108,10 @@ export default function DatosVehiculos() {
             onToggleAll={() => setSelUse(selUse.length === filteredUse.length ? [] : filteredUse.map(p => p.id))}
             onBulkDelete={() => bulkDelete(selUse, 'usos-vehiculo', loadAll)}
             onDelete={async id => { if (confirm('¿Eliminar uso?')) { await API.delete(`/usos-vehiculo/${id}`); loadAll(); } }}
-            onEdit={p => { setEditUse(p); setShowUseModal(true); }}
-            onCreate={() => { setEditUse(null); setShowUseModal(true); }}
-          />
+           onEdit={p => { setEditUse(p); setShowUseModal(true); }}
+              onCreate={() => { setEditUse(null); setShowUseModal(true); }}
+              accentColor={accentColor}
+            />
         </div>
       </div>
 
@@ -123,8 +127,9 @@ export default function DatosVehiculos() {
             onBulkDelete={() => bulkDelete(selClass, 'clasificaciones-vehiculo', loadAll)}
             onDelete={async id => { if (confirm('¿Eliminar clasificación?')) { await API.delete(`/clasificaciones-vehiculo/${id}`); loadAll(); } }}
             onEdit={p => { setEditClass(p); setShowClassModal(true); }}
-            onCreate={() => { setEditClass(null); setShowClassModal(true); }}
-          />
+              onCreate={() => { setEditClass(null); setShowClassModal(true); }}
+              accentColor={accentColor}
+            />
         </div>
       </div>
 
@@ -140,15 +145,22 @@ export default function DatosVehiculos() {
       {showClassModal && (
         <VehicleClassificationModal classification={editClass} onClose={() => { setShowClassModal(false); loadAll(); }} />
       )}
+      <ListStyles darkMode={darkMode} accentColor={accentColor} />
     </div>
   );
 }
 
-function Section({ title, items, darkMode, selected, onToggleSelect, onToggleAll, onBulkDelete, onDelete, onEdit, onCreate }) {
+function Section({ title, items, darkMode, selected, onToggleSelect, onToggleAll, onBulkDelete, onDelete, onEdit, onCreate, accentColor }) {
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
   const filtered = items.filter(i => i.Description.toLowerCase().includes(search.toLowerCase()) || String(i.id).includes(search));
 
-  useEffect(() => { setSearch(""); }, [items]);
+  useEffect(() => { setSearch(""); setCurrentPage(1); }, [items]);
+  useEffect(() => { setCurrentPage(1); }, [search]);
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
+  const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div>
@@ -156,7 +168,18 @@ function Section({ title, items, darkMode, selected, onToggleSelect, onToggleAll
       <div className="d-flex justify-content-between align-items-center mb-2">
         <div className="d-flex gap-2">
           <div className="dropdown">
-            <button className="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <button
+              className="btn dropdown-toggle px-3 py-2 rounded-3"
+              type="button"
+              data-bs-toggle="dropdown"
+              style={{
+                fontWeight: '500',
+                transition: 'all 0.3s ease',
+                border: `1px solid ${accentColor}`,
+                color: accentColor,
+                backgroundColor: 'transparent'
+              }}
+            >
               Acción
             </button>
             <ul className="dropdown-menu">
@@ -168,7 +191,19 @@ function Section({ title, items, darkMode, selected, onToggleSelect, onToggleAll
             <input type="text" className={`form-control ${darkMode ? "bg-dark text-white border-secondary" : ""}`} placeholder={`Buscar ${title.toLowerCase()}`} value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div>
-        <button className="btn btn-primary" onClick={onCreate}>Nuevo</button>
+        <button
+          className="btn px-3 py-2 rounded-3"
+          onClick={onCreate}
+          style={{
+            fontWeight: '500',
+            transition: 'all 0.3s ease',
+            backgroundColor: accentColor,
+            borderColor: accentColor,
+            color: '#fff'
+          }}
+        >
+          Nuevo
+        </button>
       </div>
       <div className={`card shadow-sm ${darkMode ? "bg-dark text-white" : ""}`}>
         <div className="card-body p-0">
@@ -185,7 +220,7 @@ function Section({ title, items, darkMode, selected, onToggleSelect, onToggleAll
                 </tr>
               </thead>
               <tbody>
-                {filtered.map(i => (
+                {paginated.map(i => (
                   <tr key={i.id}>
                     <td>
                       <input type="checkbox" className="form-check-input" checked={selected.includes(i.id)} onChange={() => onToggleSelect(i.id)} />
@@ -205,6 +240,26 @@ function Section({ title, items, darkMode, selected, onToggleSelect, onToggleAll
                 )}
               </tbody>
             </table>
+          </div>
+          <div className="d-flex justify-content-between align-items-center p-2">
+            <div className="hint-text">
+              Mostrando <b>{filtered.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}</b>
+              -<b>{Math.min(currentPage * itemsPerPage, filtered.length)}</b>{" de "}
+              <b>{filtered.length}</b> registros
+            </div>
+            <ul className="pagination mb-0">
+              <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}> 
+                <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>Anterior</button>
+              </li>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}> 
+                  <button className="page-link" onClick={() => setCurrentPage(i + 1)}>{i + 1}</button>
+                </li>
+              ))}
+              <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}> 
+                <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>Siguiente</button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

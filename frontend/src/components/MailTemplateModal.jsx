@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import API from "../services/api";
 import RichTextEditor from "./RichTextEditor";
 
+
 function stripHtml(html) {
   const div = document.createElement("div");
   div.innerHTML = html;
