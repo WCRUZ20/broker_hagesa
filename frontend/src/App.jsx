@@ -12,7 +12,7 @@ import Vendedores from "./pages/Vendedores";
 import Compania from "./pages/Compania";
 // import Paises from "./pages/Paises";
 import DatosGeograficos from "./pages/DatosGeograficos";
-import CargosUsuarios from "./pages/CargosUsuarios";
+// import CargosUsuarios from "./pages/CargosUsuarios";
 import DatosVehiculos from "./pages/DatosVehiculos";
 import VehiculosRegistrados from "./pages/VehiculosRegistrados";
 import DatosPersonas from "./pages/DatosPersonas";
@@ -82,7 +82,7 @@ function App() {
           <Route path="/datos-personas" element={<DatosPersonas />} />
           <Route path="/datos-vehiculos" element={<DatosVehiculos />} />
           <Route path="/vehiculos-registrados" element={<VehiculosRegistrados />} />
-          <Route path="/cargos" element={<CargosUsuarios />} />
+          {/* <Route path="/cargos" element={<CargosUsuarios />} /> */}
           <Route path="/crear-poliza" element={<CrearPoliza />} />
           <Route path="/editar-poliza/:id" element={<CrearPoliza />} />
           <Route path="/polizas" element={<Polizas />} />

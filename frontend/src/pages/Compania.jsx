@@ -97,110 +97,120 @@ export default function Compania() {
       className={`company-page container my-4 p-4 rounded-3 ${darkMode ? 'bg-dark text-white' : 'bg-white'}`}
     >
       <h3 className="mb-3" style={{ color: accentColor }}>Compañía</h3>
-      <form onSubmit={handleSubmit} className="row g-3">
-        <div className="col-md-6">
-          <label className="form-label">RUC</label>
-          <input
-            name="IdCompany"
-            className="form-control"
-            placeholder="RUC"
-            value={form.IdCompany}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Tipo Documento</label>
-          <select
-            name="IdDocType"
-            className="form-select"
-            value={form.IdDocType}
-            onChange={handleChange}
-          >
-            <option value="">Seleccionar...</option>
-            {types.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.Description}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">ID Representante Legal</label>
-          <input
-            name="idLegalRep"
-            className="form-control"
-            value={form.idLegalRep}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Nombres Representante</label>
-          <input
-            name="FnameLegalRep"
-            className="form-control"
-            value={form.FnameLegalRep}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Apellidos Representante</label>
-          <input
-            name="LnameLegalRep"
-            className="form-control"
-            value={form.LnameLegalRep}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Nombre Compañía</label>
-          <input
-            name="CompanyName"
-            className="form-control"
-            placeholder="Nombre"
-            value={form.CompanyName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Dirección</label>
-          <input
-            name="AdressCompany"
-            className="form-control"
-            value={form.AdressCompany}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Teléfono</label>
-          <input
-            name="PhoneCompany"
-            className="form-control"
-            value={form.PhoneCompany}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Fecha Fundación</label>
-          <input
-            type="date"
-            name="FundationDate"
-            className="form-control"
-            value={form.FundationDate || ""}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Logo</label>
-          <input type="file" className="form-control" onChange={handleLogoChange} />
-        </div>
-        {form.CompanyLogo && (
-          <div className="col-12 logo-preview text-center">
-            <img src={form.CompanyLogo} alt="logo" />
+      <form onSubmit={handleSubmit} className="row g-3 company-form">
+        <div className="col-md-6 pe-md-4">
+          <h5 style={{ color: accentColor }}>Datos de la compañía</h5>
+          <div className="row g-3">
+            <div className="col-12">
+              <label className="form-label">RUC</label>
+              <input
+                name="IdCompany"
+                className="form-control"
+                placeholder="RUC"
+                value={form.IdCompany}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="col-12">
+              <label className="form-label">Tipo Documento</label>
+              <select
+                name="IdDocType"
+                className="form-select"
+                value={form.IdDocType}
+                onChange={handleChange}
+              >
+                <option value="">Seleccionar...</option>
+                {types.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.Description}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-12">
+              <label className="form-label">Nombre Compañía</label>
+              <input
+                name="CompanyName"
+                className="form-control"
+                placeholder="Nombre"
+                value={form.CompanyName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="col-12">
+              <label className="form-label">Dirección</label>
+              <input
+                name="AdressCompany"
+                className="form-control"
+                value={form.AdressCompany}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-12">
+              <label className="form-label">Teléfono</label>
+              <input
+                name="PhoneCompany"
+                className="form-control"
+                value={form.PhoneCompany}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-12">
+              <label className="form-label">Fecha Fundación</label>
+              <input
+                type="date"
+                name="FundationDate"
+                className="form-control"
+                value={form.FundationDate || ""}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-12">
+              <label className="form-label">Logo</label>
+              <input type="file" className="form-control" onChange={handleLogoChange} />
+            </div>
+            {form.CompanyLogo && (
+              <div className="col-12 logo-preview text-center">
+                <img src={form.CompanyLogo} alt="logo" />
+              </div>
+            )}
           </div>
-        )}
-        <div className="col-12 text-end">
+        </div>
+        <div className="col-md-6 ps-md-4 legal-section">
+          <h5 style={{ color: accentColor }}>Datos del representante legal</h5>
+          <div className="row g-3">
+            <div className="col-12">
+              <label className="form-label">ID Representante Legal</label>
+              <input
+                name="idLegalRep"
+                className="form-control"
+                value={form.idLegalRep}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-12">
+              <label className="form-label">Nombres Representante</label>
+              <input
+                name="FnameLegalRep"
+                className="form-control"
+                value={form.FnameLegalRep}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-12">
+              <label className="form-label">Apellidos Representante</label>
+              <input
+                name="LnameLegalRep"
+                className="form-control"
+                value={form.LnameLegalRep}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-12 text-end mt-3">
           <button className="btn btn-primary" type="submit" style={{ backgroundColor: accentColor, borderColor: accentColor }}>
             Guardar
           </button>

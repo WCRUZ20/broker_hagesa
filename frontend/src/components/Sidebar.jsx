@@ -377,11 +377,11 @@ export default function Sidebar({ user, onLogout }) {
                       <i className="bi bi-person-vcard me-2"></i>Datos Personas
                     </NavLink>
                   </li>
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                       <NavLink className="nav-link" to="/cargos">
                       <i className="bi bi-diagram-3 me-2"></i>Cargos usuarios
                     </NavLink>
-                  </li>
+                  </li> */}
                 </ul>
               )}
             </li>
