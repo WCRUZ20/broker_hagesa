@@ -83,7 +83,7 @@ export default function MailTemplateModal({ template, onClose }) {
   return (
     <div className="modal show fade d-block" tabIndex="-1" style={{ backgroundColor: "rgba(211,211,211,0.5)" }}>
       <div className="modal-dialog modal-lg">
-        <div className="modal-content">
+        <div className="modal-content" style={{ backgroundColor: "rgb(48, 48, 48)" }}>
           <form onSubmit={handleSubmit}>
             <div className="modal-header">
               <h5 className="modal-title">{isEdit ? "Editar Plantilla" : "Nueva Plantilla"}</h5>
