@@ -6,3 +6,28 @@
 .crear-poliza-card {
   border-radius: 12px;
 }
+
+.steps-container .step-btn {
+  border: none;
+  background: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.steps-container .step-btn.active {
+  background-color: rgba(200, 150, 82, 0.15);
+  color: rgb(200, 150, 82);
+  border: 1px solid rgba(200, 150, 82, 0.3);
+}
+
+.progress-line {
+  width: 40px;
+  height: 2px;
+  background: rgb(200, 150, 82);
+  opacity: 0.4;
+  border-radius: 1px;
+  align-self: center;
+}

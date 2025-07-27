@@ -51,6 +51,7 @@ export default function CrearPoliza() {
   const [clientName, setClientName] = useState("");
   const [insuranceName, setInsuranceName] = useState("");
   const [policyRelName, setPolicyRelName] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
   
 
   useEffect(() => {
@@ -202,6 +203,24 @@ export default function CrearPoliza() {
       />
       <h2 className={`mb-4 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>{isEdit ? "Editar Póliza" : "Crear Póliza"}</h2>
       <form onSubmit={handleSubmit} className={`card p-4 border-0 shadow-sm crear-poliza-card ${darkMode ? 'bg-dark text-light' : 'bg-white'}`}>
+        <div className="d-flex justify-content-center mb-4 steps-container">
+          <button
+            type="button"
+            className={`step-btn ${currentStep === 1 ? 'active' : ''}`}
+            onClick={() => setCurrentStep(1)}
+          >
+            Cabecera
+          </button>
+          <div className="progress-line mx-2"></div>
+          <button
+            type="button"
+            className={`step-btn ${currentStep === 2 ? 'active' : ''}`}
+            onClick={() => setCurrentStep(2)}
+          >
+            Detalle
+          </button>
+        </div>
+        {currentStep === 1 && (
         <div className="row">
           <div className="col-md-6 mb-3">
             <label className="form-label">Tipo póliza</label>
@@ -364,7 +383,8 @@ export default function CrearPoliza() {
               onChange={handleChange}
             />
           </div>
-        </div>
+        </div>) }
+        {currentStep === 2 && (<>
         <hr />
         <h5>Vehículos</h5>
         {lines.map((line, idx) => (
@@ -419,20 +439,49 @@ export default function CrearPoliza() {
           </button>
         </div>
         <div className="text-end">
-          <button
-            className="btn px-4 py-2 rounded-3"
-            style={{
+          {currentStep === 1 ? (
+            <button
+              type="button"
+              className="btn px-4 py-2 rounded-3"
+              style={{
                 fontWeight: '500',
                 transition: 'all 0.3s ease',
                 backgroundColor: accentColor,
                 borderColor: accentColor,
                 color: '#fff',
                 width: '200px',
+                width: '200px'
               }}
-          >
-            Guardar
-          </button>
+          onClick={() => setCurrentStep(2)}
+            >
+              Siguiente
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="btn btn-secondary me-2"
+                onClick={() => setCurrentStep(1)}
+              >
+                Anterior
+              </button>
+              <button
+                className="btn px-4 py-2 rounded-3"
+                style={{
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  backgroundColor: accentColor,
+                  borderColor: accentColor,
+                  color: '#fff',
+                  width: '200px'
+                }}
+              >
+                {isEdit ? 'Actualizar' : 'Guardar'}
+              </button>
+            </>
+          )}
         </div>
+        </>)}
       </form>
       {showSellerSelect && (
         <SellerSelectModal
