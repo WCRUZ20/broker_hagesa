@@ -222,6 +222,7 @@ export default function CrearPoliza() {
           </button>
         </div>
         {currentStep === 1 && (
+        <>
         <div className="row">
           <div className="col-md-6 mb-3">
             <label className="form-label">Tipo póliza</label>
@@ -384,7 +385,18 @@ export default function CrearPoliza() {
               onChange={handleChange}
             />
           </div>
-        </div>) }
+          </div>
+        <div className="text-end">
+          <button
+            type="button"
+            className="btn btn-secondary me-2"
+            onClick={() => setCurrentStep(2)}
+          >
+            Siguiente
+          </button>
+        </div>
+        </>
+        ) }
         {currentStep === 2 && (<>
         <hr />
         <h5>Vehículos</h5>
@@ -440,47 +452,26 @@ export default function CrearPoliza() {
           </button>
         </div>
         <div className="text-end">
-          {currentStep === 1 ? (
-            <button
-              type="button"
-              className="btn px-4 py-2 rounded-3"
-              style={{
-                fontWeight: '500',
-                transition: 'all 0.3s ease',
-                backgroundColor: accentColor,
-                borderColor: accentColor,
-                color: '#fff',
-                width: '200px',
-                width: '200px'
-              }}
-          onClick={() => setCurrentStep(2)}
-            >
-              Siguiente
-            </button>
-          ) : (
-            <>
-              <button
-                type="button"
-                className="btn btn-secondary me-2"
-                onClick={() => setCurrentStep(1)}
-              >
-                Anterior
-              </button>
-              <button
-                className="btn px-4 py-2 rounded-3"
-                style={{
-                  fontWeight: '500',
-                  transition: 'all 0.3s ease',
-                  backgroundColor: accentColor,
-                  borderColor: accentColor,
-                  color: '#fff',
-                  width: '200px'
-                }}
-              >
-                {isEdit ? 'Actualizar' : 'Guardar'}
-              </button>
-            </>
-          )}
+          <button
+            type="button"
+            className="btn btn-secondary me-2"
+            onClick={() => setCurrentStep(1)}
+          >
+            Anterior
+          </button>
+          <button
+            className="btn px-4 py-2 rounded-3"
+            style={{
+              fontWeight: '500',
+              transition: 'all 0.3s ease',
+              backgroundColor: accentColor,
+              borderColor: accentColor,
+              color: '#fff',
+              width: '200px'
+            }}
+          >
+            {isEdit ? 'Actualizar' : 'Guardar'}
+          </button>
         </div>
         </>)}
       </form>
