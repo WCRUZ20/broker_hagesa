@@ -19,7 +19,11 @@ export default function PolicySelectModal({ policies = [], onSelect, onClose }) 
   };
 
   return (
-    <div className="modal-backdrop" onClick={handleBackdropClick} style={{ zIndex: 1060 }}>
+    <div
+      className="modal-backdrop"
+      onClick={handleBackdropClick}
+      style={{ zIndex: 1060, backgroundColor: "rgba(211,211,211,0.5)" }}
+    >
       <div className="modal-container" style={{ maxWidth: "750px" }}>
         <div className="modal-content-custom">
           <div className="modal-header-custom">

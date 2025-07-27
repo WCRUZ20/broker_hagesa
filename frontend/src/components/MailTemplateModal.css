@@ -22,7 +22,7 @@
 .modal-backdrop-custom {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(211, 211, 211, 0.5);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;

@@ -139,7 +139,11 @@ export default function UsuarioModal({ user, onClose }) {
   const isStep1Valid = form.user_name && form.last_name && form.user_cod && form.user_email;
 
   return (
-    <div className="modal-backdrop" onClick={handleBackdropClick}>
+    <div
+      className="modal-backdrop"
+      onClick={handleBackdropClick}
+      style={{ backgroundColor: "rgba(211,211,211,0.5)" }}
+    >
       <div className="modal-container">
         <div className="modal-content-custom" style={{ 
           maxHeight: 'calc(100vh - 40px)',

@@ -130,7 +130,11 @@ export default function MailConfigModal({ config, onClose }) {
   };
 
   return (
-    <div className="modal-backdrop" onClick={handleBackdropClick}>
+    <div
+      className="modal-backdrop"
+      onClick={handleBackdropClick}
+      style={{ backgroundColor: "rgba(211,211,211,0.5)" }}
+    >
       <div className="modal-container">
         <div className="modal-content-custom">
           

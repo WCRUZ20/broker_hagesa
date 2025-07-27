@@ -76,7 +76,11 @@ export default function AseguradoraModal({ aseguradora, onClose }) {
   const isFormValid = form.IdentType && form.Identification && form.CompanyName && form.ComiPrcnt;
 
   return (
-    <div className="modal-backdrop aseguradora-modal" onClick={handleBackdropClick}>
+    <div
+      className="modal-backdrop aseguradora-modal"
+      onClick={handleBackdropClick}
+      style={{ backgroundColor: "rgba(211,211,211,0.5)" }}
+    >
       <div className="modal-container">
         <div className="modal-content-custom">
           

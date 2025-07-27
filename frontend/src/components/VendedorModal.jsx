@@ -245,7 +245,12 @@ export default function VendedorModal({ vendedor, onClose, onSave }) {
   );
 
   return (
-    <div className="modal-backdrop" onClick={handleBackdropClick} ref={modalRef}>
+    <div
+      className="modal-backdrop"
+      onClick={handleBackdropClick}
+      ref={modalRef}
+      style={{ backgroundColor: "rgba(211,211,211,0.5)" }}
+    >
       <div className="modal-container">
         <div className="modal-content-custom">
           

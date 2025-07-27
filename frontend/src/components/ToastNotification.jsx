@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function ToastNotification({ show, message, onClose }) {
+export default function ToastNotification({ show, message, onClose, variant = "danger" }) {
   useEffect(() => {
     if (show) {
       const timer = setTimeout(onClose, 3000);
@@ -14,7 +14,7 @@ export default function ToastNotification({ show, message, onClose }) {
       style={{ zIndex: 2000 }}
     >
       <div
-        className={`toast align-items-center text-white bg-danger border-0 ${show ? "show" : "hide"}`}
+        className={`toast align-items-center text-white bg-${variant} border-0 ${show ? "show" : "hide"}`}
         role="alert"
       >
         <div className="d-flex">

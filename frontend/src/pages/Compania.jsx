@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
+import ToastNotification from "../components/ToastNotification";
 import "./Compania.css";
 
 export default function Compania() {
@@ -19,6 +20,7 @@ export default function Compania() {
   const [originalId, setOriginalId] = useState("");
   const [types, setTypes] = useState([]);
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
+  const [toast, setToast] = useState({ show: false, message: "", variant: "success" });
   const accentColor = "rgb(200, 150, 82)";
 
 
@@ -86,9 +88,9 @@ export default function Compania() {
         await API.put(`/company/${originalId}`, payload);
         setOriginalId(payload.IdCompany);
       }
-      alert("Datos guardados");
+      setToast({ show: true, message: "Datos guardados", variant: "success" });
     } catch (err) {
-      alert("Error al guardar");
+      setToast({ show: true, message: "Error al guardar", variant: "danger" });
     }
   };
 
@@ -96,6 +98,12 @@ export default function Compania() {
     <div
       className={`company-page container my-4 p-4 rounded-3 ${darkMode ? 'bg-dark text-white' : 'bg-white'}`}
     >
+      <ToastNotification
+        show={toast.show}
+        message={toast.message}
+        variant={toast.variant}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
       <h3 className="mb-3" style={{ color: accentColor }}>Compañía</h3>
       <form onSubmit={handleSubmit} className="row g-3 company-form">
         <div className="col-md-6 pe-md-4">

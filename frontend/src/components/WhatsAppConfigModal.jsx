@@ -113,7 +113,11 @@ export default function WhatsAppConfigModal({ config, onClose }) {
   };
 
   return (
-    <div className="modal-backdrop" onClick={handleBackdropClick}>
+    <div
+      className="modal-backdrop"
+      onClick={handleBackdropClick}
+      style={{ backgroundColor: "rgba(211,211,211,0.5)" }}
+    >
         <ToastNotification
         show={toast.show}
         message={toast.message}

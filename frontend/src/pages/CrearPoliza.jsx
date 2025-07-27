@@ -10,6 +10,9 @@ import ListStyles from "../components/ListStyles";
 import ToastNotification from "../components/ToastNotification";
 import "./CrearPoliza.css";
 
+const isPolicyActive = (p) =>
+  p.activo === true || p.activo === 1 || p.activo === "Y" || p.activo === "y";
+
 export default function CrearPoliza() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -68,6 +71,18 @@ export default function CrearPoliza() {
       setInsurances(a.data);
       setVehicles(v.data);
       setPolicies(p0.data);
+
+      const activePolicies = p0.data
+        .filter(isPolicyActive)
+        .filter((p) => !isEdit || p.id !== Number(id));
+      const detailResponses = await Promise.all(
+        activePolicies.map((p) => API.get(`/polizas/${p.id}`))
+      );
+      const actIds = new Set();
+      detailResponses.forEach((res) => {
+        (res.data.lines || []).forEach((l) => actIds.add(l.id_itm));
+      });
+      setActiveVehicleIds(Array.from(actIds));
         if (isEdit) {
           const res = await API.get(`/polizas/${id}`);
           const p = res.data;
@@ -511,7 +526,10 @@ export default function CrearPoliza() {
       )}
       {showPolicySelect && (
         <PolicySelectModal
-          policies={policies}
+          policies={policies.filter(
+            (p) =>
+              p.id_ctms === Number(form.id_ctms) && isPolicyActive(p)
+          )}
           onSelect={(p) => {
             setForm({ ...form, id_poliza_rel: p.id });
             setPolicyRelName(p.PolicyNum);
@@ -522,7 +540,12 @@ export default function CrearPoliza() {
       )}
       {vehicleIndex !== null && (
         <VehicleSelectModal
-          vehicles={vehicles.filter((v) => v.Propetary === Number(form.id_ctms))}
+          vehicles={vehicles
+            .filter((v) => v.Propetary === Number(form.id_ctms))
+            .filter(
+              (v) =>
+                form.DocType === "R" || !activeVehicleIds.includes(v.id)
+            )}
           onSelect={(v) => {
             const newLines = [...lines];
             newLines[vehicleIndex] = { ...newLines[vehicleIndex], id_itm: v.id, plate: v.Plate };
