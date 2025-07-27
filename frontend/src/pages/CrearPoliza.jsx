@@ -56,6 +56,7 @@ export default function CrearPoliza() {
   const [policyRelName, setPolicyRelName] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [activeVehicleIds, setActiveVehicleIds] = useState([]);
   
 
   useEffect(() => {
