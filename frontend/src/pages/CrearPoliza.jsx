@@ -52,6 +52,7 @@ export default function CrearPoliza() {
   const [insuranceName, setInsuranceName] = useState("");
   const [policyRelName, setPolicyRelName] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
+  const [showSuccess, setShowSuccess] = useState(false);
   
 
   useEffect(() => {
@@ -162,32 +163,15 @@ export default function CrearPoliza() {
     try {
       if (isEdit) {
         await API.put(`/polizas/${id}`, payload);
-        alert("Póliza actualizada");
       } else {
         await API.post("/polizas", payload);
-        alert("Póliza creada");
       }
-      navigate("/polizas");
-      setForm({
-          DocType: "N",
-          PolicyNum: "",
-          InitDate: "",
-          DueDate: "",
-          ComiPrcnt: "",
-          AscValue: "",
-          id_slrs: "",
-          id_ctms: "",
-          id_insurance: "",
-          id_poliza_rel: "",
-          comentario: "",
-          activo: "Y",
-          aut_noti: "N",
-        });
-      setSellerName("");
-      setClientName("");
-      setInsuranceName("");
-      setPolicyRelName("");
-      setLines([{ id_itm: "", LineNum: 1, LineTotal: "", plate: "" }]);
+      // Mostrar animación de éxito y redirigir
+      setShowSuccess(true);
+      setTimeout(() => {
+        navigate("/polizas");
+      }, 2500);
+
     } catch (err) {
       const detail = err.response?.data?.detail;
       setToast({ show: true, message: detail || "Error al guardar póliza" });
@@ -196,6 +180,23 @@ export default function CrearPoliza() {
 
   return (
     <div className="container-fluid py-4 px-4 crear-poliza-container">
+      {showSuccess && (
+        <div className="success-overlay">
+          <div className="success-animation">
+            <div className="checkmark-circle">
+              <svg className="checkmark" viewBox="0 0 52 52">
+                <path d="M14 27 L22 35 L38 19" />
+              </svg>
+            </div>
+            <h3 className="success-title">
+              {isEdit ? "¡Póliza Actualizada!" : "¡Póliza Creada!"}
+            </h3>
+            <p className="success-message">
+              La información se ha guardado correctamente
+            </p>
+          </div>
+        </div>
+      )}
       <ToastNotification
         show={toast.show}
         message={toast.message}
