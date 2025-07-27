@@ -24,6 +24,13 @@ def create_policy(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
+    existing = (
+        db.query(models.Policy)
+        .filter(models.Policy.PolicyNum == data.PolicyNum)
+        .first()
+    )
+    if existing:
+        raise HTTPException(status_code=400, detail="Número de póliza ya existe")
     policy = models.Policy(
         DocType=data.DocType,
         PolicyNum=data.PolicyNum,
@@ -131,6 +138,14 @@ def update_policy(
     policy = db.query(models.Policy).get(id)
     if not policy:
         raise HTTPException(status_code=404, detail="Póliza no encontrada")
+    
+    existing = (
+        db.query(models.Policy)
+        .filter(models.Policy.PolicyNum == data.PolicyNum, models.Policy.id != id)
+        .first()
+    )
+    if existing:
+        raise HTTPException(status_code=400, detail="Número de póliza ya existe")
 
     policy.DocType = data.DocType
     policy.PolicyNum = data.PolicyNum

@@ -7,6 +7,7 @@ import InsuranceSelectModal from "../components/InsuranceSelectModal";
 import VehicleSelectModal from "../components/VehicleSelectModal";
 import PolicySelectModal from "../components/PolicySelectModal";
 import ListStyles from "../components/ListStyles";
+import ToastNotification from "../components/ToastNotification";
 import "./CrearPoliza.css";
 
 export default function CrearPoliza() {
@@ -17,6 +18,7 @@ export default function CrearPoliza() {
     localStorage.getItem("darkMode") === "true"
   );
   const accentColor = "rgb(200, 150, 82)";
+  const [toast, setToast] = useState({ show: false, message: "" });
   const [form, setForm] = useState({
     DocType: "N",
     PolicyNum: "",
@@ -186,12 +188,18 @@ export default function CrearPoliza() {
       setPolicyRelName("");
       setLines([{ id_itm: "", LineNum: 1, LineTotal: "", plate: "" }]);
     } catch (err) {
-      alert("Error al guardar póliza");
+      const detail = err.response?.data?.detail;
+      setToast({ show: true, message: detail || "Error al guardar póliza" });
     }
   };
 
   return (
     <div className="container-fluid py-4 px-4 crear-poliza-container">
+      <ToastNotification
+        show={toast.show}
+        message={toast.message}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
       <h2 className={`mb-4 fw-bold ${darkMode ? 'text-white' : 'text-dark'}`}>{isEdit ? "Editar Póliza" : "Crear Póliza"}</h2>
       <form onSubmit={handleSubmit} className={`card p-4 border-0 shadow-sm crear-poliza-card ${darkMode ? 'bg-dark text-light' : 'bg-white'}`}>
         <div className="row">

@@ -98,3 +98,28 @@ Time: 12:0
 Phone Number: +593998990136
 Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000005 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-05. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
 --------------------
+Date: 15/7/2025
+Time: 23:6
+Phone Number: +593998990136
+Message: Mensaje de prueba de HAGESA
+--------------------
+Date: 15/7/2025
+Time: 23:9
+Phone Number: +593998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000005 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-05. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 20/7/2025
+Time: 22:1
+Phone Number: +593998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000005 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-05. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 20/7/2025
+Time: 22:2
+Phone Number: +593998990136
+Message: Recordatorio PólizaEstimado Gisella Jiménez, esperando se encuentre bien. El motivo de nuestro mensajes es para que se ponga en contacto con el cliente 0951934348 con poliza PL00000008 y fecha de vencimiento 2025-08-16.
+--------------------
+Date: 27/7/2025
+Time: 12:0
+Phone Number: +593998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000005 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-05. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
