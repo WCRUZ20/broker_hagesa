@@ -116,10 +116,13 @@ def update_user(
         raise HTTPException(status_code=400, detail="Datos inválidos")
 
     if "user_photo" in data:
-        try:
-            data["user_photo"] = validate_image_base64(data["user_photo"])
-        except ValueError as e:
-            raise HTTPException(status_code=400, detail=str(e))
+        if data["user_photo"]:
+            try:
+                data["user_photo"] = validate_image_base64(data["user_photo"])
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail=str(e))
+        else:
+            data.pop("user_photo")
 
     # Actualizar campos
     if "user_password" in data:

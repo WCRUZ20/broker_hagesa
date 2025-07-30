@@ -19,7 +19,7 @@
 .modal-container {
   width: 90%;
   max-width: 800px;
-  max-height: calc(100vh - 40px);
+  max-height: calc(100vh - 20px);
   animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   margin: auto;
   display: flex;
@@ -563,7 +563,7 @@
 @media (max-width: 768px) {
   .modal-container {
     width: 95%;
-    max-height: calc(100vh - 20px);
+    max-height: calc(100vh - 10px);
   }
   
   .modal-header-custom,

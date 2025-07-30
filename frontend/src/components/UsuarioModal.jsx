@@ -120,7 +120,8 @@ export default function UsuarioModal({ user, onClose }) {
     }
   };
 
-  const nextStep = () => {
+  const nextStep = (e) => {
+    e.preventDefault();
     if (currentStep < 2) setCurrentStep(currentStep + 1);
   };
 
@@ -145,8 +146,8 @@ export default function UsuarioModal({ user, onClose }) {
       style={{ backgroundColor: "rgba(211,211,211,0.5)" }}
     >
       <div className="modal-container">
-        <div className="modal-content-custom" style={{ 
-          maxHeight: 'calc(100vh - 40px)',
+        <div className="modal-content-custom" style={{
+          maxHeight: 'calc(100vh - 20px)',
           height: 'auto',
           display: 'flex',
           flexDirection: 'column'
@@ -218,7 +219,7 @@ export default function UsuarioModal({ user, onClose }) {
               overflowY: 'auto',
               flex: '1',
               minHeight: '0',
-              maxHeight: 'calc(100vh - 280px)'
+              maxHeight: 'calc(100vh - 140px)'
             }}>
               
               {/* Step 1: Basic Information */}
