@@ -15,6 +15,8 @@ class User(Base):
     # user_position = Column(String, nullable=True)
     user_position = Column(Integer, ForeignKey("CRGO.id"), nullable=True)
     user_status = Column(String, default="Habilitado", nullable=False)
+    #temp_password = Column(String, nullable=True)
+    #force_password_change = Column(Integer, default=0, nullable=False)
     
 
 class Client(Base):

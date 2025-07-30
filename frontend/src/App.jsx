@@ -29,6 +29,8 @@ import WhatsAppParams from "./pages/WhatsAppParams";
 import WhatsAppTemplates from "./pages/WhatsAppTemplates";
 import WhatsAppSeguimientoClientes from "./pages/WhatsAppSeguimientoClientes";
 import WhatsAppSeguimientoVendedores from "./pages/WhatsAppSeguimientoVendedores";
+import RecoverPassword from "./pages/RecoverPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   const [user, setUser] = useState(null);
