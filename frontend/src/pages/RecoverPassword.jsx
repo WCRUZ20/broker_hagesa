@@ -11,6 +11,7 @@ export default function RecoverPassword() {
     e.preventDefault();
     try {
       await API.post("/users/recover-password", { identifier });
+      localStorage.setItem("resetIdentifier", identifier);
       setMsg("Se envió una contraseña temporal a su correo");
       setTimeout(() => navigate("/reset"), 2000);
     } catch (err) {

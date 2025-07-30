@@ -3,12 +3,24 @@ import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 export default function ResetPassword() {
-  const [identifier, setIdentifier] = useState("");
+  const [identifier, setIdentifier] = useState(
+    localStorage.getItem("resetIdentifier") || ""
+  );
   const [tempPwd, setTempPwd] = useState("");
   const [pwd, setPwd] = useState("");
   const [confirm, setConfirm] = useState("");
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
+
+  const handleConfirmChange = e => {
+    const value = e.target.value;
+    setConfirm(value);
+    if (pwd && value && value !== pwd) {
+      setMsg("Las contraseñas no coinciden");
+    } else {
+      setMsg("");
+    }
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -17,13 +29,14 @@ export default function ResetPassword() {
       return;
     }
     try {
-      await API.post("/users/change-password", {
-        identifier,
-        temp_password: tempPwd,
-        new_password: pwd,
-      });
-      setMsg("Contraseña actualizada");
-      setTimeout(() => navigate("/"), 2000);
+        await API.post("/users/change-password", {
+          identifier,
+          temp_password: tempPwd,
+          new_password: pwd,
+        });
+        localStorage.removeItem("resetIdentifier");
+        setMsg("Contraseña actualizada");
+        setTimeout(() => navigate("/"), 2000);
     } catch (err) {
       setMsg("Error al actualizar contraseña");
     }
@@ -36,7 +49,7 @@ export default function ResetPassword() {
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Usuario o correo</label>
-          <input className="form-control" value={identifier} onChange={e => setIdentifier(e.target.value)} required />
+          <input className="form-control" value={identifier} onChange={e => setIdentifier(e.target.value)} required disabled/>
         </div>
         <div className="mb-3">
           <label className="form-label">Contraseña temporal</label>
