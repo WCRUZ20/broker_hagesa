@@ -12,7 +12,7 @@ export default function RecoverPassword() {
     try {
       await API.post("/users/recover-password", { identifier });
       setMsg("Se envió una contraseña temporal a su correo");
-      setTimeout(() => navigate("/"), 2000);
+      setTimeout(() => navigate("/reset"), 2000);
     } catch (err) {
       setMsg("Usuario no encontrado");
     }

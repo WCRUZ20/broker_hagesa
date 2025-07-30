@@ -48,6 +48,15 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+class RecoverPassword(BaseModel):
+    identifier: str
+
+
+class ChangePassword(BaseModel):
+    identifier: str
+    temp_password: str
+    new_password: str
+
 
 class ClientBase(BaseModel):
     nombre: str

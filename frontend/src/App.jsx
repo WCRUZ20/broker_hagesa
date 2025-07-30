@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import Sidebar from "./components/Sidebar";
 import API from "./services/api";
@@ -34,6 +34,7 @@ import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
    useEffect(() => {
     // Agrega el link a Google Fonts (Montserrat)
@@ -64,7 +65,14 @@ function App() {
     setUser(null);
   };
 
-  if (!user) return <LoginForm onLogin={handleLogin} />;
+  if (!user)
+    return (
+      <Routes>
+        <Route path="/recover" element={<RecoverPassword />} />
+        <Route path="/reset" element={<ResetPassword />} />
+        <Route path="*" element={<LoginForm onLogin={handleLogin} />} />
+      </Routes>
+    );
 
   return (
     <div style={{ fontFamily: "'Montserrat', sans-serif" }}>

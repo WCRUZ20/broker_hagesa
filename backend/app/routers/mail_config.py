@@ -5,25 +5,15 @@ from datetime import date
 from .. import models, schemas
 from app.database import SessionLocal
 from .users import get_current_user
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email import encoders
-from email.header import Header
 import logging
-import os
-import re
-
+from ..utils.email_utils import (
+    send_email_enhanced,
+    send_email,
+    strip_tags,
+)
 # Configurar logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
-def strip_tags(text: str) -> str:
-    """Remove HTML tags from a string."""
-    if not text:
-        return ""
-    return re.sub(r"<[^>]+>", "", text)
 
 def get_db():
     db = SessionLocal()
@@ -31,119 +21,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-def send_email_enhanced(cfg: Any, to: str, subject: str, body: str, es_html: bool = True, tipo_test: int = 3, titulo: str = "Sistema"):
-    """
-    Envía correo electrónico usando SMTP con manejo mejorado basado en HotmailSender
-    
-    Args:
-        cfg: Configuración de correo
-        to: Correo destinatario
-        subject: Asunto del correo
-        body: Contenido del correo
-        es_html: Si el cuerpo es HTML
-        tipo_test: Tipo de prueba (1=config, 2=usuario, 3=consulta, 4=reporte)
-        titulo: Nombre del remitente
-    """
-    try:
-        subject = strip_tags(subject)
-        logger.info(f"Iniciando envío de correo - Tipo: {tipo_test}")
-        logger.info(f"Servidor: {cfg.HOST_SMTP}, Puerto: {cfg.PORT_SMTP}")
-        logger.info(f"Destinatario: {to}")
-        
-        # Crear mensaje con codificación UTF-8
-        mensaje = MIMEMultipart()
-        
-        # Configurar según tipo de test
-        if tipo_test == 1:  # Test de configuración
-            mensaje['From'] = f"Test SMTP <{cfg.USER_SMTP}>"
-            mensaje['Subject'] = Header("Prueba Configuracion Cuenta", 'utf-8')
-            cuerpo_final = "Prueba de configuracion del servidor de correo. Si recibes este mensaje, la configuración SMTP es correcta."
-            es_html = False
-        
-        elif tipo_test == 2:  # Test de usuario
-            mensaje['From'] = f"{titulo} <{cfg.USER_SMTP}>"
-            mensaje['Subject'] = Header(subject, 'utf-8')
-            cuerpo_final = body
-        
-        elif tipo_test == 3:  # Envío de consulta
-            mensaje['From'] = f"{titulo} <{cfg.USER_SMTP}>"
-            mensaje['Subject'] = Header(subject, 'utf-8')
-            cuerpo_final = body
-        
-        elif tipo_test == 4:  # Reporte especial
-            mensaje['From'] = f"{titulo} <{cfg.USER_SMTP}>"
-            mensaje['Subject'] = Header(subject, 'utf-8')
-            cuerpo_final = body
-        
-        else:
-            mensaje['From'] = f"{titulo} <{cfg.USER_SMTP}>"
-            mensaje['Subject'] = Header(subject, 'utf-8')
-            cuerpo_final = body
-        
-        # Agregar destinatario
-        mensaje['To'] = to
-        
-        # Agregar cuerpo del mensaje
-        if es_html:
-            mensaje.attach(MIMEText(cuerpo_final, 'html', 'utf-8'))
-        else:
-            mensaje.attach(MIMEText(cuerpo_final, 'plain', 'utf-8'))
-        
-        # Configurar servidor SMTP con manejo de codificación
-        logger.info("Conectando al servidor SMTP...")
-        
-        # Determinar si usar SSL/TLS basado en el puerto
-        puerto = int(cfg.PORT_SMTP)
-        usar_ssl = puerto in [587, 25]  # Puertos comunes que requieren STARTTLS
-        
-        servidor = smtplib.SMTP(cfg.HOST_SMTP, puerto)
-        
-        if usar_ssl:
-            servidor.starttls()  # Habilitar TLS
-            logger.info("SSL/TLS habilitado")
-        
-        # Login con manejo de caracteres especiales
-        servidor.login(cfg.USER_SMTP, cfg.PASS_SMTP)
-        logger.info("Autenticación exitosa")
-        
-        # Convertir mensaje a string con codificación correcta
-        texto_mensaje = mensaje.as_string()
-        
-        # Enviar correo usando sendmail para mejor control de codificación
-        logger.info("Enviando correo...")
-        servidor.sendmail(cfg.USER_SMTP, [to], texto_mensaje.encode('utf-8'))
-        servidor.quit()
-        
-        logger.info("Correo enviado exitosamente")
-        return True
-        
-    except UnicodeEncodeError as e:
-        error_msg = f"Error de codificación: {str(e)}. Intenta usar caracteres ASCII únicamente."
-        logger.error(error_msg)
-        raise HTTPException(status_code=500, detail=error_msg)
-        
-    except smtplib.SMTPAuthenticationError as e:
-        error_msg = f"Error de autenticación: {str(e)}. Verifica tu email y contraseña."
-        logger.error(error_msg)
-        raise HTTPException(status_code=401, detail=error_msg)
-        
-    except smtplib.SMTPException as e:
-        error_msg = f"Error SMTP: {str(e)}"
-        logger.error(error_msg)
-        raise HTTPException(status_code=500, detail=error_msg)
-        
-    except Exception as e:
-        error_msg = f"Error al enviar correo: {str(e)}"
-        logger.error(error_msg)
-        raise HTTPException(status_code=500, detail=error_msg)
-
-
-def send_email(cfg: Any, to: str, subject: str, body: str):
-    """Función de compatibilidad hacia atrás"""
-    return send_email_enhanced(cfg, to, subject, body, es_html=True, tipo_test=3)
-
 
 router = APIRouter(
     prefix="/seguimiento/parametrizaciones-mail", tags=["Parametrizaciones Mail"]

@@ -4,7 +4,7 @@ import logging
 import typing as t
 from .database import SessionLocal
 from . import models
-from .routers.mail_config import send_email, strip_tags
+from .utils.email_utils import send_email, strip_tags
 from .routers.mail_history import render_template
 from .routers.whatsapp_config import send_whatsapp
 

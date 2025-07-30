@@ -5,7 +5,7 @@ from datetime import date
 from .. import models, schemas
 from app.database import SessionLocal
 from .users import get_current_user
-from .mail_config import send_email, strip_tags
+from ..utils.email_utils import send_email, strip_tags
 
 
 

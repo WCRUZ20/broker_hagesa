@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function LoginForm({ onLogin }) {
   const [identifier, setIdentifier] = useState("");
@@ -348,8 +349,13 @@ export default function LoginForm({ onLogin }) {
                   </button>
                 </div>
               </div>
+                <div className="text-end mb-3">
+                  <Link to="/recover" style={{ color: "#B27936" }}>
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </div>
 
-              <button
+                <button
                 type="submit"
                 className="btn fw-bold text-white w-100"
                 style={{

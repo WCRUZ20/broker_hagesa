@@ -1,10 +1,14 @@
 import { useState } from "react";
 import API from "../services/api";
+import { useNavigate } from "react-router-dom";
 
-export default function ResetPassword({ onDone }) {
+export default function ResetPassword() {
+  const [identifier, setIdentifier] = useState("");
+  const [tempPwd, setTempPwd] = useState("");
   const [pwd, setPwd] = useState("");
   const [confirm, setConfirm] = useState("");
   const [msg, setMsg] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -13,9 +17,13 @@ export default function ResetPassword({ onDone }) {
       return;
     }
     try {
-      await API.post("/users/change-password", { new_password: pwd });
+      await API.post("/users/change-password", {
+        identifier,
+        temp_password: tempPwd,
+        new_password: pwd,
+      });
       setMsg("Contraseña actualizada");
-      onDone && onDone();
+      setTimeout(() => navigate("/"), 2000);
     } catch (err) {
       setMsg("Error al actualizar contraseña");
     }
@@ -23,11 +31,19 @@ export default function ResetPassword({ onDone }) {
 
   return (
     <div className="container" style={{ maxWidth: 400, marginTop: 100 }}>
-      <h3 className="mb-3">Nueva contraseña</h3>
+      <h3 className="mb-3">Restablecer contraseña</h3>
       {msg && <div className="alert alert-info">{msg}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label className="form-label">Contraseña</label>
+          <label className="form-label">Usuario o correo</label>
+          <input className="form-control" value={identifier} onChange={e => setIdentifier(e.target.value)} required />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Contraseña temporal</label>
+          <input type="password" className="form-control" value={tempPwd} onChange={e => setTempPwd(e.target.value)} required />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Nueva contraseña</label>
           <input type="password" className="form-control" value={pwd} onChange={e => setPwd(e.target.value)} required />
         </div>
         <div className="mb-3">

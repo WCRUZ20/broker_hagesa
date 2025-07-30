@@ -8,6 +8,8 @@ import os
 from dotenv import load_dotenv
 from typing import List
 import base64
+import secrets
+from ..utils.email_utils import send_email
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/login")
@@ -139,4 +141,42 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     db.delete(user)
     db.commit()
     return {"msg": "Usuario eliminado"}
+
+@router.post("/recover-password")
+def recover_password(data: schemas.RecoverPassword, db: Session = Depends(get_db)):
+    user = crud.get_user_by_email_or_cod(db, data.identifier.strip())
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    temp_pwd = secrets.token_urlsafe(8)
+    user.temp_password = auth.hash_password(temp_pwd)
+    user.force_password_change = 1
+    db.commit()
+
+    cfg = db.query(models.MailConfig).first()
+    if cfg:
+        subject = "Recuperaci\u00f3n de contrase\u00f1a"
+        body = f"Su contrase\u00f1a temporal es: {temp_pwd}"
+        try:
+            send_email(cfg, user.user_email, subject, body)
+        except Exception:
+            raise HTTPException(status_code=500, detail="Error al enviar correo")
+
+    return {"msg": "Correo enviado"}
+
+
+@router.post("/change-password")
+def change_password(data: schemas.ChangePassword, db: Session = Depends(get_db)):
+    user = crud.get_user_by_email_or_cod(db, data.identifier.strip())
+    if not user or not user.temp_password:
+        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+
+    if not auth.verify_password(data.temp_password, user.temp_password):
+        raise HTTPException(status_code=400, detail="Contrase\u00f1a temporal incorrecta")
+
+    user.user_password = auth.hash_password(data.new_password.strip())
+    user.temp_password = None
+    user.force_password_change = 0
+    db.commit()
+    return {"msg": "Contrase\u00f1a actualizada"}
     
