@@ -11,23 +11,26 @@ export default function ResetPassword() {
   const [tempPwd, setTempPwd] = useState("");
   const [pwd, setPwd] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState({ text: "", type: "" });
+  const [showTemp, setShowTemp] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
 
   const handleConfirmChange = e => {
     const value = e.target.value;
     setConfirm(value);
     if (pwd && value && value !== pwd) {
-      setMsg("Las contraseñas no coinciden");
+      setMsg({ text: "Las contraseñas no coinciden", type: "error" });
     } else {
-      setMsg("");
+      setMsg({ text: "", type: "" });
     }
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
     if (pwd !== confirm) {
-      setMsg("Las contraseñas no coinciden");
+      setMsg({ text: "Las contraseñas no coinciden", type: "error" });
       return;
     }
     try {
@@ -37,10 +40,10 @@ export default function ResetPassword() {
           new_password: pwd,
         });
         localStorage.removeItem("resetIdentifier");
-        setMsg("Contraseña actualizada");
+        setMsg({ text: "Contraseña actualizada", type: "success" });
         setTimeout(() => navigate("/"), 2000);
     } catch (err) {
-      setMsg("Error al actualizar contraseña");
+      setMsg({ text: "Error al actualizar contraseña", type: "error" });
     }
   };
 
@@ -70,19 +73,25 @@ export default function ResetPassword() {
             Ingrese la contraseña temporal y su nueva contraseña
           </p>
         </div>
-        {msg && (
+        {msg.text && (
           <div
             className="alert text-center mb-4"
             style={{
-              backgroundColor: "rgba(220, 53, 69, 0.1)",
-              border: "1px solid rgba(220, 53, 69, 0.2)",
+              backgroundColor:
+                msg.type === "success"
+                  ? "rgba(25, 135, 84, 0.1)"
+                  : "rgba(220, 53, 69, 0.1)",
+              border:
+                msg.type === "success"
+                  ? "1px solid rgba(25, 135, 84, 0.2)"
+                  : "1px solid rgba(220, 53, 69, 0.2)",
               borderRadius: "12px",
-              color: "#dc3545",
+              color: msg.type === "success" ? "#198754" : "#dc3545",
               fontSize: "0.9rem",
               fontWeight: "500"
             }}
           >
-            {msg}
+            {msg.text}
           </div>
         )}
         <form onSubmit={handleSubmit}>
@@ -137,32 +146,61 @@ export default function ResetPassword() {
             >
               CONTRASEÑA TEMPORAL
             </label>
-            <input
-              type="password"
-              className="form-control"
-              value={tempPwd}
-              onChange={e => setTempPwd(e.target.value)}
-              style={{
-                border: "2px solid rgba(178, 121, 54, 0.2)",
-                borderRadius: "12px",
-                padding: "12px 16px",
-                fontSize: "1rem",
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                transition: "all 0.3s ease",
-                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)"
-              }}
-              onFocus={e => {
-                e.target.style.borderColor = "#B27936";
-                e.target.style.backgroundColor = "rgba(255, 255, 255, 1)";
-                e.target.style.boxShadow = "0 0 0 3px rgba(178, 121, 54, 0.1)";
-              }}
-              onBlur={e => {
-                e.target.style.borderColor = "rgba(178, 121, 54, 0.2)";
-                e.target.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-                e.target.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.05)";
-              }}
-              required
-            />
+            <div className="input-group" style={{ position: "relative" }}>
+              <input
+                type={showTemp ? "text" : "password"}
+                className="form-control"
+                value={tempPwd}
+                onChange={e => setTempPwd(e.target.value)}
+                style={{
+                  border: "2px solid rgba(178, 121, 54, 0.2)",
+                  borderRadius: "12px",
+                  padding: "12px 50px 12px 16px",
+                  fontSize: "1rem",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)"
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = "#B27936";
+                  e.target.style.backgroundColor = "rgba(255, 255, 255, 1)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(178, 121, 54, 0.1)";
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = "rgba(178, 121, 54, 0.2)";
+                  e.target.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+                  e.target.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.05)";
+                }}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowTemp(!showTemp)}
+                style={{
+                  position: "absolute",
+                  right: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  color: "#B27936",
+                  fontSize: "1.1rem",
+                  cursor: "pointer",
+                  zIndex: 10,
+                  padding: "4px",
+                  borderRadius: "4px",
+                  transition: "all 0.2s ease"
+                }}
+                onMouseEnter={e => {
+                  e.target.style.backgroundColor = "rgba(178, 121, 54, 0.1)";
+                }}
+                onMouseLeave={e => {
+                  e.target.style.backgroundColor = "transparent";
+                }}
+              >
+                <i className={`bi ${showTemp ? "bi-eye-slash" : "bi-eye"}`}></i>
+              </button>
+            </div>
           </div>
           <div className="mb-4">
             <label
@@ -176,32 +214,61 @@ export default function ResetPassword() {
             >
               NUEVA CONTRASEÑA
             </label>
-            <input
-              type="password"
-              className="form-control"
-              value={pwd}
-              onChange={e => setPwd(e.target.value)}
-              style={{
-                border: "2px solid rgba(178, 121, 54, 0.2)",
-                borderRadius: "12px",
-                padding: "12px 16px",
-                fontSize: "1rem",
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                transition: "all 0.3s ease",
-                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)"
-              }}
-              onFocus={e => {
-                e.target.style.borderColor = "#B27936";
-                e.target.style.backgroundColor = "rgba(255, 255, 255, 1)";
-                e.target.style.boxShadow = "0 0 0 3px rgba(178, 121, 54, 0.1)";
-              }}
-              onBlur={e => {
-                e.target.style.borderColor = "rgba(178, 121, 54, 0.2)";
-                e.target.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-                e.target.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.05)";
-              }}
-              required
-            />
+            <div className="input-group" style={{ position: "relative" }}>
+              <input
+                type={showPwd ? "text" : "password"}
+                className="form-control"
+                value={pwd}
+                onChange={e => setPwd(e.target.value)}
+                style={{
+                  border: "2px solid rgba(178, 121, 54, 0.2)",
+                  borderRadius: "12px",
+                  padding: "12px 50px 12px 16px",
+                  fontSize: "1rem",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)"
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = "#B27936";
+                  e.target.style.backgroundColor = "rgba(255, 255, 255, 1)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(178, 121, 54, 0.1)";
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = "rgba(178, 121, 54, 0.2)";
+                  e.target.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+                  e.target.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.05)";
+                }}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPwd(!showPwd)}
+                style={{
+                  position: "absolute",
+                  right: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  color: "#B27936",
+                  fontSize: "1.1rem",
+                  cursor: "pointer",
+                  zIndex: 10,
+                  padding: "4px",
+                  borderRadius: "4px",
+                  transition: "all 0.2s ease"
+                }}
+                onMouseEnter={e => {
+                  e.target.style.backgroundColor = "rgba(178, 121, 54, 0.1)";
+                }}
+                onMouseLeave={e => {
+                  e.target.style.backgroundColor = "transparent";
+                }}
+              >
+                <i className={`bi ${showPwd ? "bi-eye-slash" : "bi-eye"}`}></i>
+              </button>
+            </div>
           </div>
           <div className="mb-4">
             <label
@@ -215,32 +282,61 @@ export default function ResetPassword() {
             >
               CONFIRMAR
             </label>
-            <input
-              type="password"
-              className="form-control"
-              value={confirm}
-              onChange={e => setConfirm(e.target.value)}
-              style={{
-                border: "2px solid rgba(178, 121, 54, 0.2)",
-                borderRadius: "12px",
-                padding: "12px 16px",
-                fontSize: "1rem",
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                transition: "all 0.3s ease",
-                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)"
-              }}
-              onFocus={e => {
-                e.target.style.borderColor = "#B27936";
-                e.target.style.backgroundColor = "rgba(255, 255, 255, 1)";
-                e.target.style.boxShadow = "0 0 0 3px rgba(178, 121, 54, 0.1)";
-              }}
-              onBlur={e => {
-                e.target.style.borderColor = "rgba(178, 121, 54, 0.2)";
-                e.target.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-                e.target.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.05)";
-              }}
-              required
-            />
+            <div className="input-group" style={{ position: "relative" }}>
+              <input
+                type={showConfirm ? "text" : "password"}
+                className="form-control"
+                value={confirm}
+                onChange={e => setConfirm(e.target.value)}
+                style={{
+                  border: "2px solid rgba(178, 121, 54, 0.2)",
+                  borderRadius: "12px",
+                  padding: "12px 50px 12px 16px",
+                  fontSize: "1rem",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)"
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = "#B27936";
+                  e.target.style.backgroundColor = "rgba(255, 255, 255, 1)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(178, 121, 54, 0.1)";
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = "rgba(178, 121, 54, 0.2)";
+                  e.target.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+                  e.target.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.05)";
+                }}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirm(!showConfirm)}
+                style={{
+                  position: "absolute",
+                  right: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  color: "#B27936",
+                  fontSize: "1.1rem",
+                  cursor: "pointer",
+                  zIndex: 10,
+                  padding: "4px",
+                  borderRadius: "4px",
+                  transition: "all 0.2s ease"
+                }}
+                onMouseEnter={e => {
+                  e.target.style.backgroundColor = "rgba(178, 121, 54, 0.1)";
+                }}
+                onMouseLeave={e => {
+                  e.target.style.backgroundColor = "transparent";
+                }}
+              >
+                <i className={`bi ${showConfirm ? "bi-eye-slash" : "bi-eye"}`}></i>
+              </button>
+            </div>
           </div>
           <button
             type="submit"

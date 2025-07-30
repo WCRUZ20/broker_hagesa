@@ -6,18 +6,22 @@ import AuthCard from "../components/AuthCard";
 
 export default function RecoverPassword() {
   const [identifier, setIdentifier] = useState("");
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState({ text: "", type: "" });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true);
     try {
       await API.post("/users/recover-password", { identifier });
       localStorage.setItem("resetIdentifier", identifier);
-      setMsg("Se envió una contraseña temporal a su correo");
+      setMsg({ text: "Se envió una contraseña temporal a su correo", type: "success" });
       setTimeout(() => navigate("/reset"), 2000);
     } catch (err) {
-      setMsg("Usuario no encontrado");
+      setMsg({ text: "Usuario no encontrado", type: "error" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,19 +51,25 @@ export default function RecoverPassword() {
             Ingresa tu usuario o correo para recibir una clave temporal
           </p>
         </div>
-        {msg && (
+        {msg.text && (
           <div
             className="alert text-center mb-4"
             style={{
-              backgroundColor: "rgba(220, 53, 69, 0.1)",
-              border: "1px solid rgba(220, 53, 69, 0.2)",
+              backgroundColor:
+                msg.type === "success"
+                  ? "rgba(25, 135, 84, 0.1)"
+                  : "rgba(220, 53, 69, 0.1)",
+              border:
+                msg.type === "success"
+                  ? "1px solid rgba(25, 135, 84, 0.2)"
+                  : "1px solid rgba(220, 53, 69, 0.2)",
               borderRadius: "12px",
-              color: "#dc3545",
+              color: msg.type === "success" ? "#198754" : "#dc3545",
               fontSize: "0.9rem",
               fontWeight: "500"
             }}
           >
-            {msg}
+            {msg.text}
           </div>
         )}
         <form onSubmit={handleSubmit}>
@@ -104,6 +114,7 @@ export default function RecoverPassword() {
           <button
             type="submit"
             className="btn fw-bold text-white w-100"
+            disabled={loading}
             style={{
               background: "linear-gradient(135deg, #B27936 0%, #D4A574 50%, #B27936 100%)",
               fontSize: "1.1rem",
@@ -126,7 +137,17 @@ export default function RecoverPassword() {
               e.target.style.boxShadow = "0 8px 20px rgba(178, 121, 54, 0.3)";
             }}
           >
-            <span style={{ position: "relative", zIndex: 2 }}>ENVIAR</span>
+            {loading && (
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+                style={{ position: "relative", zIndex: 2 }}
+              ></span>
+            )}
+            <span style={{ position: "relative", zIndex: 2 }}>
+              {loading ? "ENVIANDO..." : "ENVIAR"}
+            </span>
             <div
               style={{
                 position: "absolute",
