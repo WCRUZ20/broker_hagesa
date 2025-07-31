@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import users, clients, sellers, company, countries, cargos
 from app.routers import states, cities, parishes, brands, vehicle_types
@@ -6,6 +6,8 @@ from app.routers import vehicle_uses, vehicle_classifications, vehicles
 from app.routers import identification_types, insurance_companies, policies
 from app.routers import mail_config, mail_templates, mail_params, mail_history, whatsapp_config, whatsapp_params, whatsapp_templates, whatsapp_history
 from app.tasks import start_scheduler, stop_scheduler
+from app import models
+from app.routers.users import get_current_user
 
 
 
@@ -66,5 +68,5 @@ def _shutdown() -> None:
     stop_scheduler()
 
 @app.get("/")
-def read_root():
+def read_root(current_user: models.User = Depends(get_current_user)):
     return {"msg": "API real funcionando correctamente"}
