@@ -158,8 +158,8 @@ def recover_password(data: schemas.RecoverPassword, db: Session = Depends(get_db
 
     cfg = db.query(models.MailConfig).first()
     if cfg:
-        subject = "Recuperaci\u00f3n de contrase\u00f1a"
-        body = f"Su contrase\u00f1a temporal es: {temp_pwd}"
+        subject = "Recuperación de contraseña"
+        body = f"Su contraseña temporal es: {temp_pwd}"
         try:
             send_email(cfg, user.user_email, subject, body)
         except Exception:
@@ -175,11 +175,11 @@ def change_password(data: schemas.ChangePassword, db: Session = Depends(get_db))
         raise HTTPException(status_code=404, detail="Solicitud no encontrada")
 
     if not auth.verify_password(data.temp_password, user.temp_password):
-        raise HTTPException(status_code=400, detail="Contrase\u00f1a temporal incorrecta")
+        raise HTTPException(status_code=400, detail="Contraseña temporal incorrecta")
 
     user.user_password = auth.hash_password(data.new_password.strip())
     user.temp_password = None
     user.force_password_change = 0
     db.commit()
-    return {"msg": "Contrase\u00f1a actualizada"}
+    return {"msg": "Contraseña actualizada"}
     

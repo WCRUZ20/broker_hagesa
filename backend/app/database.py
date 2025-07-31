@@ -8,7 +8,7 @@ load_dotenv(dotenv_path=env_path)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
-    raise ValueError("❌ DATABASE_URL no encontrada en .env")
+    raise ValueError("DATABASE_URL no encontrada en .env")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
