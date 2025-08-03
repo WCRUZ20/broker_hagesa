@@ -86,14 +86,29 @@ export default function Polizas() {
     return (
       <span
         className={`badge bg-${color} px-3 py-2 rounded-pill fw-normal d-flex align-items-center gap-1`}
-        style={{ fontSize: "0.875rem", letterSpacing: "0.5px", width: "fit-content" }}
+        style={{ fontSize: "0.7rem", letterSpacing: "0.5px", width: "fit-content" }}
       >
-        <i className={`bi ${icon}`} style={{ fontSize: "0.8rem" }}></i>
+        <i className={`bi ${icon}`} style={{ fontSize: "0.7rem" }}></i>
         {text}
       </span>
     );
   };
 
+  const renderAutNotiBadge = (aut) => {
+    const active = aut === "Y";
+    const color = active ? "success" : "secondary";
+    const icon = active ? "bi-bell" : "bi-bell-slash";
+    const text = active ? "Activo" : "Desactivado";
+    return (
+      <span
+        className={`badge bg-${color} px-3 py-2 rounded-pill fw-normal d-flex align-items-center gap-1`}
+        style={{ fontSize: "0.7rem", letterSpacing: "0.5px", width: "fit-content" }}
+      >
+        <i className={`bi ${icon}`} style={{ fontSize: "0.7rem" }}></i>
+        {text}
+      </span>
+    );
+  };
 
   useEffect(() => {
     loadItems();
@@ -285,7 +300,7 @@ export default function Polizas() {
                         <td className="py-3 border-0">{p.DueDate}</td>
                         <td className="py-3 border-0">{p.AscValue}</td>
                         <td className="py-3 border-0">{renderActivoBadge(p.activo)}</td>
-                        <td className="py-3 border-0">{p.aut_noti}</td>
+                        <td className="py-3 border-0">{renderAutNotiBadge(p.aut_noti)}</td>
                         <td className="py-3 border-0">{p.DaysOverdue}</td>
                         <td className="py-3 border-0 text-center">
                           <div className="d-flex justify-content-center gap-2">

@@ -15,7 +15,7 @@ def get_db():
     finally:
         db.close()
 
-router = APIRouter(prefix="/parroquias", tags=["Parroquias"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/parroquias", tags=["Parroquias"])
 
 
 @router.post("", response_model=schemas.ParishOut)

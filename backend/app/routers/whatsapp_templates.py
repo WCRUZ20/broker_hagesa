@@ -15,7 +15,8 @@ def get_db():
         db.close()
 
 
-router = APIRouter(prefix="/seguimiento/plantillas-whatsapp", tags=["Plantillas WhatsApp"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/seguimiento/plantillas-whatsapp", tags=["Plantillas WhatsApp"])
+
 
 
 @router.post("/", response_model=schemas.WhatsAppTemplateOut)

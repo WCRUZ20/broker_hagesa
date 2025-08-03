@@ -22,7 +22,7 @@ def get_db():
     finally:
         db.close()
 
-router = APIRouter(
+router = APIRouter(dependencies=[Depends(get_current_user)], 
     prefix="/seguimiento/parametrizaciones-mail", tags=["Parametrizaciones Mail"]
 )
 

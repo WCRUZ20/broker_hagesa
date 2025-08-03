@@ -19,7 +19,7 @@ def get_db():
         db.close()
 
 
-router = APIRouter(prefix="/seguimiento/historial-whatsapp", tags=["Historial WhatsApp"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/seguimiento/historial-whatsapp", tags=["Historial WhatsApp"])
 
 
 @router.get("/", response_model=List[schemas.WhatsAppHistoryOut])

@@ -15,7 +15,7 @@ def get_db():
     finally:
         db.close()
 
-router = APIRouter(prefix="/provincias", tags=["Provincias"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/provincias", tags=["Provincias"])
 
 
 @router.post("", response_model=schemas.StateOut)

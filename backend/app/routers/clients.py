@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from .. import models, schemas
+from .users import get_current_user
 from app.database import SessionLocal
 from geopy.geocoders import Nominatim
 
@@ -43,7 +44,7 @@ def get_db():
     finally:
         db.close()
 
-router = APIRouter(prefix="/clientes", tags=["Clientes"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/clientes", tags=["Clientes"])
 
 @router.post("/", response_model=schemas.ClientOut)
 def create_cliente(cliente: schemas.ClientCreate, db: Session = Depends(get_db)):

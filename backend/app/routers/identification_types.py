@@ -15,7 +15,7 @@ def get_db():
         db.close()
 
 
-router = APIRouter(prefix="/tipos-identificacion", tags=["TiposIdentificacion"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/tipos-identificacion", tags=["TiposIdentificacion"])
 
 
 @router.post("/", response_model=schemas.IdentificationTypeOut)

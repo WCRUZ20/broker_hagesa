@@ -15,7 +15,7 @@ def get_db():
         db.close()
 
 
-router = APIRouter(prefix="/usos-vehiculo", tags=["UsosVehiculo"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/usos-vehiculo", tags=["UsosVehiculo"])
 
 
 @router.post("/", response_model=schemas.VehicleUseOut)

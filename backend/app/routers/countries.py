@@ -16,7 +16,7 @@ def get_db():
         db.close()
 
 
-router = APIRouter(prefix="/paises", tags=["Países"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/paises", tags=["Países"])
 
 
 @router.post("", response_model=schemas.CountryOut)

@@ -2,11 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from app import models
+from .users import get_current_user
 from app.schemas import CompanyBase, CompanyOut
 from app.database import SessionLocal
 from app.crud import validate_image_base64
 
-router = APIRouter(prefix="/company", tags=["Company"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/company", tags=["Company"])
 
 
 def get_db():

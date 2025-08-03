@@ -15,7 +15,7 @@ def get_db():
         db.close()
 
 
-router = APIRouter(prefix="/seguimiento/plantillas-mail", tags=["Plantillas Mail"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/seguimiento/plantillas-mail", tags=["Plantillas Mail"])
 
 
 @router.post("/", response_model=schemas.MailTemplateOut)

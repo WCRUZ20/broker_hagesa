@@ -14,7 +14,7 @@ def get_db():
         db.close()
 
 
-router = APIRouter(prefix="/seguimiento/parametros-envio", tags=["Parametros Envio"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/seguimiento/parametros-envio", tags=["Parametros Envio"])
 
 
 @router.post("/", response_model=schemas.MailParamOut)
@@ -52,7 +52,7 @@ def list_params(db: Session = Depends(get_db)):
 def get_param(id: int, db: Session = Depends(get_db)):
     item = db.query(models.MailSendingParam).get(id)
     if not item:
-        raise HTTPException(status_code=404, detail="Par\u00e1metro no encontrado")
+        raise HTTPException(status_code=404, detail="Parámetro no encontrado")
     return item
 
 

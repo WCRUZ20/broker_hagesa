@@ -56,7 +56,7 @@ def get_db():
     finally:
         db.close()
 
-router = APIRouter(prefix="/seguimiento/historial-correos", tags=["Historial Correos"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/seguimiento/historial-correos", tags=["Historial Correos"])
 
 
 @router.get("/", response_model=List[schemas.MailHistoryOut])

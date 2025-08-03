@@ -15,7 +15,7 @@ def get_db():
     finally:
         db.close()
 
-router = APIRouter(prefix="/ciudades", tags=["Ciudades"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/ciudades", tags=["Ciudades"])
 
 
 @router.post("", response_model=schemas.CityOut)

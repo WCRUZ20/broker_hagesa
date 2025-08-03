@@ -24,7 +24,7 @@ def get_db():
         db.close()
 
 
-router = APIRouter(prefix="/seguimiento/parametrizaciones-whatsapp", tags=["Parametrizaciones WhatsApp"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/seguimiento/parametrizaciones-whatsapp", tags=["Parametrizaciones WhatsApp"])
 
 
 @router.post("/", response_model=schemas.WhatsAppConfigOut)

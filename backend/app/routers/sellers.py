@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from .. import models, schemas
 from app.database import SessionLocal
+from .users import get_current_user
 
 def get_db():
     db = SessionLocal()
@@ -11,7 +12,7 @@ def get_db():
     finally:
         db.close()
 
-router = APIRouter(prefix="/vendedores", tags=["Vendedores"])
+router = APIRouter(dependencies=[Depends(get_current_user)], prefix="/vendedores", tags=["Vendedores"])
 
 @router.post("/", response_model=schemas.SellerOut)
 def crear_vendedor(data: schemas.SellerCreate, db: Session = Depends(get_db)):
