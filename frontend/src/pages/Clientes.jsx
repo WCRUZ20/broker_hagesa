@@ -77,6 +77,22 @@ export default function Clientes() {
     });
   };
 
+  const handleDownload = async () => {
+    try {
+      const res = await API.get("/clientes/export", { responseType: "blob" });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      const ts = new Date().toISOString().replace(/[:.]/g, "-");
+      link.setAttribute("download", `clientes_${ts}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Error descargando clientes:", err);
+    }
+  };
+
   const filtered = clientes.filter(
     (c) =>
       c.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -144,6 +160,12 @@ export default function Clientes() {
                         Acciones
                       </button>
                       <ul className={`dropdown-menu shadow-lg border-0 ${darkMode ? 'dropdown-menu-dark' : ''}`}>
+                        <li>
+                          <button className="dropdown-item py-2 px-3 d-flex align-items-center gap-2" onClick={handleDownload}>
+                            <i className="bi bi-file-earmark-excel text-success"></i>
+                            Descargar Excel
+                          </button>
+                        </li>
                         <li>
                           <button className="dropdown-item py-2 px-3 d-flex align-items-center gap-2" onClick={handleBulkDelete}>
                             <i className="bi bi-trash text-danger"></i>

@@ -1,10 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from typing import List
 from .. import models, schemas
 from .users import get_current_user
 from app.database import SessionLocal
 from geopy.geocoders import Nominatim
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image as XLImage
+from openpyxl.styles import Alignment, Font
+from io import BytesIO
+from datetime import datetime
+import os
 
 geolocator = Nominatim(user_agent="hagesa_api")
 
@@ -61,6 +68,73 @@ def create_cliente(cliente: schemas.ClientCreate, db: Session = Depends(get_db))
 @router.get("/", response_model=List[schemas.ClientOut])
 def list_clientes(db: Session = Depends(get_db)):
     return db.query(models.Client).all()
+
+@router.get("/export")
+def export_clientes(db: Session = Depends(get_db)):
+    clientes = db.query(models.Client).all()
+
+    wb = Workbook()
+    ws = wb.active
+
+    logo_path = os.path.join(
+        os.path.dirname(__file__),
+        "../../..",
+        "frontend",
+        "public",
+        "LoginForm",
+        "logo.png",
+    )
+    if os.path.exists(logo_path):
+        img = XLImage(logo_path)
+        img.height = 80
+        img.width = 160
+        ws.add_image(img, "A1")
+
+    ws.merge_cells("C1:H1")
+    ws["C1"] = "Listado de clientes"
+    ws["C1"].font = Font(size=16, bold=True)
+    ws["C1"].alignment = Alignment(horizontal="center", vertical="center")
+
+    ws.merge_cells("C2:H2")
+    ws["C2"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ws["C2"].alignment = Alignment(horizontal="center", vertical="center")
+
+    ws.append([])
+    headers = [
+        "ID",
+        "Nombre",
+        "Apellidos",
+        "Identificación",
+        "Teléfono",
+        "Email",
+        "Dirección",
+    ]
+    ws.append(headers)
+    for cell in ws[4]:
+        cell.font = Font(bold=True)
+
+    for c in clientes:
+        ws.append(
+            [
+                c.id,
+                c.nombre,
+                c.apellidos or "",
+                c.identificacion,
+                c.telefono,
+                c.email,
+                c.direccion,
+            ]
+        )
+
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+    filename = f"clientes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename={filename}"},
+    )
 
 @router.get("/{id}", response_model=schemas.ClientOut)
 def get_cliente(id: int, db: Session = Depends(get_db)):
