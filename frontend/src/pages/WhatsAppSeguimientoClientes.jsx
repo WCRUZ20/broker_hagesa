@@ -125,7 +125,7 @@ export default function WhatsAppSeguimientoClientes() {
           <div className={`card border-0 shadow-sm ${darkMode ? "bg-dark" : "bg-white"}`}>
             <div className="card-body">
               <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5 className="mb-0">Pólizas por vencer</h5>
+                <h5 className="mb-0" style={{ color: "white" }}>Pólizas por vencer</h5>
                 <button className="btn btn-primary" disabled={selected.length === 0} onClick={sendMessages}>
                   Enviar WhatsApp
                 </button>
@@ -191,7 +191,7 @@ export default function WhatsAppSeguimientoClientes() {
         <div className="col-md-6 mb-4">
           <div className={`card border-0 shadow-sm ${darkMode ? "bg-dark" : "bg-white"}`}>
             <div className="card-body">
-              <h5>Mensajes enviados</h5>
+              <h5 style={{ color: "white" }}>Mensajes enviados</h5>
               <div className="mb-3">
                 <input
                   type="text"

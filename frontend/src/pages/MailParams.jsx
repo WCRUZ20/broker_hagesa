@@ -143,16 +143,7 @@ export default function MailParams() {
               Envío manual
             </label>
           </div>
-          <div className="col">
-            <label className="form-label">Días aviso antes de vencer cliente</label>
-            <input
-              name="daystodue"
-              type="number"
-              className="form-control"
-              value={form.daystodue}
-              onChange={handleChange}
-            />
-          </div>
+          
           <div className="col">
             <label className="form-label">Días aviso antes de vencer vendedor</label>
             <input
@@ -160,6 +151,16 @@ export default function MailParams() {
               type="number"
               className="form-control"
               value={form.daystodueSeller}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col">
+            <label className="form-label">Días aviso antes de vencer cliente</label>
+            <input
+              name="daystodue"
+              type="number"
+              className="form-control"
+              value={form.daystodue}
               onChange={handleChange}
             />
           </div>
