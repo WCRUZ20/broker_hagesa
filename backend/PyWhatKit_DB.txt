@@ -158,3 +158,73 @@ Time: 12:4
 Phone Number: +593998990136
 Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL0000221 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-31. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
 --------------------
+Date: 3/8/2025
+Time: 21:49
+Phone Number: +593998990136
+Message: Mensaje de prueba de HAGESA
+--------------------
+Date: 3/8/2025
+Time: 21:59
+Phone Number: +593998990136
+Message: Recordatorio PólizaEstimado Gisella Jiménez, esperando se encuentre bien. El motivo de nuestro mensajes es para que se ponga en contacto con el cliente 05587411 con poliza PL00000015 y fecha de vencimiento 2025-08-03.
+--------------------
+Date: 3/8/2025
+Time: 22:5
+Phone Number: +5930998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Pedro Leon, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000015 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-08-03. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 4/8/2025
+Time: 12:1
+Phone Number: +593998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000005 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-05. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 4/8/2025
+Time: 12:1
+Phone Number: +593998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL0000221 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-31. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 4/8/2025
+Time: 12:2
+Phone Number: +5930998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Pedro Leon, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000015 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-08-03. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 5/8/2025
+Time: 12:1
+Phone Number: +593998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL0000221 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-31. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 5/8/2025
+Time: 12:1
+Phone Number: +5930998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Pedro Leon, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000015 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-08-03. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 6/8/2025
+Time: 12:1
+Phone Number: +593998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL0000221 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-31. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 6/8/2025
+Time: 12:1
+Phone Number: +5930998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Pedro Leon, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000015 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-08-03. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 8/8/2025
+Time: 12:1
+Phone Number: +593998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL0000221 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-31. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 8/8/2025
+Time: 12:1
+Phone Number: +5930998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Pedro Leon, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000015 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-08-03. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 12/8/2025
+Time: 21:48
+Phone Number: +593998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Valentina Cruz, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL0000221 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-07-31. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
+Date: 12/8/2025
+Time: 21:49
+Phone Number: +5930998990136
+Message: Recordatorio PólizaEs de nuestro agrado saludarle Estimado Pedro Leon, esperando que se encuentre bien. Este mensaje es para recordarle que su poliza PL00000015 con nosotros HAGESA S.A tiene fecha de vencimiento&nbsp; 2025-08-03. Puede comunicarse con nosotros mediante .......No es necesario responde este mensaje de recordatorio.
+--------------------
