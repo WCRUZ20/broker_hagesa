@@ -86,7 +86,7 @@ export default function MailTemplateModal({ template, onClose }) {
         <div className="modal-content" style={{ backgroundColor: "rgb(48, 48, 48)" }}>
           <form onSubmit={handleSubmit}>
             <div className="modal-header">
-              <h5 className="modal-title">{isEdit ? "Editar Plantilla" : "Nueva Plantilla"}</h5>
+              <h5 className="modal-title" style={{color: "white"}}> {isEdit ? "Editar Plantilla" : "Nueva Plantilla"}</h5>
               <button type="button" className="btn-close" onClick={onClose}></button>
             </div>
             <div className="modal-body">

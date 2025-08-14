@@ -225,6 +225,7 @@ export default function CrearPoliza() {
             type="button"
             className={`step-btn ${currentStep === 1 ? 'active' : ''}`}
             onClick={() => setCurrentStep(1)}
+            style={{color:"white"}}
           >
             Cabecera
           </button>
@@ -233,6 +234,7 @@ export default function CrearPoliza() {
             type="button"
             className={`step-btn ${currentStep === 2 ? 'active' : ''}`}
             onClick={() => setCurrentStep(2)}
+            style={{color:"white"}}
           >
             Detalle
           </button>
